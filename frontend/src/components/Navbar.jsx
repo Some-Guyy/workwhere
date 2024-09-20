@@ -21,7 +21,7 @@ const Navbar = () => {
                 </svg>
               </label>
             </div>
-            <div className="mx-2 flex-1 px-2">Navbar Title</div>
+            <div className="mx-2 flex-1 px-2 text-4xl font-bold">Workwhere</div>
             <div className="flex-none lg:block">
               <ul className="menu menu-horizontal">
                 {/* Navbar menu content here */}
@@ -48,13 +48,13 @@ const Navbar = () => {
             </div>
           </div>
           {/* Page content here */}
-          Content
+          
         </div>
-        <div className="drawer-side">
+        <div className="drawer-side z-10">
           <label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label>
           <ul className="menu bg-base-200 min-h-full w-80 p-4">
             {/* Sidebar content here */}
-            <li><strong class="text-3xl">Hi Ryan</strong></li>
+            <li><strong className="text-3xl">Hi Ryan!</strong></li>
             <hr></hr>
             <li><a className="active">View Schedule</a></li>
             <li><a>Manage My Applications</a></li>
