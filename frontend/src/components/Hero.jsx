@@ -4,9 +4,9 @@ import Stats from "./Stats";
 const Hero = () => {
   return (
     <div className="mt-20">
-        <div className="container bg-primary min-h-screen glass w-full">
-            <div className="flex flex-col lg:flex-row-reverse items-center">
-                <div className="text-center lg:text-left lg:ml-5  text-base-100 w-full p-4">
+        <div className="bg-primary min-h-screen glass w-full">
+            <div className="flex flex-col lg:flex-row-reverse items-center w-full">
+                <div className="text-center lg:text-left lg:ml-5 text-base-100 w-full p-4">
                     <div className="glass p-4 w-full">
                         <h1 className="text-5xl font-bold">Hi Ryan!</h1>
                         <p className="py-6">
