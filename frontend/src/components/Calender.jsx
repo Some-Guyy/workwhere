@@ -41,7 +41,7 @@ const Calender = () => {
             </div>
             <div className="basis-1/5"></div>
         </div>
-        <hr className="w-9/12 m-auto" />
+        <hr className="w-9/12 m-auto mb-10" />
     </>
   )
 }

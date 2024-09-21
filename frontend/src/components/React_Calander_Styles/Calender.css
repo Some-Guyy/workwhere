@@ -7,7 +7,7 @@
 
 --rdp-day-font: inherit; /* The font used for the day cells. */
 --rdp-day-height: 2.75rem; /* The height of the day cells. */
---rdp-day-width: 7vw; /* The width of the day cells. */
+--rdp-day-width: 2.75rem; /* The width of the day cells. */
 
 --rdp-day_button-border-radius: 100%; /* The border radius of the day cells. */
 --rdp-day_button-border: 2px solid transparent; /* The border of the day cells. */
