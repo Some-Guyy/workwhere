@@ -1,9 +1,13 @@
-import Navbar from "../components/Navbar"
+import ViewScheduleSection from "../components/ViewScheduleSection";
+import Hero from "../components/Hero";
+
 
 const HomePage = () => {
   return (
     <>
-        <div>Homepage</div>
+        <Hero />
+        <ViewScheduleSection />
+        
     </>
   )
 }
