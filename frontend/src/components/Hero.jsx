@@ -12,6 +12,9 @@ const Hero = () => {
                         <p className="py-6">
                             You have 2 more days of WFH this month, your next WFH is on 2nd October 2024. You  have 10 requests not approved yet.
                         </p>
+                        <p>
+                            Click here to jump straight to your schedule.
+                        </p>
                     </div>
                     <div className="glass my-4 p-4">
                         <Stats />
