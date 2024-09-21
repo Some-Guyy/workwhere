@@ -17,7 +17,7 @@ const Calender = () => {
 
   return (
     <>
-      <hr className="mt-10 w-9/12 m-auto" />
+      <div className="mt-10 w-9/12 m-auto divider" />
         <div className="flex">
           <div className="basis-1/5 "></div>
             <div className="basis-3/5 m-5 p-5 ">
@@ -41,7 +41,7 @@ const Calender = () => {
             </div>
             <div className="basis-1/5"></div>
         </div>
-        <hr className="w-9/12 m-auto mb-10" />
+        <div className="w-9/12 m-auto mb-10 divider" />
     </>
   )
 }

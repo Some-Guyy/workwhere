@@ -1,3 +1,5 @@
+import { MdMapsHomeWork } from "react-icons/md";
+
 const Navbar = () => {
   return (
     <>
@@ -5,7 +7,7 @@ const Navbar = () => {
         <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col">
           {/* Navbar */}
-          <div className="navbar bg-primary text-primary-content w-full fixed z-10">
+          <div className="navbar bg-neutral text-primary-content w-full fixed z-10">
             <div className="flex-none">
               <label htmlFor="my-drawer-3" aria-label="open sidebar" className="btn btn-square btn-ghost">
                 <svg
@@ -22,7 +24,8 @@ const Navbar = () => {
               </label>
             </div>
             <div className="mx-2 flex-1 px-2 text-4xl font-bold">
-              <span className="m-auto sm:mx-0">
+              <MdMapsHomeWork />
+              <span className="m-auto sm:mx-1">
                 Workwhere
               </span>
             </div>
