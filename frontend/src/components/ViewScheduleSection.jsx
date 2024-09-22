@@ -19,8 +19,8 @@ const ViewScheduleSection = () => {
     };
 
   return (
-    <div className="">
-        <div className="font-bold text-4xl mt-10 ml-5 text-center">
+    <div className="ml-5">
+        <div className="font-bold text-4xl mt-10 ml-10 text-center">
             {activeSchedule}
         </div>
         

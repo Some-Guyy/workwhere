@@ -4,7 +4,7 @@ import Stats from "./Stats";
 const Hero = () => {
   return (
     <div className="mt-20">
-        <div className="bg-primary min-h-screen glass w-full">
+        <div className="bg-primary min-h-screen glass w-full min-w-[450px]">
             <div className="flex flex-col lg:flex-row-reverse items-center w-full">
                 <div className="text-center lg:text-left lg:ml-5 text-base-100 w-full p-4">
                     <div className="glass p-4 w-full">
@@ -21,7 +21,7 @@ const Hero = () => {
                     </div>
                 </div>
 
-                <div className="card bg-base-300 w-full max-w-sm shrink-0 shadow-2xl">
+                <div className="card bg-base-300 w-full max-w-sm shrink-0 shadow-2xl m-5">
                     <Calender />
                 </div>
 
