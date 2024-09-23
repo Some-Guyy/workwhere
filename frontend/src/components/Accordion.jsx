@@ -1,48 +1,29 @@
 import ScheduleTable from "./ScheduleTable";
 import Spinner from "../components/Spinner";
 import { useState, useEffect } from 'react';
+import AccordionRow from "./AccordionRow";
 
 const Accordion = () => {
-    const [loading, setLoading] = useState(false); 
-
+    const [loading, setLoading] = useState(true); 
+    const fetchWFH = async () => {
+        try{
+            ;
+        } catch(error) {
+            console.log("Error fetching data", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    useEffect(() => {
+        fetchWFH();
+    }, []);
+    
     return (
         <div>
-            <div className="flex">
-                <div className="collapse collapse-arrow ">
-                    <input type="radio" name="my-accordion-2" defaultChecked />
-                    <div className="collapse-title text-xl font-medium">Work From Home Dates</div>
-                    <div className="collapse-content">
-                    {loading ? <Spinner loading={loading} /> : (
-                        <ScheduleTable />
-                    )}    
-                    </div>
-                </div>
-            </div>
-
-            <div className="flex">
-                <div className="collapse collapse-arrow ">
-                    <input type="radio" name="my-accordion-2" />
-                    <div className="collapse-title text-xl font-medium">Leave Dates</div>
-                    <div className="collapse-content">
-                    {loading ? <Spinner loading={loading} /> : (
-                        <ScheduleTable />
-                    )}
-                    </div>
-                </div>
-            </div>
-
-            <div className="flex">
-                <div className="collapse collapse-arrow ">
-                    <input type="radio" name="my-accordion-2" />
-                    <div className="collapse-title text-xl font-medium">Pending Requests</div>
-                    <div className="collapse-content">
-                    {loading ? <Spinner loading={loading} /> : (
-                        <ScheduleTable />
-                    )}
-                    </div>
-                </div>
-            </div>
-
+            <AccordionRow rowName={"Work From Home Dates"} loading={loading}/>
+            <AccordionRow rowName={"Leave Dates"} loading={loading}/>
+            <AccordionRow rowName={"Pending Requests"} loading={loading}/>
         </div>
   )
 }
