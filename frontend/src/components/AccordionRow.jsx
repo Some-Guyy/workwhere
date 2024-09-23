@@ -2,7 +2,7 @@ import ScheduleTable from "./ScheduleTable";
 import Spinner from "../components/Spinner";
 import React from 'react'
 
-const AccordionRow = ({rowName, loading}) => {
+const AccordionRow = ({rowName, loading, data}) => {
   return (
     <div className="flex">
         <div className="collapse collapse-arrow ">
@@ -10,7 +10,7 @@ const AccordionRow = ({rowName, loading}) => {
             <div className="collapse-title text-xl font-medium">{rowName}</div>
             <div className="collapse-content">
             {loading ? <Spinner loading={loading} /> : (
-                <ScheduleTable />
+                <ScheduleTable data={data}/>
             )}    
             </div>
         </div>

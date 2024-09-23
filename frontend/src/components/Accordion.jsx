@@ -3,27 +3,31 @@ import Spinner from "../components/Spinner";
 import { useState, useEffect } from 'react';
 import AccordionRow from "./AccordionRow";
 
-const Accordion = () => {
-    const [loading, setLoading] = useState(true); 
-    const fetchWFH = async () => {
-        try{
-            ;
-        } catch(error) {
-            console.log("Error fetching data", error);
-        } finally {
-            setLoading(false);
+const Accordion = ({loading, data}) => {
+    const wfhData = [];
+    const pendingData = [];
+    const leaveData = [];
+
+    async function filterData() {
+        for (const d of data) {
+            // console.log(d);
+            if(d.status == "approved"){
+                wfhData.push(d);
+            }else if (d.status == "pending"){
+                pendingData.push(d);
+            }else{
+                leaveData.push(d);
+            }
         }
-    };
+    }; 
     
-    useEffect(() => {
-        fetchWFH();
-    }, []);
+    filterData();
     
     return (
         <div>
-            <AccordionRow rowName={"Work From Home Dates"} loading={loading}/>
-            <AccordionRow rowName={"Leave Dates"} loading={loading}/>
-            <AccordionRow rowName={"Pending Requests"} loading={loading}/>
+            <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData}/>
+            <AccordionRow rowName={"Leave Dates"} loading={loading} data={leaveData}/>
+            <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingData}/>
         </div>
   )
 }

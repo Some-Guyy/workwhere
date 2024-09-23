@@ -2,7 +2,7 @@ import Accordion from "./Accordion";
 import { useEffect, useState } from "react";
 import FilterButtonsSection from "./FilterButtonsSection";
 
-const ViewScheduleSection = () => {
+const ViewScheduleSection = ({loading, data}) => {
 
     // states for filter
     const [activeSchedule, setActiveSchedule] = useState("Your Schedule");
@@ -40,7 +40,7 @@ const ViewScheduleSection = () => {
                 yourDepartmentSchedule={yourDepartmentSchedule}
                 yourOverallSchedule={yourOverallSchedule}
                 />
-                <Accordion />
+                <Accordion loading={loading} data={data}/>
             </div>
 
             <div className="basis-1/5 "></div>
