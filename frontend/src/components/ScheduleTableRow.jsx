@@ -5,8 +5,8 @@ const ScheduleTableRow = ({details, index}) => {
         <tr className="hover">
             <th>{index+1}</th>
             <td>{details.startDate}</td>
-            <td>{details.startTime._seconds}</td>
-            <td>{details.status}</td>
+            <td>{details.startTime}</td>
+            <td>{details.approvedBy}</td>
         </tr>
     </>
   )

@@ -22,7 +22,7 @@ const Hero = ({loading, data}) => {
                 </div>
 
                 <div className="card bg-base-300 w-full max-w-sm shrink-0 shadow-2xl m-5">
-                    <Calender />
+                    <Calender data={data}/>
                 </div>
 
             </div>
