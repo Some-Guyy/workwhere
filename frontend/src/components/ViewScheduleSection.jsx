@@ -1,8 +1,8 @@
 import Accordion from "./Accordion";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import FilterButtonsSection from "./FilterButtonsSection";
 
-const ViewScheduleSection = ({loading, data}) => {
+const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOverall}) => {
 
     // states for filter
     const [activeSchedule, setActiveSchedule] = useState("Your Schedule");
@@ -39,6 +39,9 @@ const ViewScheduleSection = ({loading, data}) => {
                 yourTeamSchedule={yourTeamSchedule}
                 yourDepartmentSchedule={yourDepartmentSchedule}
                 yourOverallSchedule={yourOverallSchedule}
+                fetchPersonal={fetchPersonal}
+                fetchTeam={fetchTeam}
+                fetchOverall={fetchOverall}
                 />
                 <Accordion loading={loading} data={data}/>
             </div>

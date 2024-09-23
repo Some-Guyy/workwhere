@@ -9,6 +9,9 @@ const FilterButtonsSection = ({
     yourTeamSchedule,
     yourDepartmentSchedule,
     yourOverallSchedule,
+    fetchPersonal,
+    fetchTeam,
+    fetchOverall
 }) => {
   return (
     <div className="text-center mb-5">
@@ -16,6 +19,7 @@ const FilterButtonsSection = ({
             resetAllStates(); 
             setYourSchedule(true);
             setActiveSchedule("Your Schedule");
+            fetchPersonal();
             }} className ={yourSchedule ? "btn btn-outline btn-primary m-2 btn-active" : "btn btn-outline btn-primary m-2"}>
             Your Schedule
         </button>
@@ -24,6 +28,7 @@ const FilterButtonsSection = ({
             resetAllStates(); 
             setYourTeamSchedule(true);
             setActiveSchedule("Your Team Schedule");
+            fetchTeam();
             }} className ={yourTeamSchedule ? "btn btn-outline btn-primary m-2 btn-active" : "btn btn-outline btn-primary m-2"}>
             Your Team Schedule
         </button>
@@ -40,6 +45,7 @@ const FilterButtonsSection = ({
             resetAllStates(); 
             setYourOverallSchedule(true);                        
             setActiveSchedule("Your Overall Schedule");
+            fetchOverall();
             }} className ={yourOverallSchedule ? "btn btn-outline btn-primary m-2 btn-active" : "btn btn-outline btn-primary m-2"}>
             Your Overall Schedule
         </button>

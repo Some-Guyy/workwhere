@@ -6,85 +6,114 @@ import Hero from "../components/Hero";
 
 const HomePage = () => {
   const [loading, setLoading] = useState(true); 
-  const[wfhData, setWfhData] = useState(null);
 
-  function SimpleCacheComponent(){
+  const[showedData, setShowedData] = useState(null);
+  const[personalData, setPersonalData] = useState(null);
+  const[teamData, setTeamData] = useState(null);
+  const[overallData, setOverallData] = useState(null);
+
 
     useEffect(() => {
-      if(!wfhData) {
-        fetchWFH();
+      if(!showedData) {
+        fetchPersonalData();
       }
-    }, [wfhData]);
+    }, [showedData]);
 
-    const fetchWFH = async () => {
-      const apiUrl = "http://localhost:3000/working-arrangements/150233";
-      try{
-          // const res = await fetch(apiUrl);
-          // const data = await res.json();
-          const data = [
-                {
-                    "reason": "Take care of mom",
-                    "requestCreated": {
-                       "_seconds": 1727049600,
-                       "_nanoseconds": 200000000
-                    },
-                    "employee_id": "150233",
-                    "status": "approved",
-                    "endDate": "28/09/2024",
-                    "startDate": "27/09/2024",
-                    "startTime": {
-                      "_seconds": 1727312400,
-                      "_nanoseconds": 112000000
-                    },
-                    "endTime": {
-                      "_seconds": 1727427600,
-                      "_nanoseconds": 940000000
-                    }
-                    
-                },
-                {
-                  "reason": "no important meetings",
-                  "requestCreated": {
-                     "_seconds": 1727049600,
-                     "_nanoseconds": 200000000
-                  },
-                  "employee_id": "150233",
-                  "status": "pending",
-                  "endDate": "27/09/2024",
-                  "startDate": "26/09/2024",
-                  "startTime": {
-                    "_seconds": 1727312400,
-                    "_nanoseconds": 112000000
-                  },
-                  "endTime": {
-                    "_seconds": 1727427600,
-                    "_nanoseconds": 940000000
-                  }
-                  
-              }
-            ]
-          setWfhData(data);
+    // function to fetch personal schedule
+    const fetchPersonalData = async () => {
+      const apiUrl = "http://localhost:3030/working-arrangements/150233";
+      // const apiUrl = "http://localhost:3030/working-arrangements";
+      // const apiUrl =  "http://localhost:3030/working-arrangements/team/190024"
+
+      if(!personalData) {
+
+        setLoading(true);
+
+        try{
+          const res = await fetch(apiUrl);
+          const data = await res.json();
+          setPersonalData(data);
           setLoading(false);
+          setShowedData(data);
 
+        } catch(error) {
+            console.log("Error fetching personal data", error);
 
-      } catch(error) {
-          console.log("Error fetching data", error);
-
-      } finally {
-          console.log("We fetched the data");
+        } finally {
+            console.log("We fetched the personal data");
+        }
+      } else{
+        setShowedData(personalData);
       }
+
+      
+    };
+    
+    // function to fetch team schedule
+    const fetchTeamData = async () => {
+      const apiUrl =  "http://localhost:3030/working-arrangements/team/190024"
+
+      
+          if(!teamData) {
+
+            setLoading(true);
+
+            try{
+              const res = await fetch(apiUrl);
+              const data = await res.json();
+            
+              setTeamData(data);
+              setLoading(false);
+              setShowedData(data);
+    
+    
+            } catch(error) {
+                console.log("Error fetching team data", error);
+      
+            } finally {
+                console.log("We fetched the team data");
+            }
+
+          }else{
+            setShowedData(teamData);
+          }
     };
 
-  }
+    // function to fetch overall schedule
+    const fetchOverallData = async () => {
+      const apiUrl =  "http://localhost:3030/working-arrangements"
+      
+          if(!overallData) {
 
-  SimpleCacheComponent();
-  // console.log(wfhData);
+            setLoading(true);
+
+            try{
+              const res = await fetch(apiUrl);
+              const data = await res.json();
+            
+              setOverallData(data);
+              setLoading(false);
+              setShowedData(data);
     
+    
+            } catch(error) {
+                console.log("Error fetching overall data", error);
+      
+            } finally {
+                console.log("We fetched the overall data");
+            }
+
+          }else{
+            setShowedData(overallData);
+          }
+    };
+
+  
 
   return (
     <div className="w-full">
-        <Hero loading={loading} data={wfhData}/>
-        <ViewScheduleSection loading={loading} data={wfhData}/>
+        <Hero loading={loading} data={personalData}/>
+        <ViewScheduleSection loading={loading} data={showedData} fetchPersonal={fetchPersonalData} fetchTeam={fetchTeamData} fetchOverall={fetchOverallData}/>
         
     </div>
   )

@@ -8,9 +8,11 @@ admin.initializeApp({
 const db = admin.firestore()
 
 const express = require('express');
+const cors = require('cors')
 const app = express()
 //need to use this to ionclude body parser functionality
-app.use(express.json())
+// app.use(express.json())
+app.use(cors())
 
 
 /*
@@ -121,7 +123,7 @@ app.get("/working-arrangements/team/:employeeId", async (req, res) => {
     }
 })
 
-const PORT = 3000; 
+const PORT = 3030; 
 app.listen(PORT, () => { 
     console.log(`Server is running on http://localhost:${PORT}`) 
 }); 
