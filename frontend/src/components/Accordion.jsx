@@ -3,7 +3,7 @@ import Spinner from "../components/Spinner";
 import { useState, useEffect } from 'react';
 import AccordionRow from "./AccordionRow";
 
-const Accordion = ({loading, data}) => {
+const Accordion = ({loading, data, yourSchedule}) => {
     const wfhData = [];
     const pendingData = [];
     const leaveData = [];
@@ -25,9 +25,19 @@ const Accordion = ({loading, data}) => {
     
     return (
         <div>
-            <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData}/>
-            <AccordionRow rowName={"Leave Dates"} loading={loading} data={leaveData}/>
-            <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingData}/>
+            {yourSchedule ? 
+            <>
+                <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData}/>
+                <AccordionRow rowName={"Leave Dates"} loading={loading} data={leaveData}/>
+                <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingData}/>
+            </>
+             : 
+            <>
+                <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData}/>
+                <AccordionRow rowName={"Work From Office Dates"} loading={loading} data={wfhData}/>
+                <AccordionRow rowName={"Leave Dates"} loading={loading} data={leaveData}/>
+                <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingData}/>
+            </>}
         </div>
   )
 }

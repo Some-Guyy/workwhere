@@ -4,12 +4,13 @@ import ScheduleTableHeader from "./ScheduleTableHeader"
 const ScheduleTable = ({data}) => {
     const headerDetails = {
         no: "S/N",
+        staffName: "Staff Name",
         date: "Date",
         time: "Time",
         approvedBy: "Approved By"
     }
 
-    // console.log(data)
+    console.log(data)
   return (
 
     <>{data.length<1 ? 

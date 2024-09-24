@@ -1,6 +1,7 @@
 import Accordion from "./Accordion";
 import { useState } from "react";
 import FilterButtonsSection from "./FilterButtonsSection";
+import DateFilter from "./DateFilter";
 
 const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOverall}) => {
 
@@ -43,7 +44,8 @@ const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOver
                 fetchTeam={fetchTeam}
                 fetchOverall={fetchOverall}
                 />
-                <Accordion loading={loading} data={data}/>
+                <DateFilter />
+                <Accordion loading={loading} data={data} yourSchedule={yourSchedule}/>
             </div>
 
             <div className="basis-1/5 "></div>
