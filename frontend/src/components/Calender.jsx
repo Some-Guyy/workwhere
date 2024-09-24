@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "./React_Calander_Styles/Calender.css";
 
@@ -14,35 +14,43 @@ const Calender = ({data}) => {
     const currentYear = parseInt(today.toLocaleDateString().split("/")[2]);
 
     // console.log(currentDate,currentMonth,currentYear)
+    // console.log(data);
 
-    console.log(data);
-    const wfhDays = [
-      // new Date(2024, 8, 25),
-    ];
-    const leaveDays = [
-    ];
-    const pendingDays = [
-    ];
+    const [wfhDays, setWfhDays] = useState([]);
+    const [leaveDays, setLeaveDays] = useState([]);
+    const [pendingDays, setPendingDays] = useState([]);
 
+    useEffect(() => {
+      async function countDays() {
+        const tempWfhDays = [];
+        const tempLeaveDays = [];
+        const tempPendingDays = [];
 
-    async function countDays() {
         for (const d of data) {
             let startDate = d.startDate.split("/");
             let month = parseInt(startDate[1]);
             let date = parseInt(startDate[0]); 
             let year = parseInt(startDate[2]);
-            wfhDays.push(new Date(year, month-1, date));
-            if(d.status == "approved"){
-              wfhDays.push(new Date(year, month-1, date));
-            }else if(d.status == "leave"){
-              leaveDays.push(new Date(year, month-1, date));
-            }else if(d.status == "pending"){
-              pendingDays.push(new Date(year, month-1, date));
-            }
-        }
-    };
 
-    countDays();
+            let newDate = new Date(year, month - 1, date);
+
+            if (d.status === "approved") {
+                    tempWfhDays.push(newDate);
+                } else if (d.status === "leave") {
+                    tempLeaveDays.push(newDate);
+                } else if (d.status === "pending") {
+                    tempPendingDays.push(newDate);
+                }
+          }
+
+          setWfhDays(tempWfhDays);
+          setLeaveDays(tempLeaveDays);
+          setPendingDays(tempPendingDays);
+
+      };
+
+      countDays();
+    }, [data]);
     
 
     // setSelected(wfhDays);
@@ -80,8 +88,12 @@ const Calender = ({data}) => {
                 // }
                 // className="wfhDays"
                 ></DayPicker>
-                <button className="btn btn-outline btn-sm" onClick={() => setMonth(today)}>Go to Today</button>
+
+                <button className="btn btn-outline btn-sm" onClick={() => setMonth(today)}>
+                  Go to Today
+                </button>
             </div>
+
             <div className="basis-1/5"></div>
         </div>
         <div className="w-9/12 m-auto mb-10 divider" />

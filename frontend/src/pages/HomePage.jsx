@@ -112,8 +112,8 @@ const HomePage = () => {
 
   return (
     <div className="w-full">
-        {/* <Hero loading={loading} data={personalData}/> */}
-        <Hero loading={loading} data={overallData}/>
+        <Hero loading={loading} data={personalData}/>
+        {/* <Hero loading={loading} data={overallData}/> */}
         <ViewScheduleSection loading={loading} data={showedData} fetchPersonal={fetchPersonalData} fetchTeam={fetchTeamData} fetchOverall={fetchOverallData}/>
         
     </div>
