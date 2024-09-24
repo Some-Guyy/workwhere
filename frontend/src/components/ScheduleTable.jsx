@@ -10,7 +10,7 @@ const ScheduleTable = ({data}) => {
         approvedBy: "Approved By"
     }
 
-    console.log(data)
+    // console.log(data)
   return (
 
     <>{data.length<1 ? 

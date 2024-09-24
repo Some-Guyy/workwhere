@@ -11,7 +11,8 @@ const FilterButtonsSection = ({
     yourOverallSchedule,
     fetchPersonal,
     fetchTeam,
-    fetchOverall
+    fetchOverall,
+    setSelectedDate
 }) => {
   return (
     <div className="text-center mb-5">

@@ -11,7 +11,7 @@ const Stats = ({loading, data}) => {
     const [gotWfh, setGotWfh] = useState(false);
     const [gotLeave, setGotLeave] = useState(false);
 
-    console.log(data);
+    // console.log(data);
 
     useEffect(() => {
         async function countDays() {

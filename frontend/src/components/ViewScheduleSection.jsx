@@ -5,12 +5,16 @@ import DateFilter from "./DateFilter";
 
 const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOverall}) => {
 
+    const today = new Date().toLocaleDateString().split("/");
+
     // states for filter
     const [activeSchedule, setActiveSchedule] = useState("Your Schedule");
     const [yourSchedule, setYourSchedule] = useState(true);
     const [yourTeamSchedule, setYourTeamSchedule] = useState(false);
     const [yourDepartmentSchedule, setYourDepartmentSchedule] = useState(false);
     const [yourOverallSchedule, setYourOverallSchedule] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(`${today[1]}/${today[0]}/${today[2]}`);
+
 
     // Function to reset all states
     const resetAllStates = () => {
@@ -21,10 +25,12 @@ const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOver
     };
 
   return (
-    <div className="ml-5">
+    <div className="">
+        
         <div className="font-bold text-4xl mt-10 ml-10 text-center">
-            {activeSchedule}
+        {activeSchedule} on {selectedDate}
         </div>
+        
         
         <div className="flex">
             <div className="basis-1/5 "></div>
@@ -43,8 +49,10 @@ const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOver
                 fetchPersonal={fetchPersonal}
                 fetchTeam={fetchTeam}
                 fetchOverall={fetchOverall}
+                setSelectedDate={setSelectedDate}
                 />
-                <DateFilter />
+                {yourSchedule ? <></> : <DateFilter setSelectedDate={setSelectedDate}/>}
+                
                 <Accordion loading={loading} data={data} yourSchedule={yourSchedule}/>
             </div>
 
