@@ -3,24 +3,55 @@ import { useState, useEffect } from 'react';
 
 const Stats = ({loading, data}) => {
 
-    let noOfWfhDays = 0;
-    let noOfPendingReq = 0;
-    let noOfLeaves = 0;
+    const [noOfWfhDays, setNoOfWfhDays] = useState(0);
+    const [noOfPendingReq, setNoOfPendingReq] = useState(0);
+    const [noOfLeaves, setNoOfLeaves] = useState(0);
+    const [wfhDay, setWfhDay] = useState(null);
+    const [leaveDay, setLeaveDay] = useState(null);
+    const [gotWfh, setGotWfh] = useState(false);
+    const [gotLeave, setGotLeave] = useState(false);
+
     console.log(data);
 
-    async function countDays() {
-        for (const d of data) {
-            if(d.status == "approved"){
-                noOfWfhDays++;
-            }else if (d.status == "pending"){
-                noOfPendingReq++;
-            }else{
-                noOfLeaves++;
+    useEffect(() => {
+        async function countDays() {
+            let wfhDays = 0;
+            let pendingReq = 0;
+            let leaves = 0;
+            let tempWfhDay = null;
+            let tempLeaveDay = null;
+            
+            for (const d of data) {
+                if(d.status === "approved"){
+                    if(tempWfhDay == null){
+                        tempWfhDay = d.startDate;
+                        setGotWfh(true);
+                    } else if(tempWfhDay < d.startDate){
+                        tempWfhDay = d.startDate;
+                    }
+                    wfhDays++;
+                } else if (d.status === "leave"){
+                    if(tempLeaveDay == null){
+                        tempLeaveDay = d.startDate;
+                        setGotLeave(true);
+                    } else if(tempLeaveDay < d.startDate){
+                        tempLeaveDay = d.startDate;
+                    }
+                    leaves++;
+                } else if (d.status === "pending"){
+                    pendingReq++;
+                }
             }
-        }
-    };
 
-    countDays();
+            setNoOfWfhDays(wfhDays);
+            setNoOfPendingReq(pendingReq);
+            setNoOfLeaves(leaves);
+            setWfhDay(tempWfhDay);
+            setLeaveDay(tempLeaveDay);
+        }
+
+        countDays();
+    }, [data]); // Depend on data to re-run when data changes
     
     return (
         <div className='flex justify-center'>
@@ -33,7 +64,10 @@ const Stats = ({loading, data}) => {
                         </div>
                     )} 
                     </div>
-                    <div className="stat-desc mt-1">Next WFH day on 1 Jan 2024</div>
+                    <div className="stat-desc mt-1">
+                        {gotWfh ? (<>Next WFH day on {wfhDay}</>) : (<>No upcoming WFH</>)}
+                        
+                    </div>
                 </div>
 
                 <div className="stat">
@@ -44,7 +78,9 @@ const Stats = ({loading, data}) => {
                         </div>
                     )} 
                     </div>
-                    <div className="stat-desc mt-1">Next leave on 2 Jan 2024</div>
+                    <div className="stat-desc mt-1">
+                        {gotLeave ? (<>Next leave on {leaveDay}</>) : <>No upcoming leaves</>}
+                    </div>
                 </div>
 
                 <div className="stat">
