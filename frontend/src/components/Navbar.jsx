@@ -1,6 +1,9 @@
 import { MdMapsHomeWork } from "react-icons/md";
+import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const Navbar = () => {
+  
   return (
     <>
       <div className="drawer">
@@ -61,11 +64,10 @@ const Navbar = () => {
           <label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label>
           <ul className="menu bg-base-200 min-h-full w-80 p-4">
             {/* Sidebar content here */}
-            <li><strong className="text-3xl mb-5 outline ">Hi Ryan!</strong></li>
-            <hr></hr>
-            <li><a className="active">View Schedule</a></li>
-            <li><a>Manage My Applications</a></li>
-            <li><a>Manage Other's Applications</a></li>
+            <li><strong className="text-3xl mb-5 ">Hi Ryan!</strong></li>
+            <li><Link to="/" className="active">View Schedule</Link></li>
+            <li><Link to="/my">Manage My Applications</Link></li>
+            <li><Link to="/other">Manage Other's Applications</Link></li>
           </ul>
         </div>
       </div>
