@@ -4,16 +4,16 @@ import FilterButtonsSection from "./FilterButtonsSection";
 import DateFilter from "./DateFilter";
 import DepartmentFilter from "./DepartmentFilter";
 
-const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOverall}) => {
+const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOverall, selectedDate, setSelectedDate, selectedDepartment, setSelectedDepartment, teamOrOverall, setTeamOrOverall}) => {
 
-    const today = new Date().toLocaleDateString().split("/");
+    // const today = new Date().toLocaleDateString().split("/");
 
     // states for filter
     const [activeSchedule, setActiveSchedule] = useState("Your Schedule");
     const [yourSchedule, setYourSchedule] = useState(true);
     const [yourTeamSchedule, setYourTeamSchedule] = useState(false);
     const [yourOverallSchedule, setYourOverallSchedule] = useState(false);
-    const [selectedDate, setSelectedDate] = useState(`${today[1]}/${today[0]}/${today[2]}`);
+    // const [selectedDate, setSelectedDate] = useState(`${today[1]}/${today[0]}/${today[2]}`);
 
 
     // Function to reset all states
@@ -52,13 +52,22 @@ const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOver
                 fetchPersonal={fetchPersonal}
                 fetchTeam={fetchTeam}
                 fetchOverall={fetchOverall}
-                setSelectedDate={setSelectedDate}
+                setTeamOrOverall={setTeamOrOverall}
                 />
 
                 <div className="">
-                {yourSchedule ? <></> : <DateFilter setSelectedDate={setSelectedDate}/>}
+                {yourSchedule ? <></> : <DateFilter 
+                setSelectedDate={setSelectedDate}
+                selectedDepartment={selectedDepartment}
+                fetchTeam={fetchTeam} 
+                fetchOverall={fetchOverall}
+                teamOrOverall={teamOrOverall}
+                />}
 
-                {yourOverallSchedule ? <DepartmentFilter /> : <></>}
+                {yourOverallSchedule ? <DepartmentFilter setSelectedDepartment={setSelectedDepartment} selectedDepartment={selectedDepartment} 
+                selectedDate={selectedDate}
+                fetchOverall={fetchOverall} 
+                /> : <></>}
                 </div>
                 
                 

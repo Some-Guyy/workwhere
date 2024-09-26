@@ -1,7 +1,7 @@
 import { DayPicker } from "react-day-picker";
 import { useState } from "react";
 
-const DateFilter = ({setSelectedDate}) => {
+const DateFilter = ({setSelectedDate, selectedDepartment, fetchTeam, fetchOverall, teamOrOverall}) => {
   const [selected, setSelected] = useState(null);
   const today = new Date();
   const [month, setMonth] = useState();
@@ -21,6 +21,15 @@ const DateFilter = ({setSelectedDate}) => {
 
       const formattedDate = `${selectedDate}/${selectedMonth}/${selectedYear}`;
       setSelectedDate(formattedDate); // Pass the formatted date to the parent
+
+      if(teamOrOverall=="team"){
+        console.log("team");
+        // fetchTeam();
+      }else if(teamOrOverall == "overall"){
+        console.log("overall " + selectedDepartment);
+        // fetchOverall();
+      }
+      
     } else {
       setSelectedDate(null); // If no date is selected, set it to null
     }

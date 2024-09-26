@@ -12,7 +12,13 @@ const HomePage = () => {
   const[teamData, setTeamData] = useState(null);
   const[overallData, setOverallData] = useState(null);
 
+  const today = new Date().toLocaleDateString().split("/");
+  const [selectedDate, setSelectedDate] = useState(`${today[1]}/${today[0]}/${today[2]}`);
 
+  const[teamOrOverall, setTeamOrOverall] = useState("null");
+  const [selectedDepartment, setSelectedDepartment] = useState("");
+
+    // initial loading will fetch personal schedule
     useEffect(() => {
       if(!showedData) {
         fetchPersonalData();
@@ -49,7 +55,7 @@ const HomePage = () => {
       
     };
     
-    // function to fetch team schedule
+    // function to fetch team schedule based on a date
     const fetchTeamData = async () => {
       const apiUrl =  "http://localhost:3030/working-arrangements/team/190024"
 
@@ -79,7 +85,7 @@ const HomePage = () => {
           }
     };
 
-    // function to fetch overall schedule
+    // function to fetch overall schedule based on a date and department
     const fetchOverallData = async () => {
       const apiUrl =  "http://localhost:3030/working-arrangements"
       
@@ -114,7 +120,19 @@ const HomePage = () => {
     <div className="w-full">
         <Hero loading={loading} data={personalData}/>
         {/* <Hero loading={loading} data={overallData}/> */}
-        <ViewScheduleSection loading={loading} data={showedData} fetchPersonal={fetchPersonalData} fetchTeam={fetchTeamData} fetchOverall={fetchOverallData}/>
+        <ViewScheduleSection 
+        loading={loading} 
+        data={showedData} 
+        fetchPersonal={fetchPersonalData} 
+        fetchTeam={fetchTeamData} 
+        fetchOverall={fetchOverallData}
+        selectedDate={selectedDate} 
+        setSelectedDate={setSelectedDate} 
+        selectedDepartment={selectedDepartment} 
+        setSelectedDepartment={setSelectedDepartment}
+        teamOrOverall={teamOrOverall}
+        setTeamOrOverall={setTeamOrOverall}
+        />
         
     </div>
   )
