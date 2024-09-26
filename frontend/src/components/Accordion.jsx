@@ -1,6 +1,3 @@
-import ScheduleTable from "./ScheduleTable";
-import Spinner from "../components/Spinner";
-import { useState, useEffect } from 'react';
 import AccordionRow from "./AccordionRow";
 
 const Accordion = ({loading, data, yourSchedule}) => {
@@ -35,8 +32,7 @@ const Accordion = ({loading, data, yourSchedule}) => {
             <>
                 <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData}/>
                 <AccordionRow rowName={"Work From Office Dates"} loading={loading} data={wfhData}/>
-                <AccordionRow rowName={"Leave Dates"} loading={loading} data={leaveData}/>
-                <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingData}/>
+                {/* <AccordionRow rowName={"Leave Dates"} loading={loading} data={leaveData}/> */}
             </>}
         </div>
   )

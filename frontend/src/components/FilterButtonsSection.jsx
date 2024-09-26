@@ -36,14 +36,6 @@ const FilterButtonsSection = ({
 
         <button onClick={ () => {
             resetAllStates(); 
-            setYourDepartmentSchedule(true);
-            setActiveSchedule("Your Department Schedule");
-            }} className ={yourDepartmentSchedule ? "btn btn-outline btn-primary m-2 btn-active" : "btn btn-outline btn-primary m-2"}>
-            Your Department Schedule
-        </button>
-
-        <button onClick={ () => {
-            resetAllStates(); 
             setYourOverallSchedule(true);                        
             setActiveSchedule("Your Overall Schedule");
             fetchOverall();

@@ -16,7 +16,7 @@ const DateFilter = ({setSelectedDate}) => {
     if (date) {
       const selectedDay = date.toLocaleDateString().split("/");
       const selectedDate = parseInt(selectedDay[1]);
-      const selectedMonth = parseInt(selectedDay[0])-1;
+      const selectedMonth = parseInt(selectedDay[0]);
       const selectedYear = parseInt(selectedDay[2]);
 
       const formattedDate = `${selectedDate}/${selectedMonth}/${selectedYear}`;
@@ -28,7 +28,7 @@ const DateFilter = ({setSelectedDate}) => {
 
   return (
     <div className="dropdown flex">
-        <div tabIndex={0} role="button" className="btn m-1 px-40 mx-auto justify-center">Please Select a Date</div>
+        <div tabIndex={0} role="button" className="btn m-1 px-32 mx-auto justify-center">Please Select a Date</div>
             <div
                 tabIndex={0}
                 className="dropdown-content card card-compact bg-primary text-primary-content z-[10] p-2 shadow">
