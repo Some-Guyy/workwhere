@@ -27,11 +27,11 @@ const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOver
     <div className="">
         
         {yourSchedule ? 
-        <div className="font-bold text-4xl mt-10 ml-10 text-center">
+        <div className="font-bold text-4xl mt-10 ml-20 sm:ml-5 text-center">
         {activeSchedule}
         </div>
         :
-        <div className="font-bold text-4xl mt-10 ml-10 text-center">
+        <div className="font-bold text-4xl mt-10 ml-20 sm:ml-5 text-center">
         {activeSchedule} on {selectedDate}
         </div>
 

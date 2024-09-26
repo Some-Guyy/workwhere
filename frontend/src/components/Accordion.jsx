@@ -21,7 +21,7 @@ const Accordion = ({loading, data, yourSchedule}) => {
     filterData();
     
     return (
-        <div>
+        <div className="">
             {yourSchedule ? 
             <>
                 <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData}/>
