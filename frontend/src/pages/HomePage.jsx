@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect} from "react";
 import ViewScheduleSection from "../components/ViewScheduleSection";
 import Hero from "../components/Hero";
 
 
 
 const HomePage = () => {
+
   const [loading, setLoading] = useState(true); 
 
   const[showedData, setShowedData] = useState(null);
@@ -18,6 +19,7 @@ const HomePage = () => {
   const[teamOrOverall, setTeamOrOverall] = useState("null");
   const [selectedDepartment, setSelectedDepartment] = useState("");
 
+  
     // initial loading will fetch personal schedule
     useEffect(() => {
       if(!showedData) {

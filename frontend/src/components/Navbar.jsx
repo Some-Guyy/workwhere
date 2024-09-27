@@ -1,9 +1,16 @@
 import { MdMapsHomeWork } from "react-icons/md";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-
+import { useState,useEffect } from "react";
+import { useLocation } from "react-router-dom";
 const Navbar = () => {
-  
+  const [EmployeeRole,setEmployeeRole] = useState(null)
+  const location = useLocation();
+  useEffect(()=>{
+
+      const data = location.state;
+      console.log(data.role)
+      setEmployeeRole(data.role)
+  },[])
   return (
     <>
       <div className="drawer">
@@ -67,7 +74,9 @@ const Navbar = () => {
             <li><strong className="text-3xl mb-5 ">Hi Ryan!</strong></li>
             <li><Link to="/" className="active">View Schedule</Link></li>
             <li><Link to="/my">Manage My Applications</Link></li>
+            {EmployeeRole == 2? null:
             <li><Link to="/other">Manage Other's Applications</Link></li>
+            }
           </ul>
         </div>
       </div>
