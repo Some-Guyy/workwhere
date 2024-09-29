@@ -6,7 +6,7 @@ const ScheduleTable = ({data}) => {
         no: "S/N",
         staffName: "Staff Name",
         date: "Date",
-        time: "Time",
+        time: "Type",
         approvedBy: "Approved By"
     }
 

@@ -28,8 +28,9 @@ const HomePage = () => {
     }, [showedData]);
 
     // function to fetch personal schedule
-    const fetchPersonalData = async () => {
-      const apiUrl = "http://localhost:3030/working-arrangements/150233";
+    const fetchPersonalData = async (employeeId=150233) => {
+      
+      const apiUrl = `http://localhost:3030/working-arrangements/${employeeId}`;      
       // const apiUrl = "http://localhost:3030/working-arrangements";
       // const apiUrl =  "http://localhost:3030/working-arrangements/team/190024"
 
@@ -43,6 +44,7 @@ const HomePage = () => {
           setPersonalData(data);
           setLoading(false);
           setShowedData(data);
+          // console.log(data)
 
         } catch(error) {
             console.log("Error fetching personal data", error);
@@ -58,8 +60,20 @@ const HomePage = () => {
     };
     
     // function to fetch team schedule based on a date
-    const fetchTeamData = async () => {
-      const apiUrl =  "http://localhost:3030/working-arrangements/team/190024"
+    const fetchTeamData = async (employeeId=190024, chosenDate=null) => {
+
+      if (chosenDate==null){
+        let date = new Date();
+        date = date.toLocaleDateString().split("/");
+        const selectedDate = parseInt(date[1]);
+        const selectedMonth = parseInt(date[0]);
+        const selectedYear = parseInt(date[2]);
+
+        chosenDate = `${selectedYear}-${selectedMonth}-${selectedDate}`;
+        // console.log(chosenDate);
+      }
+
+      const apiUrl =  `http://localhost:3030/working-arrangements/team/${employeeId}/${chosenDate}`;
 
       
           if(!teamData) {
