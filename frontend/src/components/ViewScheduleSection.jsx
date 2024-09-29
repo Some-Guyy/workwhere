@@ -4,7 +4,7 @@ import FilterButtonsSection from "./FilterButtonsSection";
 import DateFilter from "./DateFilter";
 import DepartmentFilter from "./DepartmentFilter";
 
-const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOverall, selectedDate, setSelectedDate, selectedDepartment, setSelectedDepartment, teamOrOverall, setTeamOrOverall}) => {
+const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOverall, selectedDate, setSelectedDate, selectedDepartment, setSelectedDepartment, teamOrOverall, setTeamOrOverall, employeeId}) => {
 
     // const today = new Date().toLocaleDateString().split("/");
 
@@ -62,6 +62,7 @@ const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOver
                 fetchTeam={fetchTeam} 
                 fetchOverall={fetchOverall}
                 teamOrOverall={teamOrOverall}
+                employeeId={employeeId}
                 />}
 
                 {yourOverallSchedule ? <DepartmentFilter setSelectedDepartment={setSelectedDepartment} selectedDepartment={selectedDepartment} 

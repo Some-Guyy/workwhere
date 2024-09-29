@@ -19,6 +19,7 @@ const HomePage = () => {
   const[teamOrOverall, setTeamOrOverall] = useState("null");
   const [selectedDepartment, setSelectedDepartment] = useState("");
 
+  const loginEmployeeId = 190024;
   
     // initial loading will fetch personal schedule
     useEffect(() => {
@@ -30,9 +31,9 @@ const HomePage = () => {
     // function to fetch personal schedule
     const fetchPersonalData = async (employeeId=150233) => {
       
-      const apiUrl = `http://localhost:3030/working-arrangements/${employeeId}`;      
-      // const apiUrl = "http://localhost:3030/working-arrangements";
-      // const apiUrl =  "http://localhost:3030/working-arrangements/team/190024"
+      const apiUrl = `http://localhost:3000/working-arrangements/${employeeId}`;      
+      // const apiUrl = "http://localhost:3000/working-arrangements";
+      // const apiUrl =  "http://localhost:3000/working-arrangements/team/190024"
 
       if(!personalData) {
 
@@ -60,7 +61,7 @@ const HomePage = () => {
     };
     
     // function to fetch team schedule based on a date
-    const fetchTeamData = async (employeeId=190024, chosenDate=null) => {
+    const fetchTeamData = async (employeeId=loginEmployeeId, chosenDate=null) => {
 
       if (chosenDate==null){
         let date = new Date();
@@ -73,9 +74,10 @@ const HomePage = () => {
         // console.log(chosenDate);
       }
 
-      const apiUrl =  `http://localhost:3030/working-arrangements/team/${employeeId}/${chosenDate}`;
+      const apiUrl = `http://localhost:3000/working-arrangements/team/${employeeId}/${chosenDate}`;
 
-      
+      console.log(`Fetching for ${employeeId} ${chosenDate}`);
+
           if(!teamData) {
 
             setLoading(true);
@@ -103,7 +105,7 @@ const HomePage = () => {
 
     // function to fetch overall schedule based on a date and department
     const fetchOverallData = async () => {
-      const apiUrl =  "http://localhost:3030/working-arrangements"
+      const apiUrl =  "http://localhost:3000/working-arrangements"
       
           if(!overallData) {
 
@@ -148,6 +150,7 @@ const HomePage = () => {
         setSelectedDepartment={setSelectedDepartment}
         teamOrOverall={teamOrOverall}
         setTeamOrOverall={setTeamOrOverall}
+        employeeId={loginEmployeeId}
         />
         
     </div>

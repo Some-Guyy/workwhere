@@ -160,7 +160,7 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
     }
 })
 
-const PORT = 3030; 
+const PORT = 3000; 
 app.listen(PORT, () => { 
     console.log(`Server is running on http://localhost:${PORT}`) 
 }); 
