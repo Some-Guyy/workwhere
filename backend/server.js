@@ -22,7 +22,7 @@ app.use(cors())
 */
 
 //batch fetching
-const fetchWorkingArrangementsInBatches = async (ids) => {
+const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate) => {
     const workingArrangements = [];
     const batchSize = 30; // Firestore limit for 'in' operator
 
@@ -30,6 +30,8 @@ const fetchWorkingArrangementsInBatches = async (ids) => {
       const batch = ids.slice(i, i + batchSize)
       const snapshot = await db.collection('work_arrangement')
         .where('staff_ID', 'in', batch)
+        .where("startDate", "<=", startDate)
+        .where("endDate", ">=", endDate)
         .get()
 
       snapshot.forEach((doc) => {
@@ -67,7 +69,9 @@ app.get("/working-arrangements/:employeeId", async (req, res) => {
 //get all employee working arrangements
 app.get("/working-arrangements/", async (req, res) => {
     try {
-        const snapshot = await db.collection('work_arrangement').get()
+
+        const snapshot = await db.collection('work_arrangement')
+        .get()
 
         const workingArrangements = []
         snapshot.forEach((doc) => {
@@ -82,10 +86,43 @@ app.get("/working-arrangements/", async (req, res) => {
     }
 })
 
-//get all team members working arrangements
-app.get("/working-arrangements/team/:employeeId", async (req, res) => {
+//get all employee working arrangements, specified date
+app.get("/working-arrangements/:date", async (req, res) => {
     try {
-        const { employeeId } = req.params
+        const { date } = req.query
+        const targetDate = new Date(date)
+        const endOfDay = new Date(targetDate)
+
+        targetDate.setHours(0, 0, 0, 0)
+        endOfDay.setHours(23, 59, 59, 999)
+
+        const snapshot = await db.collection('work_arrangement')
+        .where("startDate", "<=", endOfDay)
+        .where("endDate", ">=", targetDate)
+        .get()
+
+        const workingArrangements = []
+        snapshot.forEach((doc) => {
+            workingArrangements.push(doc.data())
+        })
+
+        res.json(workingArrangements)
+
+    } catch (err) {
+        console.error("Error fetching data", err)
+        res.status(500).json({error: "Internal server error"})
+    }
+})
+
+//get all team members working arrangements, specified date
+app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
+    try {
+        const { employeeId, date } = req.params
+        const targetDate = new Date(date)
+        const endOfDay = new Date(targetDate)
+
+        targetDate.setHours(0, 0, 0, 0)
+        endOfDay.setHours(23, 59, 59, 999)
 
         const employeeSnapshot = await db.collection('employee')
         .where('Staff_ID', '==', employeeId)
@@ -111,9 +148,9 @@ app.get("/working-arrangements/team/:employeeId", async (req, res) => {
         const teamMemberIds = teamSnapshot.docs.map((doc) => doc.data().Staff_ID);
 
         //since firebase limit is 30 to use "in", have to do batch fetching
-        const workingArrangements = await fetchWorkingArrangementsInBatches(teamMemberIds);
+        const workingArrangements = await fetchWorkingArrangementsInBatches(teamMemberIds, endOfDay, targetDate)
 
-        // Step 6: Return the list of working arrangements for the team members
+        // Return the list of working arrangements for the team members
         res.json(workingArrangements);
 
 
