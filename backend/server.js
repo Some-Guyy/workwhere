@@ -65,7 +65,7 @@ app.get("/working-arrangements/:employeeId", async (req, res) => {
 })
 
 //get all employee working arrangements based on department and specified date
-app.get("/working-arrangements/:department/:date", async (req, res) => {
+app.get("/working-arrangements/department/:department/:date", async (req, res) => {
     try {
         const { department, date } = req.params
 
@@ -97,7 +97,40 @@ app.get("/working-arrangements/:department/:date", async (req, res) => {
     }
 })
 
-//get all team members working arrangements, specified date
+//get team in charge working arrangements based on specified date
+app.get("/working-arrangements/manager/:managerId/:date", async (req, res) => {
+    try {
+        const { managerId, date } = req.params
+
+        const targetDate = new Date(date)
+        const endOfDay = new Date(targetDate)
+
+        targetDate.setHours(0, 0, 0, 0)
+        endOfDay.setHours(23, 59, 59, 999)
+
+        // find employees you're in charge of
+        const snapshot = await db.collection("employee")
+        .where("Reporting_Manager", "==", managerId)
+        .get()
+
+        // create list based on these employees
+        const inChargeOf = []
+        snapshot.forEach((doc) => {
+            inChargeOf.push(doc.data().Staff_ID)
+        })
+
+        // fetch working arrangements based on these department mates
+        const workingArrangements = await fetchWorkingArrangementsInBatches(inChargeOf, endOfDay, targetDate)
+
+        res.json(workingArrangements)
+
+    } catch (err) {
+        console.error("Error fetching data", err)
+        res.status(500).json({error: "Internal server error"})
+    }
+})
+
+//get all team members working arrangement based on specified date
 app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
     try {
         const { employeeId, date } = req.params
