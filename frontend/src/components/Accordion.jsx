@@ -31,7 +31,7 @@ const Accordion = ({loading, data, yourSchedule}) => {
              : 
             <>
                 <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData}/>
-                <AccordionRow rowName={"Work From Office Dates"} loading={loading} data={wfhData}/>
+                <AccordionRow rowName={"Work From Office Dates"} loading={loading} data={pendingData}/>
                 {/* <AccordionRow rowName={"Leave Dates"} loading={loading} data={leaveData}/> */}
             </>}
         </div>

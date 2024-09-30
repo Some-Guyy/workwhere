@@ -4,7 +4,7 @@ import FilterButtonsSection from "./FilterButtonsSection";
 import DateFilter from "./DateFilter";
 import DepartmentFilter from "./DepartmentFilter";
 
-const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOverall, selectedDate, setSelectedDate, selectedDepartment, setSelectedDepartment, teamOrOverall, setTeamOrOverall, employeeId}) => {
+const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOverall, selectedDate, setSelectedDate, selectedDepartment, setSelectedDepartment, teamOrOverall, setTeamOrOverall, employeeId, setTeamCacheData, setOverallCacheData}) => {
 
     // const today = new Date().toLocaleDateString().split("/");
 
@@ -13,8 +13,7 @@ const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOver
     const [yourSchedule, setYourSchedule] = useState(true);
     const [yourTeamSchedule, setYourTeamSchedule] = useState(false);
     const [yourOverallSchedule, setYourOverallSchedule] = useState(false);
-    // const [selectedDate, setSelectedDate] = useState(`${today[1]}/${today[0]}/${today[2]}`);
-
+    
 
     // Function to reset all states
     const resetAllStates = () => {
@@ -63,11 +62,15 @@ const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOver
                 fetchOverall={fetchOverall}
                 teamOrOverall={teamOrOverall}
                 employeeId={employeeId}
+                setTeamCacheData={setTeamCacheData}
+                setOverallCacheData={setOverallCacheData}
                 />}
 
-                {yourOverallSchedule ? <DepartmentFilter setSelectedDepartment={setSelectedDepartment} selectedDepartment={selectedDepartment} 
+                {yourOverallSchedule ? <DepartmentFilter setSelectedDepartment={setSelectedDepartment} 
+                selectedDepartment={selectedDepartment} 
                 selectedDate={selectedDate}
-                fetchOverall={fetchOverall} 
+                fetchOverall={fetchOverall}
+                setOverallCacheData={setOverallCacheData} 
                 /> : <></>}
                 </div>
                 

@@ -1,7 +1,7 @@
 import { DayPicker } from "react-day-picker";
-import { useState } from "react";
+import { useState, useEffect  } from "react";
 
-const DateFilter = ({setSelectedDate, selectedDepartment, employeeId, fetchTeam, fetchOverall, teamOrOverall}) => {
+const DateFilter = ({setSelectedDate, selectedDepartment, employeeId, fetchTeam, fetchOverall, teamOrOverall, setTeamCacheData, setOverallCacheData}) => {
   const [selected, setSelected] = useState(null);
   const today = new Date();
   const [month, setMonth] = useState();
@@ -10,6 +10,8 @@ const DateFilter = ({setSelectedDate, selectedDepartment, employeeId, fetchTeam,
   const currentMonth = parseInt(today.toLocaleDateString().split("/")[0])-1;
   const currentYear = parseInt(today.toLocaleDateString().split("/")[2]);
 
+  // Separate state to track when team data is being fetched
+  const [fetchTriggered, setFetchTriggered] = useState(false);
 
   const handleSelect = (date) => {
     setSelected(date); // Update the selected date state
@@ -24,19 +26,45 @@ const DateFilter = ({setSelectedDate, selectedDepartment, employeeId, fetchTeam,
 
       setSelectedDate(formattedDateForView);
 
-      //If team fetch team, if overall fetch overall
+      // If team fetch team but set teamCache to null, if overall fetch overall
       if(teamOrOverall=="team"){
         // console.log("team");
-        fetchTeam(employeeId, formattedDate);
+        setTeamCacheData(null);
+        setFetchTriggered(true);
       }else if(teamOrOverall == "overall"){
-        console.log("overall " + selectedDepartment);
-        // fetchOverall();
+        // console.log("overall " + selectedDepartment);
+        setOverallCacheData(null);
+        setFetchTriggered(true);
       }
       
     } else {
       setSelectedDate(null); // If no date is selected, set it to null
     }
   };
+
+  // Effect to fetch data after team cache is reset. Basically need to check if the cache is reset before you fetch team.
+  useEffect(() => {
+    if (fetchTriggered && teamOrOverall === "team" && selected) {
+      const selectedDay = selected.toLocaleDateString().split("/");
+      const selectedDate = parseInt(selectedDay[1]);
+      const selectedMonth = parseInt(selectedDay[0]);
+      const selectedYear = parseInt(selectedDay[2]);
+      const formattedDate = `${selectedYear}-${selectedMonth}-${selectedDate}`;
+
+      fetchTeam(employeeId, formattedDate); // Fetch team data only after the cache is reset
+      setFetchTriggered(false); // Reset trigger
+    }else if (fetchTriggered && teamOrOverall === "overall" && selected){
+      const selectedDay = selected.toLocaleDateString().split("/");
+      const selectedDate = parseInt(selectedDay[1]);
+      const selectedMonth = parseInt(selectedDay[0]);
+      const selectedYear = parseInt(selectedDay[2]);
+      const formattedDate = `${selectedYear}-${selectedMonth}-${selectedDate}`;
+
+      fetchOverall(selectedDepartment, formattedDate); // Fetch overall data only after the cache is reset
+      setFetchTriggered(false); // Reset trigger
+    }
+  }, [fetchTriggered, selected, teamOrOverall, fetchTeam, employeeId]);
+
 
   return (
     <div className="dropdown flex">

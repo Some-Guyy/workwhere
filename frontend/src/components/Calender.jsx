@@ -20,6 +20,21 @@ const Calender = ({data}) => {
     const [leaveDays, setLeaveDays] = useState([]);
     const [pendingDays, setPendingDays] = useState([]);
 
+    // convert seconds to date
+    const convert_to_date_for_calander = (seconds) => {
+      const milliseconds = seconds * 1000;
+
+      // Create a new Date object with the milliseconds
+      const date = new Date(milliseconds);
+
+      // Extract the day, month, and year
+      const day = date.getDate();
+      const month = date.getMonth() + 1; // getMonth() is zero-based
+      const year = date.getFullYear();
+
+      return new Date(year, month, date)
+    };
+
     useEffect(() => {
       async function countDays() {
         const tempWfhDays = [];
@@ -27,12 +42,11 @@ const Calender = ({data}) => {
         const tempPendingDays = [];
 
         for (const d of data) {
-            let startDate = d.startDate.split("/");
-            let month = parseInt(startDate[1]);
-            let date = parseInt(startDate[0]); 
-            let year = parseInt(startDate[2]);
+            let seconds = d.startDate._seconds;
 
-            let newDate = new Date(year, month - 1, date);
+            
+
+            let newDate = convert_to_date_for_calander(seconds);
 
             if (d.status === "approved") {
                     tempWfhDays.push(newDate);

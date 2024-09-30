@@ -1,25 +1,30 @@
 import { useState, useEffect} from "react";
 import ViewScheduleSection from "../components/ViewScheduleSection";
+import { useLocation } from "react-router-dom";
 import Hero from "../components/Hero";
 
-
+// Note that everytime we change the filter for date or department, we refetch from backend
+// the caches are for between the filter buttons
 
 const HomePage = () => {
 
   const [loading, setLoading] = useState(true); 
 
-  const[showedData, setShowedData] = useState(null);
-  const[personalData, setPersonalData] = useState(null);
-  const[teamData, setTeamData] = useState(null);
-  const[overallData, setOverallData] = useState(null);
+  const[showedData, setShowedData] = useState(null); // data to be passed to the yourScheduleComponent
+  const[personalData, setPersonalData] = useState(null); // cache between button filters for personal schedule
+  const[teamData, setTeamData] = useState(null); // cache between button filters for team schedule
+  const[overallData, setOverallData] = useState(null); // cache between button filters for overall schedule
 
-  const today = new Date().toLocaleDateString().split("/");
-  const [selectedDate, setSelectedDate] = useState(`${today[1]}/${today[0]}/${today[2]}`);
+  const today = new Date().toLocaleDateString().split("/"); // todays date
+  const [selectedDate, setSelectedDate] = useState(`${today[1]}/${today[0]}/${today[2]}`); // state for the selected date
 
-  const[teamOrOverall, setTeamOrOverall] = useState("null");
-  const [selectedDepartment, setSelectedDepartment] = useState("");
+  const loginEmployeeId = 151408; // to be changed based on logins initial fetch for users employee id
+  const location = useLocation();
+  const loginRole = location.state.role;
+  const[teamOrOverall, setTeamOrOverall] = useState(loginRole);
+  const [selectedDepartment, setSelectedDepartment] = useState("Solutioning"); // to be changed based on logins initial fetch for users department
 
-  const loginEmployeeId = 190024;
+
   
     // initial loading will fetch personal schedule
     useEffect(() => {
@@ -28,12 +33,27 @@ const HomePage = () => {
       }
     }, [showedData]);
 
+    // any changes to the selected date causes a refetch of the team data
+    // useEffect(() => {
+    //   const selectedDay = selectedDate.split("/");
+    //   const selectedDateFetchTeamData = selectedDay[1];
+    //   const selectedMonthFetchTeamData = selectedDay[0];
+    //   const selectedYearFetchTeamData = selectedDay[2];
+
+    //   const formattedDate = `${selectedYearFetchTeamData}-${selectedDateFetchTeamData}-${selectedMonthFetchTeamData}`;
+
+    //   if(loginRole==2){
+    //     setTeamData(null);
+    //     fetchTeamData(loginEmployeeId, formattedDate);
+    //   }
+      
+      
+    // }, [selectedDate]);
+
     // function to fetch personal schedule
     const fetchPersonalData = async (employeeId=150233) => {
       
       const apiUrl = `http://localhost:3000/working-arrangements/${employeeId}`;      
-      // const apiUrl = "http://localhost:3000/working-arrangements";
-      // const apiUrl =  "http://localhost:3000/working-arrangements/team/190024"
 
       if(!personalData) {
 
@@ -64,19 +84,18 @@ const HomePage = () => {
     const fetchTeamData = async (employeeId=loginEmployeeId, chosenDate=null) => {
 
       if (chosenDate==null){
-        let date = new Date();
-        date = date.toLocaleDateString().split("/");
-        const selectedDate = parseInt(date[1]);
-        const selectedMonth = parseInt(date[0]);
-        const selectedYear = parseInt(date[2]);
+        const selectedDt = today[1];
+        const selectedMonth = today[0];
+        const selectedYear = today[2];
 
-        chosenDate = `${selectedYear}-${selectedMonth}-${selectedDate}`;
+        chosenDate = `${selectedYear}-${selectedMonth}-${selectedDt}`;
         // console.log(chosenDate);
       }
 
-      const apiUrl = `http://localhost:3000/working-arrangements/team/${employeeId}/${chosenDate}`;
+      const apiUrl = `http://localhost:3000/working-arrangements/manager/${employeeId}/${chosenDate}`;
 
-      console.log(`Fetching for ${employeeId} ${chosenDate}`);
+      // console.log(`Fetching for ${employeeId} ${chosenDate}`);
+      // console.log(teamData);
 
           if(!teamData) {
 
@@ -89,7 +108,7 @@ const HomePage = () => {
               setTeamData(data);
               setLoading(false);
               setShowedData(data);
-    
+              // console.log(data)
     
             } catch(error) {
                 console.log("Error fetching team data", error);
@@ -99,37 +118,52 @@ const HomePage = () => {
             }
 
           }else{
+            // console.log("Using cached team data")
             setShowedData(teamData);
           }
     };
 
     // function to fetch overall schedule based on a date and department
-    const fetchOverallData = async () => {
-      const apiUrl =  "http://localhost:3000/working-arrangements"
+    const fetchOverallData = async (department=selectedDepartment, chosenDate=null) => {
+     
+      if (chosenDate==null){
+        const selectedDt = today[1];
+        const selectedMonth = today[0];
+        const selectedYear = today[2];
+
+        chosenDate = `${selectedYear}-${selectedMonth}-${selectedDt}`;
+        // console.log(chosenDate);
+      }
+
+      const apiUrl =  `http://localhost:3000/working-arrangements/department/${department}/${chosenDate}`;
+
+      console.log(`Fetching for ${department} ${chosenDate}`);
       
-          if(!overallData) {
+      if(!overallData) {
 
-            setLoading(true);
+        setLoading(true);
 
-            try{
-              const res = await fetch(apiUrl);
-              const data = await res.json();
-            
-              setOverallData(data);
-              setLoading(false);
-              setShowedData(data);
-    
-    
-            } catch(error) {
-                console.log("Error fetching overall data", error);
-      
-            } finally {
-                console.log("We fetched the overall data");
-            }
+        try{
+          const res = await fetch(apiUrl);
+          const data = await res.json();
+          console.log(data)
+        
+          setOverallData(data);
+          setLoading(false);
+          setShowedData(data);
 
-          }else{
-            setShowedData(overallData);
-          }
+
+        } catch(error) {
+            console.log("Error fetching overall data", error);
+  
+        } finally {
+            console.log("We fetched the overall data");
+        }
+
+      }else{
+        // console.log("We used cached overall data");
+        setShowedData(overallData);
+      }
     };
 
   
@@ -151,6 +185,8 @@ const HomePage = () => {
         teamOrOverall={teamOrOverall}
         setTeamOrOverall={setTeamOrOverall}
         employeeId={loginEmployeeId}
+        setTeamCacheData={setTeamData}
+        setOverallCacheData={setOverallData}
         />
         
     </div>
