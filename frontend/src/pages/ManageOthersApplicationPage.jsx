@@ -11,11 +11,11 @@ const ManageOthersApplicationPage = () => {
     const loginEmployeeId = 151408; // to be changed based on logins initial fetch for users employee id
 
     const today = new Date().toLocaleDateString().split("/"); // todays date
-    // const [selectedDate, setSelectedDate] = useState(null); // state for the selected date
-    const [selectedDate, setSelectedDate] = useState(`${today[1]}/${today[0]}/${today[2]}`);
-    const [dateTriggered, setDateTriggered] = useState(false);
+    
+    const [selectedDate, setSelectedDate] = useState(`${today[1]}/${today[0]}/${today[2]}`); // state for the selected date
+    const [dateTriggered, setDateTriggered] = useState(false); // date trigger
 
-    const [userRole, setUserRole] = useState(null);
+    const [userRole, setUserRole] = useState(null); // users role
 
     // Fetch the role from localStorage when the component mounts
     useEffect(() => {
@@ -28,12 +28,12 @@ const ManageOthersApplicationPage = () => {
     
     // initial loading will fetch team in charge of schedule
     useEffect(() => {
-        if(!teamInChargeOfData) {
+        if(!teamInChargeOfData && userRole) {
           fetchTeamInChargeOf(loginEmployeeId, `${today[2]}-${today[0]}-${today[1]}`);
         }
-      }, []);
+      }, [userRole]);
 
-    // changes in date
+    // changes in date sets cache to null
     useEffect(() => {
       if(userRole==1){
         setTeamInChargeOfData(null);

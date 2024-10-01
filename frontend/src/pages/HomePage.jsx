@@ -16,16 +16,14 @@ const HomePage = () => {
 
     const today = new Date().toLocaleDateString().split("/"); // todays date
     const [selectedDate, setSelectedDate] = useState(`${today[1]}/${today[0]}/${today[2]}`);
-    const [originalDate, setOriginalDate] = useState(`${today[1]}/${today[0]}/${today[2]}`);
 
 
     const loginEmployeeId = 151408; // to be changed based on logins initial fetch for users employee id
     const [teamOrOverall, setTeamOrOverall] = useState(null);
     const [selectedDepartment, setSelectedDepartment] = useState("Solutioning"); // to be changed based on logins initial fetch for users department
-    const [userRole, setUserRole] = useState(null);
-    // Separate state to track when team data is being fetched
-    const [dateTriggered, setDateTriggered] = useState(false);
-    const [departmentTriggered, setDepartmentTriggered] = useState(false);
+    const [dateTriggered, setDateTriggered] = useState(false); // Separate state to track when date is being fetched
+    const [departmentTriggered, setDepartmentTriggered] = useState(false); // Separate state to track when department is being fetched
+    const [userRole, setUserRole] = useState(null); // used to hold employee's role
 
     // Fetch the role from localStorage when the component mounts
     useEffect(() => {
@@ -39,12 +37,12 @@ const HomePage = () => {
     
     // initial loading will fetch personal schedule
     useEffect(() => {
-      if(!showedData) {
+      if(!showedData && userRole) {
         fetchPersonalData();
       }
-    }, [showedData]);
+    }, [userRole]);
     
-    // changes in date
+    // changes in date sets team cache to null
     useEffect(() => {
       if(userRole ==2 || userRole ==3){
         setTeamData(null);
@@ -55,7 +53,7 @@ const HomePage = () => {
       }
     }, [selectedDate]);
 
-    // changes in department
+    // changes in department sets department cache to null
     useEffect(() => {
       if(userRole==1){
         setOverallData(null);
@@ -102,7 +100,7 @@ const HomePage = () => {
     }, [dateTriggered]);
 
 
-    // temp data
+    // temp data for testing
     const deta = [{
       startDate: {
         _seconds: 1727326858
@@ -129,7 +127,7 @@ const HomePage = () => {
           setPersonalData(data);
           setLoading(false);
           setShowedData(data);
-          // console.log(data)
+          console.log(data)
 
         } catch(error) {
             console.log("Error fetching personal data", error);
@@ -247,13 +245,7 @@ const HomePage = () => {
         setSelectedDate={setSelectedDate} 
         selectedDepartment={selectedDepartment} 
         setSelectedDepartment={setSelectedDepartment}
-        teamOrOverall={teamOrOverall}
         setTeamOrOverall={setTeamOrOverall}
-        employeeId={loginEmployeeId}
-        setTeamCacheData={setTeamData}
-        setOverallCacheData={setOverallData}
-        originalDate={originalDate}
-        setOriginalDate={setOriginalDate}
         />
         
     </div>
