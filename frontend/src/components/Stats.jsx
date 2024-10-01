@@ -13,6 +13,21 @@ const Stats = ({loading, data}) => {
 
     // console.log(data);
 
+    const convert_to_date = (seconds) => {
+        const milliseconds = seconds * 1000;
+    
+        // Create a new Date object with the milliseconds
+        const date = new Date(milliseconds);
+    
+        // Extract the day, month, and year
+        const day = date.getDate();
+        const month = date.getMonth() + 1; // getMonth() is zero-based
+        const year = date.getFullYear();
+    
+        return `${day}/${month}/${year}`;
+    };
+    
+
     useEffect(() => {
         async function countDays() {
             let wfhDays = 0;
@@ -24,18 +39,18 @@ const Stats = ({loading, data}) => {
             for (const d of data) {
                 if(d.status === "approved"){
                     if(tempWfhDay == null){
-                        tempWfhDay = d.startDate;
+                        tempWfhDay = convert_to_date(d.startDate._seconds);
                         setGotWfh(true);
-                    } else if(tempWfhDay < d.startDate){
-                        tempWfhDay = d.startDate;
+                    } else if(tempWfhDay < convert_to_date(d.startDate._seconds)){
+                        tempWfhDay = convert_to_date(d.startDate._seconds);
                     }
                     wfhDays++;
                 } else if (d.status === "leave"){
                     if(tempLeaveDay == null){
-                        tempLeaveDay = d.startDate;
+                        tempLeaveDay = convert_to_date(d.startDate._seconds);
                         setGotLeave(true);
-                    } else if(tempLeaveDay < d.startDate){
-                        tempLeaveDay = d.startDate;
+                    } else if(tempLeaveDay < convert_to_date(d.startDate._seconds)){
+                        tempLeaveDay = convert_to_date(d.startDate._seconds);
                     }
                     leaves++;
                 } else if (d.status === "pending"){

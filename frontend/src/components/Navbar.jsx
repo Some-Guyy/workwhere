@@ -1,16 +1,23 @@
 import { MdMapsHomeWork } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState,useEffect } from "react";
-import { useLocation } from "react-router-dom";
+
 const Navbar = () => {
   const [EmployeeRole,setEmployeeRole] = useState(null)
-  const location = useLocation();
+  
+  // extract users role to conditionally render links
   useEffect(()=>{
-
-      const data = location.state;
-      console.log(data.role)
+      const data = JSON.parse(localStorage.getItem('state'));
       setEmployeeRole(data.role)
   },[])
+
+  // logout logic which clears local storage when logged out
+  const navigate = useNavigate();
+  const logout = () => {
+    localStorage.clear();
+    navigate("/login");
+  }
+
   return (
     <>
       <div className="drawer">
@@ -69,15 +76,20 @@ const Navbar = () => {
         </div>
         <div className="drawer-side z-10">
           <label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label>
-          <ul className="menu bg-base-200 min-h-full w-80 p-4">
-            {/* Sidebar content here */}
-            <li><strong className="text-3xl mb-5 ">Hi Ryan!</strong></li>
-            <li><Link to="/" className="active">View Schedule</Link></li>
-            <li><Link to="/my">Manage My Applications</Link></li>
-            {EmployeeRole == 2? null:
-            <li><Link to="/other">Manage Other's Applications</Link></li>
-            }
-          </ul>
+          <div className="flex flex-col min-h-full w-80 bg-base-200 p-4">
+            <ul className="menu flex-grow">
+              {/* Sidebar content here */}
+              <li><strong className="text-3xl mb-5 ">Hi Ryan!</strong></li>
+              <li><Link to="/" className="active">View Schedule</Link></li>
+              <li><Link to="/my">Manage My Applications</Link></li>
+              {EmployeeRole == 2? null:
+              <li><Link to="/other">Manage Other's Applications</Link></li>
+              }
+              {/* <button className="btn btn-primary">Logout</button> */}
+            </ul>
+
+            <button className="btn btn-primary" onClick={logout}>Logout</button>
+          </div>
         </div>
       </div>
     

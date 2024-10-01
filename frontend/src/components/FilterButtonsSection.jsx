@@ -17,12 +17,12 @@ const FilterButtonsSection = ({
 }) => {
 
     const [EmployeeRole,setEmployeeRole] = useState(null)
-    const location = useLocation();
     useEffect(()=>{
-
-        const data = location.state;
-        console.log(data.role)
-        setEmployeeRole(data.role)
+        const storedRole = JSON.parse(localStorage.getItem('state')).role;
+        if (storedRole) {
+            setEmployeeRole(storedRole);
+        }
+        
     },[])
 
   return (

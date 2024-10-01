@@ -4,7 +4,7 @@ import FilterButtonsSection from "./FilterButtonsSection";
 import DateFilter from "./DateFilter";
 import DepartmentFilter from "./DepartmentFilter";
 
-const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOverall, selectedDate, setSelectedDate, selectedDepartment, setSelectedDepartment, teamOrOverall, setTeamOrOverall, employeeId, setTeamCacheData, setOverallCacheData}) => {
+const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOverall, selectedDate, setSelectedDate, selectedDepartment, setSelectedDepartment, teamOrOverall, setTeamOrOverall, employeeId, setTeamCacheData, setOverallCacheData,setOriginalDate,originalDate}) => {
 
     // const today = new Date().toLocaleDateString().split("/");
 
@@ -31,7 +31,9 @@ const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOver
         </div>
         :
         <div className="font-bold text-4xl mt-10 ml-20 sm:ml-5 text-center">
+        {/* {activeSchedule} on {originalDate} */}
         {activeSchedule} on {selectedDate}
+
         </div>
 
         }
@@ -55,23 +57,19 @@ const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOver
                 />
 
                 <div className="">
-                {yourSchedule ? <></> : <DateFilter 
+                {yourSchedule ? <></> 
+                : 
+                <DateFilter 
                 setSelectedDate={setSelectedDate}
-                selectedDepartment={selectedDepartment}
-                fetchTeam={fetchTeam} 
-                fetchOverall={fetchOverall}
-                teamOrOverall={teamOrOverall}
-                employeeId={employeeId}
-                setTeamCacheData={setTeamCacheData}
-                setOverallCacheData={setOverallCacheData}
                 />}
 
-                {yourOverallSchedule ? <DepartmentFilter setSelectedDepartment={setSelectedDepartment} 
+                {yourOverallSchedule ? 
+                <DepartmentFilter 
+                setSelectedDepartment={setSelectedDepartment} 
                 selectedDepartment={selectedDepartment} 
-                selectedDate={selectedDate}
-                fetchOverall={fetchOverall}
-                setOverallCacheData={setOverallCacheData} 
-                /> : <></>}
+                /> 
+                : 
+                <></>}
                 </div>
                 
                 

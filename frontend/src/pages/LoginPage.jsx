@@ -12,12 +12,14 @@ const LoginPage = () => {
 
 
     useEffect(()=>{
-        if(EmployeeInfo)
-        navigate('../',{state:EmployeeInfo})
-    },[EmployeeInfo])
+        if(EmployeeInfo != null){
+            console.log(EmployeeInfo)
+            localStorage.setItem('state', JSON.stringify(EmployeeInfo));
+            navigate('../')
+        }},[EmployeeInfo])
 
     const fetchEmployeeinfo = async () => {
-        const apiUrl =  "http://localhost:3030/working-arrangements/team/190024"
+        const apiUrl =  "http://localhost:3000/working-arrangements/team/190024"
 {
             setEmployeeInfo(EmployeeId);
             console.log(EmployeeInfo)

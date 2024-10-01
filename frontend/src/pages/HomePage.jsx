@@ -1,6 +1,5 @@
 import { useState, useEffect} from "react";
 import ViewScheduleSection from "../components/ViewScheduleSection";
-import { useLocation } from "react-router-dom";
 import Hero from "../components/Hero";
 
 // Note that everytime we change the filter for date or department, we refetch from backend
@@ -8,47 +7,111 @@ import Hero from "../components/Hero";
 
 const HomePage = () => {
 
-  const [loading, setLoading] = useState(true); 
+    const [loading, setLoading] = useState(true); // used to show loading sign
 
-  const[showedData, setShowedData] = useState(null); // data to be passed to the yourScheduleComponent
-  const[personalData, setPersonalData] = useState(null); // cache between button filters for personal schedule
-  const[teamData, setTeamData] = useState(null); // cache between button filters for team schedule
-  const[overallData, setOverallData] = useState(null); // cache between button filters for overall schedule
+    const[showedData, setShowedData] = useState(null); // data to be passed to the yourScheduleComponent
+    const[personalData, setPersonalData] = useState(null); // cache between button filters for personal schedule
+    const[teamData, setTeamData] = useState(null); // cache between button filters for team schedule
+    const[overallData, setOverallData] = useState(null); // cache between button filters for overall schedule
 
-  const today = new Date().toLocaleDateString().split("/"); // todays date
-  const [selectedDate, setSelectedDate] = useState(`${today[1]}/${today[0]}/${today[2]}`); // state for the selected date
-
-  const loginEmployeeId = 151408; // to be changed based on logins initial fetch for users employee id
-  const location = useLocation();
-  const loginRole = location.state.role;
-  const[teamOrOverall, setTeamOrOverall] = useState(loginRole);
-  const [selectedDepartment, setSelectedDepartment] = useState("Solutioning"); // to be changed based on logins initial fetch for users department
+    const today = new Date().toLocaleDateString().split("/"); // todays date
+    const [selectedDate, setSelectedDate] = useState(`${today[1]}/${today[0]}/${today[2]}`);
+    const [originalDate, setOriginalDate] = useState(`${today[1]}/${today[0]}/${today[2]}`);
 
 
-  
+    const loginEmployeeId = 151408; // to be changed based on logins initial fetch for users employee id
+    const [teamOrOverall, setTeamOrOverall] = useState(null);
+    const [selectedDepartment, setSelectedDepartment] = useState("Solutioning"); // to be changed based on logins initial fetch for users department
+    const [userRole, setUserRole] = useState(null);
+    // Separate state to track when team data is being fetched
+    const [dateTriggered, setDateTriggered] = useState(false);
+    const [departmentTriggered, setDepartmentTriggered] = useState(false);
+
+    // Fetch the role from localStorage when the component mounts
+    useEffect(() => {
+      const localStoreaged = localStorage.getItem('state');
+      const storedRole = JSON.parse(localStoreaged).role;
+      if (storedRole) {
+        setTeamOrOverall(storedRole);
+        setUserRole(storedRole);
+      }
+    }, []);
+    
     // initial loading will fetch personal schedule
     useEffect(() => {
       if(!showedData) {
         fetchPersonalData();
       }
     }, [showedData]);
+    
+    // changes in date
+    useEffect(() => {
+      if(userRole ==2 || userRole ==3){
+        setTeamData(null);
+        setDateTriggered(true);
+      }else if(userRole==1){
+        setOverallData(null);
+        setDateTriggered(true);
+      }
+    }, [selectedDate]);
 
-    // any changes to the selected date causes a refetch of the team data
-    // useEffect(() => {
-    //   const selectedDay = selectedDate.split("/");
-    //   const selectedDateFetchTeamData = selectedDay[1];
-    //   const selectedMonthFetchTeamData = selectedDay[0];
-    //   const selectedYearFetchTeamData = selectedDay[2];
+    // changes in department
+    useEffect(() => {
+      if(userRole==1){
+        setOverallData(null);
+        setDepartmentTriggered(true);
+      }
+    }, [selectedDepartment]);
 
-    //   const formattedDate = `${selectedYearFetchTeamData}-${selectedDateFetchTeamData}-${selectedMonthFetchTeamData}`;
+    // run when changes in dept
+    useEffect(() => {
+      if (departmentTriggered && userRole == 1) {
+        const selectedDay = selectedDate.split("/");
+        const selectedDateFetchTeamData = selectedDay[1];
+        const selectedMonthFetchTeamData = selectedDay[0];
+        const selectedYearFetchTeamData = selectedDay[2];
+  
+        const formattedDate = `${selectedYearFetchTeamData}-${selectedDateFetchTeamData}-${selectedMonthFetchTeamData}`;
+  
+        fetchOverallData(selectedDepartment, formattedDate); // Fetch team data only after the cache is reset
+        setDepartmentTriggered(false); // Reset trigger
+      }
+    }, [departmentTriggered]);
 
-    //   if(loginRole==2){
-    //     setTeamData(null);
-    //     fetchTeamData(loginEmployeeId, formattedDate);
-    //   }
-      
-      
-    // }, [selectedDate]);
+    // run when changes in date
+    useEffect(() => {
+      if (dateTriggered && (userRole == 2 || userRole == 3)) {
+        const selectedDay = selectedDate.split("/");
+        const selectedDateFetchTeamData = selectedDay[1];
+        const selectedMonthFetchTeamData = selectedDay[0];
+        const selectedYearFetchTeamData = selectedDay[2];
+
+        const formattedDate = `${selectedYearFetchTeamData}-${selectedDateFetchTeamData}-${selectedMonthFetchTeamData}`;
+        fetchTeamData(loginEmployeeId, formattedDate);
+        setDateTriggered(false); // Reset trigger
+      }else if (dateTriggered && userRole == 1){
+        const selectedDay = selectedDate.split("/");
+        const selectedDateFetchTeamData = selectedDay[1];
+        const selectedMonthFetchTeamData = selectedDay[0];
+        const selectedYearFetchTeamData = selectedDay[2];
+
+        const formattedDate = `${selectedYearFetchTeamData}-${selectedDateFetchTeamData}-${selectedMonthFetchTeamData}`;
+        fetchOverallData(selectedDepartment, formattedDate);
+        setDateTriggered(false); // Reset trigger
+      }
+    }, [dateTriggered]);
+
+
+    // temp data
+    const deta = [{
+      startDate: {
+        _seconds: 1727326858
+      },
+      status: "approved",
+      time: "AM",
+      Approved_FName: "Ryan",
+      Approved_LName: "Ng"
+    }] 
 
     // function to fetch personal schedule
     const fetchPersonalData = async (employeeId=150233) => {
@@ -60,8 +123,9 @@ const HomePage = () => {
         setLoading(true);
 
         try{
-          const res = await fetch(apiUrl);
-          const data = await res.json();
+          // const res = await fetch(apiUrl);
+          // const data = await res.json();
+          const data = deta
           setPersonalData(data);
           setLoading(false);
           setShowedData(data);
@@ -94,21 +158,21 @@ const HomePage = () => {
 
       const apiUrl = `http://localhost:3000/working-arrangements/manager/${employeeId}/${chosenDate}`;
 
-      // console.log(`Fetching for ${employeeId} ${chosenDate}`);
+      console.log(`Fetching for ${employeeId} ${chosenDate}`);
       // console.log(teamData);
 
           if(!teamData) {
-
+            // console.log("no team data")
             setLoading(true);
 
             try{
-              const res = await fetch(apiUrl);
-              const data = await res.json();
-            
+              // const res = await fetch(apiUrl);
+              // const data = await res.json();
+              const data = deta
               setTeamData(data);
               setLoading(false);
               setShowedData(data);
-              // console.log(data)
+              console.log(data)
     
             } catch(error) {
                 console.log("Error fetching team data", error);
@@ -144,8 +208,9 @@ const HomePage = () => {
         setLoading(true);
 
         try{
-          const res = await fetch(apiUrl);
-          const data = await res.json();
+          // const res = await fetch(apiUrl);
+          // const data = await res.json();
+          const data = deta;
           console.log(data)
         
           setOverallData(data);
@@ -187,6 +252,8 @@ const HomePage = () => {
         employeeId={loginEmployeeId}
         setTeamCacheData={setTeamData}
         setOverallCacheData={setOverallData}
+        originalDate={originalDate}
+        setOriginalDate={setOriginalDate}
         />
         
     </div>

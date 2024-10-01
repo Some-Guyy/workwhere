@@ -26,13 +26,13 @@ const Calender = ({data}) => {
 
       // Create a new Date object with the milliseconds
       const date = new Date(milliseconds);
-
+      
       // Extract the day, month, and year
-      const day = date.getDate();
-      const month = date.getMonth() + 1; // getMonth() is zero-based
-      const year = date.getFullYear();
-
-      return new Date(year, month, date)
+      // const day = date.getDate();
+      // const month = date.getMonth() + 1; // getMonth() is zero-based
+      // const year = date.getFullYear();
+      return date;
+      // return new Date(year, month, date)
     };
 
     useEffect(() => {
@@ -47,7 +47,7 @@ const Calender = ({data}) => {
             
 
             let newDate = convert_to_date_for_calander(seconds);
-
+            
             if (d.status === "approved") {
                     tempWfhDays.push(newDate);
                 } else if (d.status === "leave") {
