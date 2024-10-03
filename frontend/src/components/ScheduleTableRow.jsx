@@ -1,4 +1,4 @@
-const ScheduleTableRow = ({details, index}) => {
+const ScheduleTableRow = ({details, index, activeSchedule, isWFODate, isPending}) => {
   
   // convert seconds to date
   const convert_to_date = (seconds) => {
@@ -12,18 +12,89 @@ const ScheduleTableRow = ({details, index}) => {
     const month = date.getMonth() + 1; // getMonth() is zero-based
     const year = date.getFullYear();
 
-    return `${day}-${month}-${year}`;
+    return `${day}/${month}/${year}`;
   };
+
+  // console.log(details)
+  // console.log(activeSchedule)
 
   return (
     <>
+    {activeSchedule == "Your Schedule" ?
+      <>
         <tr className="hover">
             <th>{index+1}</th>
             <td>{convert_to_date(details.startDate._seconds)}</td>
             <td>{details.time}</td>
-            <td>{details.Approved_FName} {details.Approved_LName}</td>
+            <td>{details.Approved_Fname} {details.Approved_Lname}</td>
         </tr>
+      </>
+      : activeSchedule == "Your Team Schedule" && isWFODate == true? 
+      <>
+        <tr className="hover">
+            <th>{index+1}</th>
+            <td>{details.Staff_FName} {details.Staff_LName}</td>
+        </tr>
+      </>
+      : activeSchedule == "Your Team Schedule" ? 
+      <>
+        <tr className="hover">
+            <th>{index+1}</th>
+            <td>{details.Staff_FName} {details.Staff_LName}</td>
+            <td>{convert_to_date(details.startDate._seconds)}</td>
+            <td>{details.time}</td>
+            <td>{details.Approved_Fname} {details.Approved_Lname}</td>
+        </tr>
+      </>
+      : activeSchedule == "Your Overall Schedule" && isWFODate == true? 
+      <>
+        <tr className="hover">
+            <th>{index+1}</th>
+            <td>{details.Staff_FName} {details.Staff_LName}</td>
+        </tr>
+      </>
+      : activeSchedule == "Your Overall Schedule" ? 
+      <>
+        <tr className="hover">
+            <th>{index+1}</th>
+            <td>{details.Staff_FName} {details.Staff_LName}</td>
+            <td>{convert_to_date(details.startDate._seconds)}</td>
+            <td>{details.time}</td>
+            <td>{details.Approved_Fname} {details.Approved_Lname}</td>
+        </tr>
+      </>
+      : activeSchedule == "Your team in charge of" && isWFODate == true? 
+      <>
+        <tr className="hover">
+            <th>{index+1}</th>
+            <td>{details.Staff_FName} {details.Staff_LName}</td>
+        </tr>
+      </>
+      : activeSchedule == "Your team in charge of" && isPending == true? 
+      <>
+        <tr className="hover">
+            <th>{index+1}</th>
+            <td>{details.Staff_FName} {details.Staff_LName}</td>
+            <td>{convert_to_date(details.startDate._seconds)}</td>
+            <td>{details.time}</td>
+            <td>{details.Approved_Fname} {details.Approved_Lname}</td>
+            <td>Button to do actions</td>
+        </tr>
+      </>
+      : activeSchedule == "Your team in charge of" ? 
+      <>
+        <tr className="hover">
+            <th>{index+1}</th>
+            <td>{details.Staff_FName} {details.Staff_LName}</td>
+            <td>{convert_to_date(details.startDate._seconds)}</td>
+            <td>{details.time}</td>
+            <td>{details.Approved_Fname} {details.Approved_Lname}</td>
+        </tr>
+      </>
+      : "A"
+    }
     </>
+    
   )
 }
 

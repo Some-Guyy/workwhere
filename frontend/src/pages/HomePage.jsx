@@ -18,9 +18,9 @@ const HomePage = () => {
     const [selectedDate, setSelectedDate] = useState(`${today[1]}/${today[0]}/${today[2]}`);
 
 
-    const loginEmployeeId = 151408; // to be changed based on logins initial fetch for users employee id
+    const loginEmployeeId = 190019; // to be changed based on logins initial fetch for users employee id
     const [teamOrOverall, setTeamOrOverall] = useState(null);
-    const [selectedDepartment, setSelectedDepartment] = useState("Solutioning"); // to be changed based on logins initial fetch for users department
+    const [selectedDepartment, setSelectedDepartment] = useState("Sales"); // to be changed based on logins initial fetch for users department
     const [dateTriggered, setDateTriggered] = useState(false); // Separate state to track when date is being fetched
     const [departmentTriggered, setDepartmentTriggered] = useState(false); // Separate state to track when department is being fetched
     const [userRole, setUserRole] = useState(null); // used to hold employee's role
@@ -120,7 +120,7 @@ const HomePage = () => {
     }] 
 
     // function to fetch personal schedule
-    const fetchPersonalData = async (employeeId=150233) => {
+    const fetchPersonalData = async (employeeId=190019) => {
       
       const apiUrl = `http://localhost:3000/working-arrangements/${employeeId}`;      
 
@@ -129,9 +129,9 @@ const HomePage = () => {
         setLoading(true);
 
         try{
-          // const res = await fetch(apiUrl);
-          // const data = await res.json();
-          const data = deta
+          const res = await fetch(apiUrl);
+          const data = await res.json();
+          // const data = deta
           setPersonalData(data);
           setLoading(false);
           setShowedData(data);
@@ -162,7 +162,7 @@ const HomePage = () => {
         // console.log(chosenDate);
       }
 
-      const apiUrl = `http://localhost:3000/working-arrangements/manager/${employeeId}/${chosenDate}`;
+      const apiUrl = `http://localhost:3000/working-arrangements/team/${employeeId}/${chosenDate}`;
 
       console.log(`Fetching for ${employeeId} ${chosenDate}`);
       // console.log(teamData);
@@ -172,9 +172,9 @@ const HomePage = () => {
             setLoading(true);
 
             try{
-              // const res = await fetch(apiUrl);
-              // const data = await res.json();
-              const data = deta
+              const res = await fetch(apiUrl);
+              const data = await res.json();
+              // const data = deta
               setTeamData(data);
               setLoading(false);
               setShowedData(data);
@@ -214,9 +214,9 @@ const HomePage = () => {
         setLoading(true);
 
         try{
-          // const res = await fetch(apiUrl);
-          // const data = await res.json();
-          const data = deta;
+          const res = await fetch(apiUrl);
+          const data = await res.json();
+          // const data = deta;
           console.log(data)
         
           setOverallData(data);

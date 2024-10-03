@@ -71,7 +71,7 @@ const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOver
                 </div>
                 
                 
-                <Accordion loading={loading} data={data} yourSchedule={yourSchedule}/>
+                <Accordion loading={loading} data={data} yourSchedule={yourSchedule} activeSchedule={activeSchedule}/>
             </div>
 
             <div className="basis-1/5 "></div>

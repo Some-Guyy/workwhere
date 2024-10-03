@@ -8,7 +8,7 @@ const ManageOthersApplicationPage = () => {
     const [loading, setLoading] = useState(true);
     const [showedData, setShowedData] = useState(null);
 
-    const loginEmployeeId = 151408; // to be changed based on logins initial fetch for users employee id
+    const loginEmployeeId = 150008; // to be changed based on logins initial fetch for users employee id
 
     const today = new Date().toLocaleDateString().split("/"); // todays date
     
@@ -35,7 +35,7 @@ const ManageOthersApplicationPage = () => {
 
     // changes in date sets cache to null
     useEffect(() => {
-      if(userRole==1){
+      if(userRole==1 || userRole == 3){
         setTeamInChargeOfData(null);
         setDateTriggered(true);
       }
@@ -83,10 +83,10 @@ const ManageOthersApplicationPage = () => {
           setLoading(true);
   
           try{
-            // const res = await fetch(apiUrl);
-            // const data = await res.json();
+            const res = await fetch(apiUrl);
+            const data = await res.json();
             console.log(`fetching for ${employeeId} on ${chosenDate} for team in charge of`)
-            const data = deta
+            // const data = deta
             setTeamInChargeOfData(data);
             setLoading(false);
             setShowedData(data);
