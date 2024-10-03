@@ -109,6 +109,14 @@ const HomePage = () => {
       time: "AM",
       Approved_FName: "Ryan",
       Approved_LName: "Ng"
+    }, {
+      startDate: {
+        _seconds: 1727326858
+      },
+      status: "pending",
+      time: "AM",
+      Approved_FName: "Ryan",
+      Approved_LName: "Ng"
     }] 
 
     // function to fetch personal schedule
