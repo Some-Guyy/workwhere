@@ -1,6 +1,6 @@
 import AccordionRow from "./AccordionRow";
 
-const Accordion = ({loading, data, yourSchedule, activeSchedule}) => {
+const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnApplication}) => {
     const wfhData = [];
     const pendingData = [];
     const leaveData = [];
@@ -79,9 +79,9 @@ const Accordion = ({loading, data, yourSchedule, activeSchedule}) => {
         <div className="">
             {yourSchedule ? 
             <>
-                <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData} activeSchedule={activeSchedule} isWFODate={false}/>
-                <AccordionRow rowName={"Leave Dates"} loading={loading} data={leaveData} activeSchedule={activeSchedule} isWFODate={false}/>
-                <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingData} activeSchedule={activeSchedule} isWFODate={false}/>
+                <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData} activeSchedule={activeSchedule} isWFODate={false} isManageOwnApplication={isManageOwnApplication}/>
+                <AccordionRow rowName={"Leave Dates"} loading={loading} data={leaveData} activeSchedule={activeSchedule} isWFODate={false} isManageOwnApplication={isManageOwnApplication}/>
+                <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingData} activeSchedule={activeSchedule} isWFODate={false} isManageOwnApplication={isManageOwnApplication}/>
             </>
              : 
             <>

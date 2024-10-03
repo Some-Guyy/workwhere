@@ -1,7 +1,7 @@
 import ScheduleTableRow from "./ScheduleTableRow"
 import ScheduleTableHeader from "./ScheduleTableHeader"
 
-const ScheduleTable = ({data, activeSchedule, isWFODate, isPending}) => {
+const ScheduleTable = ({data, activeSchedule, isWFODate, isPending, isManageOwnApplication}) => {
     
 
     // console.log(data)
@@ -18,11 +18,11 @@ const ScheduleTable = ({data, activeSchedule, isWFODate, isPending}) => {
             <div className=" m-4 overflow-x-auto">
                 <table className="table table-pin-rows overflow-x-auto">
                     <thead>
-                        <ScheduleTableHeader activeSchedule={activeSchedule} isWFODate={isWFODate}/>
+                        <ScheduleTableHeader activeSchedule={activeSchedule} isWFODate={isWFODate} />
                     </thead>
                     <tbody>
                         {data.map((d, index) => (
-                            <ScheduleTableRow key={index} details={d} index={index} activeSchedule={activeSchedule} isWFODate={isWFODate} isPending={isPending}></ScheduleTableRow>
+                            <ScheduleTableRow key={index} details={d} index={index} activeSchedule={activeSchedule} isWFODate={isWFODate} isPending={isPending} isManageOwnApplication={isManageOwnApplication}></ScheduleTableRow>
                         ))}
                     </tbody>
                 </table>

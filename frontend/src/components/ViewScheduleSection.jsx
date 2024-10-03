@@ -4,7 +4,7 @@ import FilterButtonsSection from "./FilterButtonsSection";
 import DateFilter from "./DateFilter";
 import DepartmentFilter from "./DepartmentFilter";
 
-const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOverall, selectedDate, setSelectedDate, selectedDepartment, setSelectedDepartment, setTeamOrOverall}) => {
+const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOverall, selectedDate, setSelectedDate, selectedDepartment, setSelectedDepartment, setTeamOrOverall, isManageOwnApplication}) => {
 
     // states for filter
     const [activeSchedule, setActiveSchedule] = useState("Your Schedule");
@@ -71,7 +71,7 @@ const ViewScheduleSection = ({loading, data, fetchPersonal, fetchTeam, fetchOver
                 </div>
                 
                 
-                <Accordion loading={loading} data={data} yourSchedule={yourSchedule} activeSchedule={activeSchedule}/>
+                <Accordion loading={loading} data={data} yourSchedule={yourSchedule} activeSchedule={activeSchedule} isManageOwnApplication={isManageOwnApplication}/>
             </div>
 
             <div className="basis-1/5 "></div>

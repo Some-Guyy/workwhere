@@ -99,6 +99,10 @@ const HomePage = () => {
       }
     }, [dateTriggered]);
 
+    // local storage for persons personal schedule
+    useEffect(()=>{
+      localStorage.setItem('personalSchedule', JSON.stringify(personalData));
+    },[personalData])
 
     // temp data for testing
     const deta = [{

@@ -1,5 +1,7 @@
-const ScheduleTableRow = ({details, index, activeSchedule, isWFODate, isPending}) => {
-  
+import ModalWithdraw from "./ModalWithdraw";
+
+
+const ScheduleTableRow = ({details, index, activeSchedule, isWFODate, isPending, isManageOwnApplication}) => {
   // convert seconds to date
   const convert_to_date = (seconds) => {
     const milliseconds = seconds * 1000;
@@ -20,7 +22,17 @@ const ScheduleTableRow = ({details, index, activeSchedule, isWFODate, isPending}
 
   return (
     <>
-    {activeSchedule == "Your Schedule" ?
+    {activeSchedule == "Your Schedule" && isManageOwnApplication == true?
+      <>
+        <tr className="hover">
+            <th>{index+1}</th>
+            <td>{convert_to_date(details.startDate._seconds)}</td>
+            <td>{details.time}</td>
+            <td>{details.Approved_Fname} {details.Approved_Lname}</td>
+            <td><ModalWithdraw /></td>
+        </tr>
+      </>
+      : activeSchedule == "Your Schedule"? 
       <>
         <tr className="hover">
             <th>{index+1}</th>
