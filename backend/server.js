@@ -1,6 +1,6 @@
 // firebase db setup
 const admin = require("firebase-admin")
-var serviceAccount = require("./workwhere_firebase_env.json");
+var serviceAccount = require("./workwhere_firebase_env.json")
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "workwhere-2b031"
@@ -28,8 +28,8 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate) => {
 
     for (let i = 0; i < ids.length; i += batchSize) {
       const batch = ids.slice(i, i + batchSize)
-      const snapshot = await db.collection('work_arrangement')
-        .where('staff_ID', 'in', batch)
+      const snapshot = await db.collection('mock_working_arrangements')
+        .where('Staff_ID', 'in', batch)
         .where("startDate", "<=", startDate)
         .where("endDate", ">=", endDate)
         .get()
@@ -43,11 +43,11 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate) => {
 }
 
 //get specific employee for working arrangements (personal work schedule)
-app.get("/working-arrangements/:employeeId", async (req, res) => {
+app.get("/working-arrangements/:employeeid", async (req, res) => {
     try {
-        const { employeeId } = req.params
-        const snapshot = await db.collection('work_arrangement')
-        .where('staff_ID', '==', employeeId)
+        const { employeeid } = req.params
+        const snapshot = await db.collection('mock_working_arrangements')
+        .where('Staff_ID', '==', employeeid)
         .get()
 
         if (snapshot.empty) {
@@ -78,20 +78,22 @@ app.get("/working-arrangements/department/:department/:date", async (req, res) =
         endOfDay.setHours(23, 59, 59, 999)
 
         // find department teammates
-        const snapshot = await db.collection("employee")
+        const snapshot = await db.collection("mock_employee")
         .where("Dept", "==", department)
         .get()
 
         // create list based on these teammates
-        const sameDepartment = []
+        const sameDepartmentID = []
+        const sameDepart = []
         snapshot.forEach((doc) => {
-            sameDepartment.push(doc.data().Staff_ID)
+            sameDepartmentID.push(doc.data().Staff_ID)
+            sameDepart.push(doc.data())
         })
 
         // fetch working arrangements based on these department mates
-        const workingArrangements = await fetchWorkingArrangementsInBatches(sameDepartment, endOfDay, targetDate)
+        const workingArrangements = await fetchWorkingArrangementsInBatches(sameDepartmentID, endOfDay, targetDate)
 
-        res.json(workingArrangements)
+        res.json({workingArrangements, sameDepart})
 
     } catch (err) {
         console.error("Error fetching data", err)
@@ -111,20 +113,22 @@ app.get("/working-arrangements/manager/:managerId/:date", async (req, res) => {
         endOfDay.setHours(23, 59, 59, 999)
 
         // find employees you're in charge of
-        const snapshot = await db.collection("employee")
+        const snapshot = await db.collection("mock_employee")
         .where("Reporting_Manager", "==", managerId)
         .get()
 
         // create list based on these employees
         const inChargeOf = []
+        const inChargeOfID = []
         snapshot.forEach((doc) => {
-            inChargeOf.push(doc.data().Staff_ID)
+            inChargeOfID.push(doc.data().Staff_ID)
+            inChargeOf.push(doc.data())
         })
 
         // fetch working arrangements based on these department mates
-        const workingArrangements = await fetchWorkingArrangementsInBatches(inChargeOf, endOfDay, targetDate)
+        const workingArrangements = await fetchWorkingArrangementsInBatches(inChargeOfID, endOfDay, targetDate)
 
-        res.json(workingArrangements)
+        res.json({inChargeOf, workingArrangements})
 
     } catch (err) {
         console.error("Error fetching data", err)
@@ -142,7 +146,7 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
         targetDate.setHours(0, 0, 0, 0)
         endOfDay.setHours(23, 59, 59, 999)
 
-        const employeeSnapshot = await db.collection('employee')
+        const employeeSnapshot = await db.collection('mock_employee')
         .where('Staff_ID', '==', employeeId)
         .limit(1)
         .get()
@@ -155,21 +159,26 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
 
         // reporting manager info
         const employeeData = employeeSnapshot.docs[0].data()
-        const reportingManager = employeeData.Reporting_Manager
+        const position = employeeData.Position
 
         // then call db again to find those same reporting managers
-        const teamSnapshot = await db.collection('employee')
-        .where('Reporting_Manager', '==', reportingManager)
+        const teamSnapshot = await db.collection('mock_employee')
+        .where('Position', '==', position)
         .get()
 
         // get list of team members id
-        const teamMemberIds = teamSnapshot.docs.map((doc) => doc.data().Staff_ID)
+        const teamMemberIds = []
+        const teamMembers = []
+        teamSnapshot.forEach((doc) => {
+            teamMemberIds.push(doc.data().Staff_ID)
+            teamMembers.push(doc.data())
+        })
 
         //since firebase limit is 30 to use "in", have to do batch fetching
         const workingArrangements = await fetchWorkingArrangementsInBatches(teamMemberIds, endOfDay, targetDate)
 
         // Return the list of working arrangements for the team members
-        res.json(workingArrangements)
+        res.json({teamMembers, workingArrangements})
 
 
     } catch (err) {
@@ -178,7 +187,15 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
     }
 })
 
-const PORT = 3000; 
+app.get("/login")
+
+// catch rogue calls
+app.all("*", (req, res) => {
+    console.log("Unhandled route:", req.path)
+    res.status(404).send("Route not found")
+}) 
+
+const PORT = 3000 
 app.listen(PORT, () => { 
     console.log(`Server is running on http://localhost:${PORT}`) 
-}); 
+}) 
