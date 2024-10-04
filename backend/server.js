@@ -11,7 +11,7 @@ const express = require('express');
 const cors = require('cors')
 const app = express()
 //need to use this to ionclude body parser functionality
-// app.use(express.json())
+app.use(express.json())
 app.use(cors())
 
 
@@ -102,7 +102,6 @@ app.get("/working-arrangements/department/:department/:date", async (req, res) =
             sameDepartmentID.push(doc.data().Staff_ID)
             sameDepart.push(doc.data())
         })
-
         // fetch working arrangements based on these department mates
         const workingArrangements = await fetchWorkingArrangementsInBatches(sameDepartmentID, endOfDay, targetDate)
 

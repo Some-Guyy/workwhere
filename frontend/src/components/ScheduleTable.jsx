@@ -8,7 +8,6 @@ const ScheduleTable = ({data, headCount, activeSchedule, isWFODate, isPending, i
         const dataLength = data.length
 
         const ShowNext = ()=>{
-            console.log('hello')
             if (First + 10 < dataLength){
                 setFirst(First+10)
             }
@@ -20,7 +19,6 @@ const ScheduleTable = ({data, headCount, activeSchedule, isWFODate, isPending, i
             }
         }
         const ShowPrevious = () =>{
-            console.log('hello')
             if (First - 10 >= 0){
                 setFirst(First-10)
             }

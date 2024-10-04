@@ -28,8 +28,8 @@ const LoginPage = () => {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        emailAddress: Email,
-                        password: Password
+                        "emailAddress": Email,
+                        "password": Password
                     })
                 });
                 const data = await res.json();
@@ -51,8 +51,8 @@ const LoginPage = () => {
 
     const submitForm = (e)=>{
         e.preventDefault()
-        // fetchEmployeeinfo()
-        setEmployeeInfo({role:Email});     
+        fetchEmployeeinfo()
+        // setEmployeeInfo({role:Email});     
 
     }   
 

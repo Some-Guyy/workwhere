@@ -210,7 +210,6 @@ const HomePage = () => {
         const selectedYear = today[2];
 
         chosenDate = `${selectedYear}-${selectedMonth}-${selectedDt}`;
-        // console.log(chosenDate);
       }
 
       const apiUrl =  `http://localhost:3000/working-arrangements/department/${department}/${chosenDate}`;
