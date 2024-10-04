@@ -42,6 +42,19 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate) => {
     return workingArrangements
 }
 
+//get all dates between start and end
+function getDatesBetween(startDate, endDate) {
+    const dates = []
+    let currentDate = new Date(startDate)
+
+    while (currentDate <= new Date(endDate)) {
+        dates.push(new Date(currentDate))
+        currentDate.setDate(currentDate.getDate() + 1)
+    }
+
+    return dates
+}
+
 //get specific employee for working arrangements (personal work schedule)
 app.get("/working-arrangements/:employeeid", async (req, res) => {
     try {
@@ -187,7 +200,108 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
     }
 })
 
-app.get("/login")
+// login ( ** NOT TESTED ***)
+app.post('/login', async (req, res) => {
+    const { emailAddress, password } = req.body
+
+    try {
+        // find user from user db
+        const snapshot = await db.collection('mock_employee')
+            .where('Email', '==', emailAddress)
+            .limit(1)
+            .get()
+
+        // if emaill address is wrong || compare password, if wrong return error message
+        if (snapshot.empty) {
+            return res.status(401).json({ message: 'Invalid email address or password' })
+        }
+
+        let staffDetails = ""
+        snapshot.forEach(doc => {
+            staffDetails = doc.data()
+            console.log(staffDetails)
+            if (staffDetails.password !== password) {
+                return res.status(401).json({ message: 'Invalid email address or password' })
+            }
+        });
+
+        // return the data back
+        res.json({
+            message: 'Login successful',
+            user: {
+                staff_id: staffDetails.Staff_ID,
+                staff_fname: staffDetails.Staff_FName,
+                staff_lname: staffDetails.Staff_LName,
+                dept: staffDetails.Dept,
+                position: staffDetails.Position,
+                role: staffDetails.Role,
+                reporting_manager: staffDetails.Reporting_Manager
+            },
+        });
+
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+//create new working arrangement (*** NOT TESTED ***)
+app.post('/working-arrangements', async (req, res) => {
+    try {
+        const { staff_id, startDate, endDate, time, reason } = req.body;
+
+        // get staff name from db
+        const employeeSnapshot = await firestore.collection('mock_employee')
+            .where('staff_id', '==', staff_id)
+            .get();
+
+        if (employeeSnapshot.empty) {
+            return res.status(404).json({ error: 'Employee not found' });
+        }
+
+        let staffDetails = ""
+        employeeSnapshot.forEach(doc => {
+            staffDetails = doc.data()
+        })
+
+        // unpack into variable
+        const { staff_fname, staff_lname } = staffDetails
+
+        // get the dates between startdate and enddate
+        const dates = getDatesBetween(startDate, endDate);
+
+        // create a working arrangement for each date
+        const batch = firestore.batch();
+
+        dates.forEach(date => {
+            const newDocRef = firestore.collection('working_arrangements').doc()
+            batch.set(newDocRef, {
+                Staff_ID: staff_id,
+                Staff_FName: staff_fname,
+                Staff_LName: staff_lname,
+                time,
+                reason,
+                startDate: Timestamp.fromDate(date),
+                endDate: Timestamp.fromDate(date), 
+                requestCreated: Timestamp.now(),
+                status: 'pending',
+                approvedBy: '', 
+                Approved_Fname: '', 
+                Approved_Lname: ''
+            });
+        });
+
+        // commit operation to create all documents
+        await batch.commit()
+
+        res.json({ message: 'Request created successfully' });
+
+    } catch (error) {
+        console.error('Error creating your request', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 
 // catch rogue calls
 app.all("*", (req, res) => {
