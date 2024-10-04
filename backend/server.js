@@ -204,37 +204,23 @@ app.post('/login', async (req, res) => {
 
     try {
         // find user from user db
-        const userSnapshot = await db.collection('users')
-            .where('email_address', '==', emailAddress)
+        const snapshot = await db.collection('mock_employee')
+            .where('Email', '==', emailAddress)
+            .limit(1)
             .get()
 
-        if (userSnapshot.empty) {
-            return res.status(401).json({ error: 'Invalid username or password' })
-        }
-
-        let userData = ""
-        userSnapshot.forEach(doc => {
-            userData = doc.data()
-        });
-
-        // compare password, if wrong return error message
-        if (password !== userData.password) {
-            return res.status(401).json({ error: 'Invalid username or password' });
-        }
-
-        // get staff details from employee db
-        const employeeSnapshot = await db.collection('mock_employee')
-            .where('Staff_ID', '==', userData.staff_id)
-            .get();
-
-        // if something mess up lul
-        if (employeeSnapshot.empty) {
-            return res.status(404).json({ error: 'Staff details not found' });
+        // if emaill address is wrong || compare password, if wrong return error message
+        if (snapshot.empty) {
+            return res.status(401).json({ message: 'Invalid email address or password' })
         }
 
         let staffDetails = ""
-        employeeSnapshot.forEach(doc => {
-            staffDetails = doc.data();
+        snapshot.forEach(doc => {
+            staffDetails = doc.data()
+            console.log(staffDetails)
+            if (staffDetails.password !== password) {
+                return res.status(401).json({ message: 'Invalid email address or password' })
+            }
         });
 
         // return the data back
@@ -246,7 +232,8 @@ app.post('/login', async (req, res) => {
                 staff_lname: staffDetails.Staff_LName,
                 dept: staffDetails.Dept,
                 position: staffDetails.Position,
-                reporting_manager: staffDetails.Reporting_Manager,
+                role: staffDetails.Role,
+                reporting_manager: staffDetails.Reporting_Manager
             },
         });
 
