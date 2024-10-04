@@ -1,8 +1,37 @@
 import ScheduleTableRow from "./ScheduleTableRow"
 import ScheduleTableHeader from "./ScheduleTableHeader"
+import {useState,useEffect} from "react"
 
-const ScheduleTable = ({data, activeSchedule, isWFODate, isPending, isManageOwnApplication}) => {
-    
+const ScheduleTable = ({data, headCount, activeSchedule, isWFODate, isPending, isManageOwnApplication}) => {
+    const [First, setFirst] = useState(0); 
+    const [Second, setSecond] = useState(10); 
+        const dataLength = data.length
+
+        const ShowNext = ()=>{
+            console.log('hello')
+            if (First + 10 < dataLength){
+                setFirst(First+10)
+            }
+            if (Second + 10 < dataLength){
+                setSecond(Second + 10)
+            }
+            else{
+                setSecond(dataLength)
+            }
+        }
+        const ShowPrevious = () =>{
+            console.log('hello')
+            if (First - 10 >= 0){
+                setFirst(First-10)
+            }
+            if (Second%10 == 0 && Second >= 20){
+                setSecond(Second - 10)
+            }
+            else if (Second%10 != 0){
+                setSecond(Second - (Second%10))
+            }
+        }
+        
 
     // console.log(data)
   return (
@@ -16,16 +45,34 @@ const ScheduleTable = ({data, activeSchedule, isWFODate, isPending, isManageOwnA
 
         <div className="flex justify-center w-11/12">
             <div className=" m-4 overflow-x-auto">
+             {activeSchedule != 'Your Schedule'?   
+            <span className="font-semibold text-lg text-black-500">HeadCount: {dataLength}/{headCount}</span>
+             :null}
                 <table className="table table-pin-rows overflow-x-auto">
                     <thead>
                         <ScheduleTableHeader activeSchedule={activeSchedule} isWFODate={isWFODate} />
                     </thead>
                     <tbody>
-                        {data.map((d, index) => (
-                            <ScheduleTableRow key={index} details={d} index={index} activeSchedule={activeSchedule} isWFODate={isWFODate} isPending={isPending} isManageOwnApplication={isManageOwnApplication}></ScheduleTableRow>
+                        {data.slice(First,Second).map((d, index) => (
+                            <ScheduleTableRow key={index} details={d} index={index+First} activeSchedule={activeSchedule} isWFODate={isWFODate} isPending={isPending} isManageOwnApplication={isManageOwnApplication}></ScheduleTableRow>
                         ))}
                     </tbody>
                 </table>
+            {data.length > 10?
+            <div className="flex justify-between w-full mt-4 mb-4">
+                {/* Left-aligned button */}
+                {First > 0 ?
+                <button onClick={ShowPrevious} className="btn btn-sm">Previous</button>
+                :null}
+                {/* Right-aligned button */}
+                {Second < data.length?
+                <div className="flex justify-end w-full">
+                    <button onClick={ShowNext} className="btn btn-sm">Next</button>
+                </div>
+                :null
+                }   
+            </div>
+            :null}
             </div>
         </div>
     )}

@@ -1,7 +1,7 @@
 import { useState, useEffect} from "react";
 import ViewScheduleSection from "../components/ViewScheduleSection";
 import Hero from "../components/Hero";
-
+import { useNavigate } from 'react-router-dom'
 // Note that everytime we change the filter for date or department, we refetch from backend
 // the caches are for between the filter buttons
 
@@ -32,6 +32,10 @@ const HomePage = () => {
       if (storedRole) {
         setTeamOrOverall(storedRole);
         setUserRole(storedRole);
+      }
+      else{
+        const navigate = useNavigate();
+        navigate("/login")
       }
     }, []);
     
