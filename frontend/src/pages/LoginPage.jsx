@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import LoginGraphic from "../assets/images/LoginGraphic.png" 
 
 const LoginPage = () => {
-    const[EmployeeId,setEmployeeId] = useState('')
+    const[Email,setEmail] = useState('')
     const[Password,setPassword] = useState('')
     const[EmployeeInfo, setEmployeeInfo] = useState(null);
 
@@ -19,37 +19,40 @@ const LoginPage = () => {
         }},[EmployeeInfo])
 
     const fetchEmployeeinfo = async () => {
-        const apiUrl =  "http://localhost:3000/working-arrangements/team/190024"
-{
-            setEmployeeInfo(EmployeeId);
-            console.log(EmployeeInfo)
-              setLoading(true);
+        const apiUrl =  "http://localhost:3000/login"
   
               try{
-                const res = await fetch(apiUrl);
+                const res = await fetch(apiUrl,{
+                    method: 'POST',
+                    headers:{
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "emailAddress": Email,
+                        "password": Password
+                    })
+                });
                 const data = await res.json();
               
-                setEmployeeInfo(data);
-                setLoading(false); 
-      
+                if(data.user){
+                    setEmployeeInfo(data.user);
+                }
+                else{
+                    alert(data.message);
+                }
+
               } catch(error) {
-                  console.log("Error fetching team data", error);
+                  console.log("Error fetching EmployeeInfo", error);
         
               } finally {
                   console.log("We fetched EmployeeInfo");
               }
-  
-            }
       };
 
     const submitForm = (e)=>{
         e.preventDefault()
-        const Employee ={
-            EmployeeId,
-            Password,
-        };
-        setEmployeeInfo({role:EmployeeId});     
-        // EmployeeInfo(Employee);
+        fetchEmployeeinfo()
+        // setEmployeeInfo({role:Email});     
 
     }   
 
@@ -87,15 +90,15 @@ const LoginPage = () => {
                     <form onSubmit={submitForm} className="mt-6">
                         <div className="mb-2">
                             <label
-                                htmlFor="EmployeeId"
+                                htmlFor="Email"
                                 className="block text-sm font-semibold text-gray-800"
                             >
-                                EmployeeId
+                                Email
                             </label>
                             <input
-                                type="EmployeeId"
-                                value={EmployeeId}
-                                onChange={(e)=>setEmployeeId(e.target.value)}
+                                type="mail"
+                                value={Email}
+                                onChange={(e)=>setEmail(e.target.value)}
                                 className="block w-full px-4 py-2 mt-2 text-primary bg-white border rounded-md focus:border-slate-500 focus:ring-slate-300 focus:outline-none focus:ring focus:ring-opacity-40"
                             />
                         </div>
