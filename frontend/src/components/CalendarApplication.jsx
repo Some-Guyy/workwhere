@@ -118,9 +118,9 @@ const CalendarApplication = ({data}) => {
                     <button onClick={resetApplicationDates} className="ml-5 btn btn-outline btn-sm">
                         Reset Selection
                     </button>
-                    <ModalApply selectedDates={selected}/>
+                    <ModalApply selectedDates={selected} wfhDays={wfhDays} />
                 </div>
-
+                
             </div>
 
             <div className="basis-1/5"></div>

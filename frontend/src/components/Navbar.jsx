@@ -85,7 +85,6 @@ const Navbar = () => {
               {EmployeeRole == 2? null:
               <li><Link to="/other">Manage Other's Applications</Link></li>
               }
-              {/* <button className="btn btn-primary">Logout</button> */}
             </ul>
 
             <button className="btn btn-primary" onClick={logout}>Logout</button>
