@@ -264,7 +264,7 @@ app.post('/request', async (req, res) => {
             // Convert the date string to a JavaScript Date object
             const dateValue = new Date(date); 
         
-            const newDocRef = db.collection('test_create').doc();
+            const newDocRef = db.collection('mock_working_arrangements').doc();
             batch.set(newDocRef, {
                 Staff_ID: Staff_ID,
                 Staff_FName: Staff_FName,
@@ -292,7 +292,7 @@ app.post('/request', async (req, res) => {
     }
 });
 
-//delete all 
+//delete all for mock db
 app.delete('/delete-all/', async (req, res) => {
     const collectionRef = db.collection("test_create")
 
