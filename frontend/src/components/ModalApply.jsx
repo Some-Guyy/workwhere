@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
 import { CiWarning } from "react-icons/ci";
+import { PiWarningDiamondFill } from "react-icons/pi";
+import { GrStatusGood } from "react-icons/gr";
 
-const ModalApply = ({selectedDates, wfhDays, addWFH}) => {
+const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setSuccessfulApplication}) => {
     const [moreThanTwo, setMoreThanTwo] = useState(false);
     const [showMoreThanTwoAlert, setShowMoreThanTwoAlert] = useState(false);
     
@@ -11,6 +13,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH}) => {
     
     const [userDetails, setUserDetails] = useState(null); // State to store user details
 
+
     // Used to fetch user details
     useEffect(() => {
       const localStoreaged = localStorage.getItem('state');
@@ -18,15 +21,6 @@ const ModalApply = ({selectedDates, wfhDays, addWFH}) => {
       setUserDetails(userDetailsFromStorage);
     }, []);
 
-    // Update dates state whenever selectedDates changes
-    useEffect(() => {
-        setDates(selectedDates.map((d) => ({
-            date: `${d.toLocaleDateString().split("/")[2]}/${d.toLocaleDateString().split("/")[0]}/${d.toLocaleDateString().split("/")[1]}` ,
-            time: "AM",
-            reason: "",
-            // file: null
-        })));
-    }, [selectedDates]);
 
     // shows modal if more than 2 dates and show warning as well
     const checkMoreThanTwoAndShowModal = () => {
@@ -54,19 +48,30 @@ const ModalApply = ({selectedDates, wfhDays, addWFH}) => {
         setDates(updatedDates);
     };
 
+    // Update dates state whenever selectedDates changes
+    useEffect(() => {
+        setDates(selectedDates.map((d) => ({
+            date: `${d.toLocaleDateString().split("/")[2]}-${d.toLocaleDateString().split("/")[0]}-${d.toLocaleDateString().split("/")[1]}` ,
+            time: "am",
+            reason: "",
+            // file: null
+        })));
+    }, [selectedDates]);
+
     // Handle form submission
     const handleSubmit = (event) => {
         event.preventDefault();
         // Process formData here (send it to an API, or display it, etc.)
         const formData = {
-            staff_id: userDetails.staff_id,
-            staff_fname: userDetails.staff_fname, 
-            staff_lname: userDetails.staff_lname, 
+            Staff_ID: userDetails.Staff_ID,
+            Staff_FName: userDetails.Staff_FName, 
+            Staff_LName: userDetails.Staff_LName, 
             dates
         }
             
-        addWFH(formData);
+        addWFH(formData)
         console.log(formData);
+        // console.log(successfulApplication);
 
     };
 
@@ -107,9 +112,9 @@ const ModalApply = ({selectedDates, wfhDays, addWFH}) => {
                                         value={dates[index].time} // Binding to state
                                         onChange={(e) => handleInputChange(index, "time", e.target.value)} // Update state
                                     >
-                                        <option value="AM">AM</option>
-                                        <option value="PM">PM</option>
-                                        <option value="Fullday">Fullday</option>
+                                        <option value="am">Am</option>
+                                        <option value="pm">Pm</option>
+                                        <option value="fullday">Fullday</option>
                                     </select>
                                 </label>
 
@@ -148,7 +153,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH}) => {
                 <p className="py-4">Press ESC key or click outside to close</p>
           </div>
             <form method="dialog" className="modal-backdrop">
-                {/* Alert popup */}
+                {/* warning for more than 2 wfh popup */}
                 {showMoreThanTwoAlert && (
                     <div role="alert" className="alert alert-warning fixed top-0 left-0 w-full z-50">
                         <div className="flex items-center">
@@ -159,6 +164,38 @@ const ModalApply = ({selectedDates, wfhDays, addWFH}) => {
                             <div className="absolute top-4 right-7">
                                 {/* Right side: Close icon */}
                                 <IoMdClose size={30} onClick={() => setShowMoreThanTwoAlert(false)}/>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* warning for successful wfh */}
+                {successfulApplication == true && (
+                    <div role="alert" className="alert alert-success fixed top-0 left-0 w-full z-50">
+                        <div className="flex items-center">
+                            <div className="flex items-center">
+                                <GrStatusGood size={25}/>
+                                <span className="mx-2">Successfully created arrangement</span>
+                            </div>
+                            <div className="absolute top-4 right-7">
+                                {/* Right side: Close icon */}
+                                <IoMdClose size={30} onClick={() => setSuccessfulApplication(null)}/>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* warning for successful wfh */}
+                {successfulApplication == false && (
+                    <div role="alert" className="alert alert-error fixed top-0 left-0 w-full z-50">
+                        <div className="flex items-center">
+                            <div className="flex items-center">
+                                <PiWarningDiamondFill size={25}/>
+                                <span className="mx-2">Error creating arrangement</span>
+                            </div>
+                            <div className="absolute top-4 right-7">
+                                {/* Right side: Close icon */}
+                                <IoMdClose size={30} onClick={() => setSuccessfulApplication(null)}/>
                             </div>
                         </div>
                     </div>

@@ -8,7 +8,7 @@ const Navbar = () => {
   // extract users role to conditionally render links
   useEffect(()=>{
       const data = JSON.parse(localStorage.getItem('state'));
-      setEmployeeRole(data.role)
+      setEmployeeRole(data.Role)
   },[])
 
   // logout logic which clears local storage when logged out
@@ -80,7 +80,7 @@ const Navbar = () => {
             <ul className="menu flex-grow">
               {/* Sidebar content here */}
               <li><strong className="text-3xl mb-5 ">Hi Ryan!</strong></li>
-              <li><Link to="/" className="active">View Schedule</Link></li>
+              <li><Link to="/home" className="active">View Schedule</Link></li>
               <li><Link to="/my">Manage My Applications</Link></li>
               {EmployeeRole == 2? null:
               <li><Link to="/other">Manage Other's Applications</Link></li>

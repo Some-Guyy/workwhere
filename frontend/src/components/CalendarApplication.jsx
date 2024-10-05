@@ -4,7 +4,7 @@ import "./React_Calander_Styles/Calender.css";
 import ModalApply from "./ModalApply";
 
 
-const CalendarApplication = ({data, addWFH}) => {
+const CalendarApplication = ({data, addWFH, successfulApplication, setSuccessfulApplication}) => {
     
     const [selected, setSelected] = useState([]);
     const today = new Date();
@@ -115,7 +115,7 @@ const CalendarApplication = ({data, addWFH}) => {
                     <button onClick={resetApplicationDates} className="ml-5 btn btn-outline btn-sm">
                         Reset Selection
                     </button>
-                    <ModalApply selectedDates={selected} wfhDays={wfhDays} addWFH={addWFH} />
+                    <ModalApply selectedDates={selected} wfhDays={wfhDays} addWFH={addWFH} successfulApplication={successfulApplication} setSuccessfulApplication={setSuccessfulApplication}/>
                 </div>
                 
             </div>

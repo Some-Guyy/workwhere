@@ -25,17 +25,18 @@ const HomePage = () => {
     const [departmentTriggered, setDepartmentTriggered] = useState(false); // Separate state to track when department is being fetched
     const [userRole, setUserRole] = useState(null); // used to hold employee's role
 
+    const navigate = useNavigate();
+
     // Fetch the role from localStorage when the component mounts
     useEffect(() => {
       const localStoreaged = localStorage.getItem('state');
-      const storedRole = JSON.parse(localStoreaged).role;
+      const storedRole = JSON.parse(localStoreaged).Role;
       if (storedRole) {
         setTeamOrOverall(storedRole);
         setUserRole(storedRole);
       }
       else{
-        const navigate = useNavigate();
-        navigate("/login")
+        // navigate("/");
       }
     }, []);
     

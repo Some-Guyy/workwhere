@@ -18,7 +18,7 @@ const FilterButtonsSection = ({
 
     const [EmployeeRole,setEmployeeRole] = useState(null)
     useEffect(()=>{
-        const storedRole = JSON.parse(localStorage.getItem('state')).role;
+        const storedRole = JSON.parse(localStorage.getItem('state')).Role;
         if (storedRole) {
             setEmployeeRole(storedRole);
         }

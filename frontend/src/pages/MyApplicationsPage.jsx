@@ -7,8 +7,8 @@ const MyApplicationsPage = () => {
     const[personalData, setPersonalData] = useState(null);
     const[loading, setLoading] = useState(true);
     const[isManageOwnApplication, setIsManageOwnApplication] = useState(true);
-
-    // function to addWFH
+    const [successfulApplication, setSuccessfulApplication] = useState(null);
+    
     // function to addWFH
     const addWFH = async (newArrangement) => {
       try {
@@ -19,22 +19,25 @@ const MyApplicationsPage = () => {
           },
           body: JSON.stringify(newArrangement),
         });
-
-        // Optional: Handle the response
+    
+        // Check if the response is OK
         if (!res.ok) {
           throw new Error(`Failed to add WFH arrangement: ${res.status} ${res.statusText}`);
         }
-
-        // If the request was successful
+    
+        // Successful response
         console.log("WFH arrangement added successfully!");
-
-        return res.json(); // Or res.text(), depending on the expected response type
+        setSuccessfulApplication(true);  // Update the state to indicate success
+        return await res.json();          // Ensure we return a parsed response
+    
       } catch (error) {
-        // Handle the error here
+        // Error handling, set the failure state
         console.error("Error adding WFH arrangement:", error.message);
-        // You can add further error handling (e.g., displaying a message to the user)
+        setSuccessfulApplication(false);  // Ensure state is set to false on failure
       }
     };
+    
+    
 
 
     // Fetch the role from localStorage when the component mounts
@@ -50,7 +53,7 @@ const MyApplicationsPage = () => {
     
   return (
     <div className="mt-40">
-        <CalendarApplication data={personalData} addWFH={addWFH}/>
+        <CalendarApplication data={personalData} addWFH={addWFH} successfulApplication={successfulApplication} setSuccessfulApplication={setSuccessfulApplication} />
         <Accordion loading={loading} data={personalData} yourSchedule={true} activeSchedule={"Your Schedule"} isManageOwnApplication={isManageOwnApplication}/>
     </div>
   )
