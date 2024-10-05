@@ -12,7 +12,7 @@ const MyApplicationsPage = () => {
     // function to addWFH
     const addWFH = async (newArrangement) => {
       try {
-        const res = await fetch('http://localhost:3000/working-arrangements', {
+        const res = await fetch('http://localhost:3000/request', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
