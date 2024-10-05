@@ -7,11 +7,12 @@ admin.initializeApp({
 })
 const db = admin.firestore()
 
+const cors = require("cors")
 const express = require('express')
 const app = express()
-//need to use this to ionclude body parser functionality
-app.use(express.json())
 
+app.use(express.json())
+app.use(cors())
 
 /*
  note to self:
