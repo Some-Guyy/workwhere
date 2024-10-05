@@ -250,7 +250,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
-//create new working arrangement (*** NOT TESTED ***)
+//create new working arrangement 
 app.post('/request', async (req, res) => {
     try {
         const { Staff_ID, Staff_FName, Staff_LName, dates } = req.body;
@@ -291,6 +291,35 @@ app.post('/request', async (req, res) => {
         res.status(500).json({ message: "Error creating your request", error: 'Internal server error' });
     }
 });
+
+//delete all 
+app.delete('/delete-all/', async (req, res) => {
+    const collectionRef = db.collection("test_create")
+
+    try {
+        // Get all documents in the collection
+        const snapshot = await collectionRef.get()
+
+        if (snapshot.empty) {
+            return res.status(200).json({ message: `No documents found in test_create` })
+        }
+
+        // Create a batch to delete all documents in one operation
+        const batch = db.batch()
+
+        snapshot.docs.forEach((doc) => {
+            batch.delete(doc.ref)
+        });
+
+        // Commit the batch
+        await batch.commit()
+
+        res.status(200).json({ message: `All documents from test_create deleted successfully` })
+    } catch (error) {
+        console.error('Error deleting documents:', error)
+        res.status(500).json({ error: 'Failed to delete documents', details: error.message })
+    }
+})
 
 
 // catch rogue calls
