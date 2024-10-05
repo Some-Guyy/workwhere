@@ -15,7 +15,7 @@ const LoginPage = () => {
         if(EmployeeInfo != null){
             console.log(EmployeeInfo)
             localStorage.setItem('state', JSON.stringify(EmployeeInfo));
-            navigate('../')
+            navigate('/home')
         }},[EmployeeInfo])
 
     const fetchEmployeeinfo = async () => {

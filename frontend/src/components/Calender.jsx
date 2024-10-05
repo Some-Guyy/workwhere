@@ -13,7 +13,7 @@ const Calender = ({data}) => {
     const currentMonth = parseInt(today.toLocaleDateString().split("/")[0])-1;
     const currentYear = parseInt(today.toLocaleDateString().split("/")[2]);
 
-    console.log(currentDate,currentMonth,currentYear)
+    // console.log(currentDate,currentMonth,currentYear)
     // console.log(data);
 
     const [wfhDays, setWfhDays] = useState([]);

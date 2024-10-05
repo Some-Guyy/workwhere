@@ -1,16 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
 import { CiWarning } from "react-icons/ci";
 
-const ModalApply = ({selectedDates, wfhDays}) => {
+const ModalApply = ({selectedDates, wfhDays, addWFH}) => {
     const [moreThanTwo, setMoreThanTwo] = useState(false);
-    const [showMoreThanTwoAlert, setShowMoreThanTwoAlert] = useState(false)
+    const [showMoreThanTwoAlert, setShowMoreThanTwoAlert] = useState(false);
     
+    
+    const [dates, setDates] = useState([]); // State to store form data for each date
+    
+    const [userDetails, setUserDetails] = useState(null); // State to store user details
+
+    // Used to fetch user details
+    useEffect(() => {
+      const localStoreaged = localStorage.getItem('state');
+      const userDetailsFromStorage = JSON.parse(localStoreaged);
+      setUserDetails(userDetailsFromStorage);
+    }, []);
+
+    // Update dates state whenever selectedDates changes
+    useEffect(() => {
+        setDates(selectedDates.map((d) => ({
+            date: `${d.toLocaleDateString().split("/")[2]}/${d.toLocaleDateString().split("/")[0]}/${d.toLocaleDateString().split("/")[1]}` ,
+            time: "AM",
+            reason: "",
+            // file: null
+        })));
+    }, [selectedDates]);
+
+    // shows modal if more than 2 dates and show warning as well
     const checkMoreThanTwoAndShowModal = () => {
-        // Opens up the modal
         document.getElementById('apply_modal').showModal();
 
-        // checks if more than 2 days
         if(wfhDays.length >= 2){
             setMoreThanTwo(true);
             setShowMoreThanTwoAlert(true);
@@ -19,13 +40,35 @@ const ModalApply = ({selectedDates, wfhDays}) => {
             if (totalTentativeWFHDays >= 2) {
                 setMoreThanTwo(true);
                 setShowMoreThanTwoAlert(true);
-                // alert();
             }else{
                 setMoreThanTwo(false);
                 setShowMoreThanTwoAlert(false);
             }
         }  
-        };
+    };
+
+    // Handle form input changes
+    const handleInputChange = (index, field, value) => {
+        const updatedDates = [...dates];
+        updatedDates[index][field] = value;
+        setDates(updatedDates);
+    };
+
+    // Handle form submission
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        // Process formData here (send it to an API, or display it, etc.)
+        const formData = {
+            staff_id: userDetails.staff_id,
+            staff_fname: userDetails.staff_fname, 
+            staff_lname: userDetails.staff_lname, 
+            dates
+        }
+            
+        addWFH(formData);
+        console.log(formData);
+
+    };
 
     return (
       <>
@@ -33,11 +76,9 @@ const ModalApply = ({selectedDates, wfhDays}) => {
           <dialog id="apply_modal" className="modal">
           <div className="modal-box">
                 <h3 className="font-bold text-lg">Do you want to apply for WFH arrangement?</h3><br/>
+                
                 {/* Alert for 2 or more WFH days */}
-                {moreThanTwo ? 
-                <p>Not that you will have 2 or more WFH days</p>
-                :
-                <></>}<br/>
+                {moreThanTwo ? <p>Note that you will have 2 or more WFH days</p> : <></>}<br/>
                 
                 {/* Conditional rendering of whether selected dates */}
                 {selectedDates.length > 0 ? 
@@ -46,34 +87,58 @@ const ModalApply = ({selectedDates, wfhDays}) => {
                 <p>You did not select any dates.</p>}
                 <br/>
                 
-                {/* mapping of the dates */}
+                {/* Mapping of the dates */}
                 <div>
-                    <form>
+                    <form onSubmit={handleSubmit}>
                     {selectedDates.map((d, index) => (
                         <div className="border-2 border-primary rounded-lg p-5 mb-3" key={index}>
                             <span className="font-bold text-2xl">Arrangement {index+1}: </span>
                             <span className="font-bold text-2xl">{`${d.toLocaleDateString().split("/")[1]}/${d.toLocaleDateString().split("/")[0]}/${d.toLocaleDateString().split("/")[2]}` }</span>
                             <br/>
 
-                            <select className="select select-bordered w-full my-2">
-                                <option disabled selected>Select WFH Type</option>
-                                <option>AM</option>
-                                <option>PM</option>
-                                <option>Fullday</option>
-                            </select>
+                            {/* Check if dates[index] exists before accessing its properties */}
+                            {dates[index] && (
+                              <>
+                                {/* Type data */}
+                                <label className="input input-bordered flex items-center gap-2 my-2">Type  
+                                    <select 
+                                        required 
+                                        className="ml-2 select select-bordered w-full"
+                                        value={dates[index].time} // Binding to state
+                                        onChange={(e) => handleInputChange(index, "time", e.target.value)} // Update state
+                                    >
+                                        <option value="AM">AM</option>
+                                        <option value="PM">PM</option>
+                                        <option value="Fullday">Fullday</option>
+                                    </select>
+                                </label>
 
-                            <label className="input input-bordered flex items-center gap-2">
-                                Reason
-                                <input type="text" className="grow" placeholder="Input your reasoning" />
-                            </label>
+                                {/* Reasoning data */}
+                                <label className="input input-bordered flex items-center gap-2">
+                                    Reason
+                                    <input 
+                                        required 
+                                        type="text" 
+                                        className="grow" 
+                                        placeholder="Input your reasoning"
+                                        value={dates[index].reason} // Binding to state
+                                        onChange={(e) => handleInputChange(index, "reason", e.target.value)} // Update state
+                                    />
+                                </label>
 
-                            <input type="file" className="file-input file-input-bordered w-full mt-2" />
-
+                                {/* File Input */}
+                                <input 
+                                    type="file" 
+                                    className="file-input file-input-bordered w-full mt-2" 
+                                    onChange={(e) => handleInputChange(index, "file", e.target.files[0])} // Update state
+                                />
+                              </>
+                            )}
                             <br></br>
                         </div>
                     ))}
-                        {selectedDates.length > 0  ? 
-                        <button className="btn btn-block btn-neutral mt-10">Submit your application</button>
+                        {selectedDates.length > 0 ? 
+                        <button type="submit" className="btn btn-block btn-neutral mt-10">Submit your application</button>
                         :
                         <></>}
                         
@@ -103,6 +168,6 @@ const ModalApply = ({selectedDates, wfhDays}) => {
           </dialog>
       </>
     )
-  }
-  
-  export default ModalApply
+}
+
+export default ModalApply;

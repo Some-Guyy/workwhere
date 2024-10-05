@@ -4,7 +4,7 @@ import "./React_Calander_Styles/Calender.css";
 import ModalApply from "./ModalApply";
 
 
-const CalendarApplication = ({data}) => {
+const CalendarApplication = ({data, addWFH}) => {
     
     const [selected, setSelected] = useState([]);
     const today = new Date();
@@ -22,6 +22,7 @@ const CalendarApplication = ({data}) => {
     const [wfhDays, setWfhDays] = useState([]);
     const [leaveDays, setLeaveDays] = useState([]);
     const [pendingDays, setPendingDays] = useState([]);
+    const [unselectableDays, setUnselectableDays] = useState([]);
 
     // convert seconds to date
     const convert_to_date_for_calander = (seconds) => {
@@ -44,6 +45,7 @@ const CalendarApplication = ({data}) => {
         const tempWfhDays = [];
         const tempLeaveDays = [];
         const tempPendingDays = [];
+        const tempUnselectableDays = [];
 
         for (const d of data) {
             let seconds = d.startDate._seconds;
@@ -51,32 +53,23 @@ const CalendarApplication = ({data}) => {
             
             if (d.status === "approved") {
                     tempWfhDays.push(newDate);
+                    tempUnselectableDays.push(newDate);
                 } else if (d.status === "leave") {
                     tempLeaveDays.push(newDate);
                 } else if (d.status === "pending") {
                     tempPendingDays.push(newDate);
+                    tempUnselectableDays.push(newDate);
                 }
           }
 
           setWfhDays(tempWfhDays);
           setLeaveDays(tempLeaveDays);
           setPendingDays(tempPendingDays);
-
+          setUnselectableDays(tempUnselectableDays);
       };
 
       countDays();
     }, [data]);
-
-    // const DayMouseEventHandler = (day, modifiers) => {
-    //     const newValue = [...value];
-    //     if (modifiers.selected) {
-    //       const index = value.findIndex((d) => isSameDay(day, d));
-    //       newValue.splice(index, 1);
-    //     } else {
-    //       newValue.push(day);
-    //     }
-    //     setValue(newValue);
-    //   };
     
     const resetApplicationDates= () => {setSelected([])};
     // console.log(selected);
@@ -108,6 +101,10 @@ const CalendarApplication = ({data}) => {
                   pendingDays: "pendingDays",
                   leaveDays: "leaveDays"
                 }}
+
+                disabled={
+                  unselectableDays
+                }
                 className="justify-center"
                 ></DayPicker>
 
@@ -118,7 +115,7 @@ const CalendarApplication = ({data}) => {
                     <button onClick={resetApplicationDates} className="ml-5 btn btn-outline btn-sm">
                         Reset Selection
                     </button>
-                    <ModalApply selectedDates={selected} wfhDays={wfhDays} />
+                    <ModalApply selectedDates={selected} wfhDays={wfhDays} addWFH={addWFH} />
                 </div>
                 
             </div>
