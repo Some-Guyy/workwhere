@@ -217,18 +217,20 @@ app.post('/login', async (req, res) => {
             .limit(1)
             .get()
 
-        // if emaill address is wrong || compare password, if wrong return error message
+        // if email address is wrong, return error message
         if (snapshot.empty) {
             return res.status(401).json({ message: 'Invalid email address or password' })
         }
 
-        let staffDetails = ""
+        let staffDetails = null
         snapshot.forEach(doc => {
             staffDetails = doc.data()
-            if (staffDetails.password !== password) {
-                return res.status(401).json({ message: 'Invalid email address or password' })
-            }
         });
+
+        //check if password matches
+        if (staffDetails.password !== password) {
+            return res.status(401).json({ message: 'Invalid email address or password' })
+        }
 
         // return the data back
         res.json({
@@ -328,7 +330,4 @@ app.all("*", (req, res) => {
     res.status(404).send("Route not found")
 }) 
 
-const PORT = 3000 
-app.listen(PORT, () => { 
-    console.log(`Server is running on http://localhost:${PORT}`) 
-}) 
+module.exports = app;
