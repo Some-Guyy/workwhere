@@ -461,7 +461,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
 //test team members
 describe('GET /working-arrangements/team/:employeeId/:date', () => {
   //successful
-  test('return team members and approved working arrangements', async () => {
+  test('get approved arrangements of employee\'s teammates on a date', async () => {
     const mockGet = admin.firestore().collection().get
 
     // Mock Firestore to return the employee data
@@ -545,6 +545,22 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
       .send()
 
     expect(response.status).toBe(200) // Expect 200 OK
+    expect(response.body.teamMembers).toEqual([
+      {
+        Staff_ID: '190019',
+        Staff_FName: 'Heng',
+        Staff_LName: 'Sim',
+        Position: 'Developers',
+        Dept: 'Solutioning',
+      },
+      {
+        Staff_ID: '190059',
+        Staff_FName: 'Phuc',
+        Staff_LName: 'Le',
+        Position: 'Developers',
+        Dept: 'Solutioning',
+      }
+    ])
     expect(response.body.workingArrangements).toEqual([
       {
         Staff_ID: '190019',
@@ -573,26 +589,10 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
         status: 'approved',
       }
     ])
-    expect(response.body.teamMembers).toEqual([
-      {
-        Staff_ID: '190019',
-        Staff_FName: 'Heng',
-        Staff_LName: 'Sim',
-        Position: 'Developers',
-        Dept: 'Solutioning',
-      },
-      {
-        Staff_ID: '190059',
-        Staff_FName: 'Phuc',
-        Staff_LName: 'Le',
-        Position: 'Developers',
-        Dept: 'Solutioning',
-      }
-    ])
   })
 
   //unsuccessful - employee cant be found
-  test('should return 404 when the employee is not found', async () => {
+  test('get approved arrangements of non-existent employee\'s teammates on a date', async () => {
     const mockGet = admin.firestore().collection().get
 
     // Mock Firestore to return an empty employee snapshot
@@ -607,7 +607,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
   })
 
   //unsuccessful - backend code 
-  test('should return 500 when Firestore throws an error', async () => {
+  test('get approved arrangements of employee\'s teammates on a date with firestore error', async () => {
     const mockGet = admin.firestore().collection().get
 
 
