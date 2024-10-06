@@ -1,6 +1,8 @@
 const request = require('supertest')
 const app = require('../../app')
 const admin = require('firebase-admin')
+const db = admin.firestore()
+const firestore = require('firebase-admin/firestore')
 
 // Fixtures
 jest.mock('firebase-admin', () => {
@@ -14,8 +16,22 @@ jest.mock('firebase-admin', () => {
         where: jest.fn().mockReturnThis(),
         limit: jest.fn().mockReturnThis(),
         get: jest.fn(),
+        doc: jest.fn().mockReturnValue('some-doc-ref')
       }),
-    }),
+      batch: jest.fn().mockReturnValue({
+        set: jest.fn(),
+        commit: jest.fn()
+      })
+    })
+  }
+})
+
+jest.mock('firebase-admin/firestore', () => {
+  return {
+    Timestamp: {
+      fromDate: jest.fn(),
+      now: jest.fn()
+    }
   }
 })
 
@@ -26,14 +42,14 @@ afterEach(() => {
 //test login
 describe('POST /login', () => {
   //login successful
-  test('return user details for a valid login', async () => {
-    const mockGet = admin.firestore().collection().get
+  test('login existing user with valid password', async () => {
+    const mockGet = db.collection().get
     mockGet.mockResolvedValueOnce({
       empty: false, // User exists
       forEach: (callback) => {
         callback({
           data: () => ({
-            password: '123', 
+            password: '123',
             Staff_ID: '151408',
             Staff_FName: 'Philip',
             Staff_LName: 'Lee',
@@ -49,7 +65,7 @@ describe('POST /login', () => {
     const res = await request(app)
       .post('/login')
       .send({
-        emailAddress: 'Philip.Lee@allinone.com.sg',
+        emailAddress: 'philip.lee@allinone.com.sg',
         password: '123',
       })
 
@@ -68,34 +84,35 @@ describe('POST /login', () => {
   })
 
   //login unsuccessful - wrong email
-  test('return error message when wrong email', async () => {
+  test('login non-existent user', async () => {
     // return nothing back
-    const mockGet = admin.firestore().collection().get
+    const mockGet = db.collection().get
     mockGet.mockResolvedValueOnce({
-      empty: true, 
-      forEach: jest.fn(), 
+      empty: true,
+      forEach: jest.fn(),
     })
 
     const response = await request(app)
       .post('/login')
-      .send({ 
-        emailAddress: 'Philip.Lee@allinone.com.sg', 
-        password: '12345' })
+      .send({
+        emailAddress: 'philip.lee@allinone.com.sg',
+        password: '123'
+      })
 
     expect(response.status).toBe(401)
     expect(response.body.message).toBe('Invalid email address or password')
   })
 
   //login unsuccessful - wrong password
-  test('return error message when wrong password', async () => {
+  test('login existing user with invalid password', async () => {
     // return user
-    const mockGet = admin.firestore().collection().get
+    const mockGet = db.collection().get
     mockGet.mockResolvedValueOnce({
       empty: false, // User exists
       forEach: (callback) => {
         callback({
           data: () => ({
-            password: '123', 
+            password: '123',
             Staff_ID: '151408',
             Staff_FName: 'Philip',
             Staff_LName: 'Lee',
@@ -110,23 +127,38 @@ describe('POST /login', () => {
 
     const response = await request(app)
       .post('/login')
-      .send({ 
-        emailAddress: 'Philip.Lee@allinone.com.sg', 
-        password: '1231' })
+      .send({
+        emailAddress: 'philip.lee@allinone.com.sg',
+        password: '1231'
+      })
 
     expect(response.status).toBe(401)
     expect(response.body.message).toBe('Invalid email address or password')
   })
 
-  
+  test('login with firestore error', async () => {
+    // Mock Firestore to throw an error
+    const mockGet = db.collection().get
+    mockGet.mockRejectedValueOnce(new Error('Firestore error'))
+
+    const response = await request(app)
+      .post('/login')
+      .send({
+        emailAddress: 'philip.lee@allinone.com.sg',
+        password: '123'
+      })
+
+    expect(response.status).toBe(500) // Expect 500 Internal Server Error
+    expect(response.body.error).toBe('Internal server error')
+  })
 })
 
 //test personal employee
 describe('GET /working-arrangements/:employeeid', () => {
   //successful
-  test('working arrangements for valid employeeid', async () => {
+  test('get arrangements for an employee', async () => {
     // Mock Firestore to return working arrangements
-    const mockGet = admin.firestore().collection().get
+    const mockGet = db.collection().get
     mockGet.mockResolvedValueOnce({
       empty: false,
       forEach: (callback) => {
@@ -149,7 +181,7 @@ describe('GET /working-arrangements/:employeeid', () => {
     })
 
     const response = await request(app)
-      .get('/working-arrangements/151408')
+      .get('/working-arrangements/190019')
       .send()
 
     expect(response.status).toBe(200) // Expect 200 OK
@@ -169,9 +201,9 @@ describe('GET /working-arrangements/:employeeid', () => {
   })
 
   //unsuccessful
-  test('no working arrangements for staff', async () => {
+  test('get non-existent arrangements for an employee', async () => {
     // Mock Firestore to return an empty snapshot
-    const mockGet = admin.firestore().collection().get
+    const mockGet = db.collection().get
     mockGet.mockResolvedValueOnce({ empty: true })
 
     const response = await request(app)
@@ -186,9 +218,9 @@ describe('GET /working-arrangements/:employeeid', () => {
   })
 
   //unsuccessful - something wrong with backend code
-  test('should return 500 when there is a server error', async () => {
+  test('get arrangements for an employee with firestore error', async () => {
     //get firestore to throw error
-    const mockGet = admin.firestore().collection().get
+    const mockGet = db.collection().get
     mockGet.mockRejectedValueOnce(new Error('Firestore error'))
 
     const response = await request(app)
@@ -203,9 +235,8 @@ describe('GET /working-arrangements/:employeeid', () => {
 //test department
 describe('GET /working-arrangements/department/:department/:date', () => {
   //successful
-  test('return deparments and their working arrangements', async () => {
-
-    const mockGet = admin.firestore().collection().get
+  test('get arrangements for department on a date', async () => {
+    const mockGet = db.collection().get
     mockGet.mockResolvedValueOnce({
       empty: false,
       forEach: (callback) => {
@@ -216,7 +247,7 @@ describe('GET /working-arrangements/department/:department/:date', () => {
             Staff_LName: 'Sim',
             Reporting_Manager: '150008',
             Role: '2',
-            Email: 'Heng.Sim@allinone.com.sg',
+            Email: 'heng.sim@allinone.com.sg',
             Dept: 'Solutioning',
             Position: 'Developers',
             Country: 'Singapore',
@@ -259,10 +290,24 @@ describe('GET /working-arrangements/department/:department/:date', () => {
     })
 
     const response = await request(app)
-      .get('/working-arrangements/department/Engineering/2024-10-01')
+      .get('/working-arrangements/department/Solutioning/2024-10-01')
       .send()
 
     expect(response.status).toBe(200) // Expect 200 OK
+    expect(response.body.sameDepart).toEqual([
+      {
+        Staff_ID: '190019',
+        Staff_FName: 'Heng',
+        Staff_LName: 'Sim',
+        Reporting_Manager: '150008',
+        Role: '2',
+        Email: 'heng.sim@allinone.com.sg',
+        Dept: 'Solutioning',
+        Position: 'Developers',
+        Country: 'Singapore',
+        password: '123',
+      }
+    ])
     expect(response.body.workingArrangements).toEqual([
       {
         reason: 'Take care of sick cat',
@@ -288,30 +333,16 @@ describe('GET /working-arrangements/department/:department/:date', () => {
         Approved_LName: 'Loh'
       }
     ])
-    expect(response.body.sameDepart).toEqual([
-      {
-        Staff_ID: '190019',
-        Staff_FName: 'Heng',
-        Staff_LName: 'Sim',
-        Reporting_Manager: '150008',
-        Role: '2',
-        Email: 'Heng.Sim@allinone.com.sg',
-        Dept: 'Solutioning',
-        Position: 'Developers',
-        Country: 'Singapore',
-        password: '123',
-      }
-    ])
   })
 
   //unsuccessful - something wrong with backend code
-  test('should return 500 when there is a server error', async () => {
+  test('get arrangements for department on a date with firestore error', async () => {
     // Mock Firestore to throw an error
-    const mockGet = admin.firestore().collection().get
+    const mockGet = db.collection().get
     mockGet.mockRejectedValueOnce(new Error('Firestore error'))
 
     const response = await request(app)
-      .get('/working-arrangements/department/Engineering/2024-10-01')
+      .get('/working-arrangements/department/Solutioning/2024-10-01')
       .send()
 
     expect(response.status).toBe(500) // Expect 500 Internal Server Error
@@ -321,9 +352,9 @@ describe('GET /working-arrangements/department/:department/:date', () => {
 
 //test manager
 describe('GET /working-arrangements/manager/:managerId/:date', () => {
-  test('should return employees and their approved and pending working arrangements for a manager', async () => {
-    const mockGet = admin.firestore().collection().get
-    
+  test('get arrangements of manager\'s team in charge of on a date', async () => {
+    const mockGet = db.collection().get
+
     // Mock Firestore to return employees under the manager
     mockGet.mockResolvedValueOnce({
       empty: false,
@@ -336,7 +367,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
             Reporting_Manager: '150008',
             Dept: 'Solutioning',
             Position: 'Developers',
-            Email: 'Heng.Sim@allinone.com.sg',
+            Email: 'heng.sim@allinone.com.sg',
           })
         })
         callback({
@@ -347,7 +378,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
             Reporting_Manager: '150008',
             Dept: 'Solutioning',
             Position: 'Director',
-            Email: 'Eric.Loh@allinone.com.sg',
+            Email: 'eric.loh@allinone.com.sg',
           })
         })
       },
@@ -395,6 +426,26 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
       .send()
 
     expect(response.status).toBe(200) // Expect 200 OK
+    expect(response.body.inChargeOf).toEqual([
+      {
+        Staff_ID: '190019',
+        Staff_FName: 'Heng',
+        Staff_LName: 'Sim',
+        Reporting_Manager: '150008',
+        Dept: 'Solutioning',
+        Position: 'Developers',
+        Email: 'heng.sim@allinone.com.sg',
+      },
+      {
+        Staff_ID: '150008',
+        Staff_FName: 'Eric',
+        Staff_LName: 'Loh',
+        Reporting_Manager: '150008',
+        Dept: 'Solutioning',
+        Position: 'Director',
+        Email: 'eric.loh@allinone.com.sg',
+      },
+    ])
     expect(response.body.workingArrangements).toEqual([
       {
         Staff_ID: '190019',
@@ -423,32 +474,12 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
         status: 'approved',
       }
     ])
-    expect(response.body.inChargeOf).toEqual([
-      {
-        Staff_ID: '190019',
-        Staff_FName: 'Heng',
-        Staff_LName: 'Sim',
-        Reporting_Manager: '150008',
-        Dept: 'Solutioning',
-        Position: 'Developers',
-        Email: 'Heng.Sim@allinone.com.sg',
-      },
-      {
-        Staff_ID: '150008',
-        Staff_FName: 'Eric',
-        Staff_LName: 'Loh',
-        Reporting_Manager: '150008',
-        Dept: 'Solutioning',
-        Position: 'Director',
-        Email: 'Eric.Loh@allinone.com.sg',
-      },
-    ])
   })
 
   //unsuccessful - something wrong with backend code
-  test('should return 500 when Firestore throws an error', async () => {
-    const mockGet = admin.firestore().collection().get
-    
+  test('get arrangements of manager\'s team in charge of on a date with firestore error', async () => {
+    const mockGet = db.collection().get
+
     // Mock Firestore to throw an error when fetching employees
     mockGet.mockRejectedValueOnce(new Error('Firestore error'))
 
@@ -464,8 +495,8 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
 //test team members
 describe('GET /working-arrangements/team/:employeeId/:date', () => {
   //successful
-  test('return team members and approved working arrangements', async () => {
-    const mockGet = admin.firestore().collection().get
+  test('get approved arrangements of employee\'s teammates on a date', async () => {
+    const mockGet = db.collection().get
 
     // Mock Firestore to return the employee data
     mockGet.mockResolvedValueOnce({
@@ -548,6 +579,22 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
       .send()
 
     expect(response.status).toBe(200) // Expect 200 OK
+    expect(response.body.teamMembers).toEqual([
+      {
+        Staff_ID: '190019',
+        Staff_FName: 'Heng',
+        Staff_LName: 'Sim',
+        Position: 'Developers',
+        Dept: 'Solutioning',
+      },
+      {
+        Staff_ID: '190059',
+        Staff_FName: 'Phuc',
+        Staff_LName: 'Le',
+        Position: 'Developers',
+        Dept: 'Solutioning',
+      }
+    ])
     expect(response.body.workingArrangements).toEqual([
       {
         Staff_ID: '190019',
@@ -576,27 +623,11 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
         status: 'approved',
       }
     ])
-    expect(response.body.teamMembers).toEqual([
-      {
-        Staff_ID: '190019',
-        Staff_FName: 'Heng',
-        Staff_LName: 'Sim',
-        Position: 'Developers',
-        Dept: 'Solutioning',
-      },
-      {
-        Staff_ID: '190059',
-        Staff_FName: 'Phuc',
-        Staff_LName: 'Le',
-        Position: 'Developers',
-        Dept: 'Solutioning',
-      }
-    ])
   })
 
   //unsuccessful - employee cant be found
-  test('should return 404 when the employee is not found', async () => {
-    const mockGet = admin.firestore().collection().get
+  test('get approved arrangements of non-existent employee\'s teammates on a date', async () => {
+    const mockGet = db.collection().get
 
     // Mock Firestore to return an empty employee snapshot
     mockGet.mockResolvedValueOnce({ empty: true })
@@ -610,9 +641,8 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
   })
 
   //unsuccessful - backend code 
-  test('should return 500 when Firestore throws an error', async () => {
-    const mockGet = admin.firestore().collection().get
-
+  test('get approved arrangements of employee\'s teammates on a date with firestore error', async () => {
+    const mockGet = db.collection().get
 
     // Mock Firestore to throw an error
     mockGet.mockRejectedValueOnce(new Error('Firestore error'))
@@ -623,5 +653,87 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
 
     expect(response.status).toBe(500) // Expect 500 Internal Server Error
     expect(response.body.error).toBe('Internal server error')
+  })
+})
+
+//test create working arrangement
+describe('POST /request', () => {
+  test('create request for an arrangement', async () => {
+    const staffId = '190019'
+    const staffFName = 'Heng'
+    const staffLName = 'Sim'
+    const dates = [{
+      date: '2024-10-01',
+      time: 'PM',
+      attachment: null
+    }]
+
+    const response = await request(app)
+      .post('/request')
+      .send({
+        Staff_ID: staffId,
+        Staff_FName: staffFName,
+        Staff_LName: staffLName,
+        dates: dates
+      })
+
+    const dateValue = new Date(dates[0].date);
+    const newDocRef = db.collection('mock_working_arrangements').doc();
+
+    expect(response.status).toBe(201)
+    expect(db.batch().set).toHaveBeenCalledWith(newDocRef, {
+      Staff_ID: staffId,
+      Staff_FName: staffFName,
+      Staff_LName: staffLName,
+      reason: '',
+      startDate: firestore.Timestamp.fromDate(dateValue),
+      endDate: firestore.Timestamp.fromDate(dateValue),
+      requestCreated: firestore.Timestamp.now(),
+      status: 'pending',
+      approvedBy: '',
+      Approved_FName: '',
+      Approved_LName: '',
+      time: dates[0].time,
+      attachment: dates[0].attachment
+    })
+    expect(response.body).toEqual({
+      message: 'Request created successfully'
+    })
+  })
+
+  test('create request for an arrangement with firestore error', async () => {
+    const staffId = '190019'
+    const staffFName = 'Heng'
+    const staffLName = 'Sim'
+    const dates = [{
+      date: '2024-10-01',
+      time: 'PM',
+      attachment: null
+    }]
+    db.batch().commit.mockRejectedValueOnce(new Error('Firestore error'))
+
+    const response = await request(app)
+      .post('/request')
+      .send({
+        Staff_ID: staffId,
+        Staff_FName: staffFName,
+        Staff_LName: staffLName,
+        dates: dates
+      })
+
+    expect(response.status).toBe(500)
+    expect(response.body.message).toBe('Error creating your request')
+    expect(response.body.error).toBe('Internal server error')
+  })
+})
+
+// catch rogue calls
+describe('ALL *', () => {
+  test('access rogue route', async () => {
+    const response = await request(app)
+      .get('/non-existent_route')
+      .send()
+
+    expect(response.status).toBe(404)
   })
 })
