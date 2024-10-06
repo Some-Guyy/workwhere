@@ -28,7 +28,7 @@ const ScheduleTableRow = ({details, index, activeSchedule, isWFODate, isPending,
             <th>{index+1}</th>
             <td>{convert_to_date(details.startDate._seconds)}</td>
             <td>{details.time}</td>
-            <td>{details.Approved_Fname} {details.Approved_Lname}</td>
+            {/* <td>{details.Approved_Fname} {details.Approved_Lname}</td> */}
             <td><ModalWithdraw /></td>
         </tr>
       </>

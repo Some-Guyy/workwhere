@@ -116,19 +116,17 @@ const Navbar = () => {
                   Manage My Applications
                 </NavLink>
               </li>
-
-              {EmployeeRole !== 2 && (
-                <li>
-                  <NavLink
+              
+              {EmployeeRole == 2? null:
+                <NavLink
                     to="/other"
                     className={({ isActive }) =>
                       isActive ? "active text-primary" : ""
                     }
                   >
                     Manage Other's Applications
-                  </NavLink>
-                </li>
-              )}
+                  </NavLink>              
+              }
 
             </ul>
 

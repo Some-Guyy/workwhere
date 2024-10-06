@@ -48,7 +48,7 @@ const ScheduleTable = ({data, headCount, activeSchedule, isWFODate, isPending, i
              :null}
                 <table className="table table-pin-rows overflow-x-auto">
                     <thead>
-                        <ScheduleTableHeader activeSchedule={activeSchedule} isWFODate={isWFODate} />
+                        <ScheduleTableHeader activeSchedule={activeSchedule} isWFODate={isWFODate} isManageOwnApplication={isManageOwnApplication}/>
                     </thead>
                     <tbody>
                         {data.slice(First,Second).map((d, index) => (
