@@ -318,7 +318,7 @@ describe('GET /working-arrangements/department/:department/:date', () => {
 
 //test manager
 describe('GET /working-arrangements/manager/:managerId/:date', () => {
-  test('should return employees and their approved and pending working arrangements for a manager', async () => {
+  test('get arrangements of manager\'s team in charge of on a date', async () => {
     const mockGet = admin.firestore().collection().get
     
     // Mock Firestore to return employees under the manager
@@ -333,7 +333,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
             Reporting_Manager: '150008',
             Dept: 'Solutioning',
             Position: 'Developers',
-            Email: 'Heng.Sim@allinone.com.sg',
+            Email: 'heng.sim@allinone.com.sg',
           })
         })
         callback({
@@ -344,7 +344,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
             Reporting_Manager: '150008',
             Dept: 'Solutioning',
             Position: 'Director',
-            Email: 'Eric.Loh@allinone.com.sg',
+            Email: 'eric.loh@allinone.com.sg',
           })
         })
       },
@@ -392,6 +392,26 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
       .send()
 
     expect(response.status).toBe(200) // Expect 200 OK
+    expect(response.body.inChargeOf).toEqual([
+      {
+        Staff_ID: '190019',
+        Staff_FName: 'Heng',
+        Staff_LName: 'Sim',
+        Reporting_Manager: '150008',
+        Dept: 'Solutioning',
+        Position: 'Developers',
+        Email: 'heng.sim@allinone.com.sg',
+      },
+      {
+        Staff_ID: '150008',
+        Staff_FName: 'Eric',
+        Staff_LName: 'Loh',
+        Reporting_Manager: '150008',
+        Dept: 'Solutioning',
+        Position: 'Director',
+        Email: 'eric.loh@allinone.com.sg',
+      },
+    ])
     expect(response.body.workingArrangements).toEqual([
       {
         Staff_ID: '190019',
@@ -420,30 +440,10 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
         status: 'approved',
       }
     ])
-    expect(response.body.inChargeOf).toEqual([
-      {
-        Staff_ID: '190019',
-        Staff_FName: 'Heng',
-        Staff_LName: 'Sim',
-        Reporting_Manager: '150008',
-        Dept: 'Solutioning',
-        Position: 'Developers',
-        Email: 'Heng.Sim@allinone.com.sg',
-      },
-      {
-        Staff_ID: '150008',
-        Staff_FName: 'Eric',
-        Staff_LName: 'Loh',
-        Reporting_Manager: '150008',
-        Dept: 'Solutioning',
-        Position: 'Director',
-        Email: 'Eric.Loh@allinone.com.sg',
-      },
-    ])
   })
 
   //unsuccessful - something wrong with backend code
-  test('should return 500 when Firestore throws an error', async () => {
+  test('get arrangements of manager\'s team in charge of on a date with firestore error', async () => {
     const mockGet = admin.firestore().collection().get
     
     // Mock Firestore to throw an error when fetching employees
