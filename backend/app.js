@@ -1,5 +1,6 @@
 // firebase db setup
 const admin = require("firebase-admin")
+const firestore = require("firebase-admin/firestore")
 var serviceAccount = require("./workwhere_firebase_env.json")
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -273,9 +274,9 @@ app.post('/request', async (req, res) => {
                 Staff_FName: Staff_FName,
                 Staff_LName: Staff_LName,
                 reason,  
-                startDate: admin.firestore.Timestamp.fromDate(dateValue),
-                endDate: admin.firestore.Timestamp.fromDate(dateValue),
-                requestCreated: admin.firestore.Timestamp.now(),
+                startDate: firestore.Timestamp.fromDate(dateValue),
+                endDate: firestore.Timestamp.fromDate(dateValue),
+                requestCreated: firestore.Timestamp.now(),
                 status: 'pending',
                 approvedBy: '', 
                 Approved_FName: '', 
