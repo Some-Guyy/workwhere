@@ -215,7 +215,9 @@ describe('GET /working-arrangements/:employeeid', () => {
             endDate: "2024-10-08",
             requestCreated: "2024-10-05",
             status: "pending",
-            time: "PM"
+            time: "PM",
+            reason: '',
+            attachment: ''
           })
         })
       },
@@ -237,7 +239,9 @@ describe('GET /working-arrangements/:employeeid', () => {
       endDate: "2024-10-08",
       requestCreated: "2024-10-05",
       status: "pending",
-      time: "PM"
+      time: "PM",
+      reason: '',
+      attachment: ''
     }])
   })
 
@@ -304,7 +308,7 @@ describe('GET /working-arrangements/department/:department/:date', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            reason: 'Take care of sick cat',
+            reason: '',
             Staff_LName: 'Sim',
             Staff_FName: 'Heng',
             approvedBy: '150008',
@@ -324,7 +328,8 @@ describe('GET /working-arrangements/department/:department/:date', () => {
               _nanoseconds: 331000000
             },
             Approved_FName: 'Eric',
-            Approved_LName: 'Loh'
+            Approved_LName: 'Loh',
+            attachment: ''
           })
         })
       },
@@ -351,7 +356,7 @@ describe('GET /working-arrangements/department/:department/:date', () => {
     ])
     expect(response.body.workingArrangements).toEqual([
       {
-        reason: 'Take care of sick cat',
+        reason: '',
         Staff_LName: 'Sim',
         Staff_FName: 'Heng',
         approvedBy: '150008',
@@ -371,7 +376,8 @@ describe('GET /working-arrangements/department/:department/:date', () => {
           _nanoseconds: 331000000
         },
         Approved_FName: 'Eric',
-        Approved_LName: 'Loh'
+        Approved_LName: 'Loh',
+        attachment: ''
       }
     ])
   })
@@ -416,7 +422,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
             Staff_ID: '150008',
             Staff_FName: 'Eric',
             Staff_LName: 'Loh',
-            Reporting_Manager: '150008',
+            Reporting_Manager: '130002',
             Dept: 'Solutioning',
             Position: 'Director',
             Email: 'eric.loh@allinone.com.sg',
@@ -440,8 +446,19 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
               _seconds: 1728316800,
               _nanoseconds: 713000000
             },
-            reason: 'Medical leave',
+            reason: '',
             status: 'pending',
+            Staff_LName: 'Sim',
+            Staff_FName: 'Heng',
+            approvedBy: '',
+            time: 'PM',
+            requestCreated: {
+              _seconds: 1727539200,
+              _nanoseconds: 331000000
+            },
+            Approved_FName: '',
+            Approved_LName: '',
+            attachment: ''
           })
         })
         callback({
@@ -455,8 +472,19 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
               _seconds: 1728316800,
               _nanoseconds: 713000000
             },
-            reason: 'Project work',
+            reason: '',
             status: 'approved',
+            Staff_LName: 'Eric',
+            Staff_FName: 'Loh',
+            approvedBy: '130002',
+            time: 'PM',
+            requestCreated: {
+              _seconds: 1727539200,
+              _nanoseconds: 331000000
+            },
+            Approved_FName: 'Jack',
+            Approved_LName: 'Sim',
+            attachment: ''
           })
         })
       },
@@ -481,7 +509,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
         Staff_ID: '150008',
         Staff_FName: 'Eric',
         Staff_LName: 'Loh',
-        Reporting_Manager: '150008',
+        Reporting_Manager: '130002',
         Dept: 'Solutioning',
         Position: 'Director',
         Email: 'eric.loh@allinone.com.sg',
@@ -498,8 +526,19 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
           _seconds: 1728316800,
           _nanoseconds: 713000000
         },
-        reason: 'Medical leave',
+        reason: '',
         status: 'pending',
+        Staff_LName: 'Sim',
+        Staff_FName: 'Heng',
+        approvedBy: '',
+        time: 'PM',
+        requestCreated: {
+          _seconds: 1727539200,
+          _nanoseconds: 331000000
+        },
+        Approved_FName: '',
+        Approved_LName: '',
+        attachment: ''
       },
       {
         Staff_ID: '150008',
@@ -511,8 +550,19 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
           _seconds: 1728316800,
           _nanoseconds: 713000000
         },
-        reason: 'Project work',
+        reason: '',
         status: 'approved',
+        Staff_LName: 'Eric',
+        Staff_FName: 'Loh',
+        approvedBy: '130002',
+        time: 'PM',
+        requestCreated: {
+          _seconds: 1727539200,
+          _nanoseconds: 331000000
+        },
+        Approved_FName: 'Jack',
+        Approved_LName: 'Sim',
+        attachment: ''
       }
     ])
   })
@@ -593,8 +643,19 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
               _seconds: 1728316800,
               _nanoseconds: 713000000
             },
-            reason: 'Medical leave',
+            reason: '',
             status: 'approved',
+            Staff_LName: 'Sim',
+            Staff_FName: 'Heng',
+            approvedBy: '150008',
+            time: 'PM',
+            requestCreated: {
+              _seconds: 1727539200,
+              _nanoseconds: 331000000
+            },
+            Approved_FName: 'Eric',
+            Approved_LName: 'Loh',
+            attachment: ''
           })
         })
         callback({
@@ -608,8 +669,19 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
               _seconds: 1728316800,
               _nanoseconds: 713000000
             },
-            reason: 'Project work',
+            reason: '',
             status: 'approved',
+            Staff_LName: 'Phuc',
+            Staff_FName: 'Le',
+            approvedBy: '150008',
+            time: 'PM',
+            requestCreated: {
+              _seconds: 1727539200,
+              _nanoseconds: 331000000
+            },
+            Approved_FName: 'Eric',
+            Approved_LName: 'Loh',
+            attachment: ''
           })
         })
       },
@@ -647,8 +719,19 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
           _seconds: 1728316800,
           _nanoseconds: 713000000
         },
-        reason: 'Medical leave',
+        reason: '',
         status: 'approved',
+        Staff_LName: 'Sim',
+        Staff_FName: 'Heng',
+        approvedBy: '150008',
+        time: 'PM',
+        requestCreated: {
+          _seconds: 1727539200,
+          _nanoseconds: 331000000
+        },
+        Approved_FName: 'Eric',
+        Approved_LName: 'Loh',
+        attachment: ''
       },
       {
         Staff_ID: '190059',
@@ -660,8 +743,19 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
           _seconds: 1728316800,
           _nanoseconds: 713000000
         },
-        reason: 'Project work',
+        reason: '',
         status: 'approved',
+        Staff_LName: 'Phuc',
+        Staff_FName: 'Le',
+        approvedBy: '150008',
+        time: 'PM',
+        requestCreated: {
+          _seconds: 1727539200,
+          _nanoseconds: 331000000
+        },
+        Approved_FName: 'Eric',
+        Approved_LName: 'Loh',
+        attachment: ''
       }
     ])
   })
