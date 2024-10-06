@@ -332,4 +332,4 @@ app.all("*", (req, res) => {
     res.status(404).send("Route not found")
 }) 
 
-module.exports = app;
+module.exports = { app, fetchWorkingArrangementsInBatches }

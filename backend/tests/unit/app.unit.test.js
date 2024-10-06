@@ -1,5 +1,5 @@
 const request = require('supertest')
-const app = require('../../app')
+const { app, fetchWorkingArrangementsInBatches } = require('../../app')
 const admin = require('firebase-admin')
 const db = admin.firestore()
 const firestore = require('firebase-admin/firestore')
@@ -39,6 +39,182 @@ afterEach(() => {
   jest.clearAllMocks() // Reset the mocks after each test
 })
 
+describe('fetchWorkingArrangementsInBatches function is called', () => {
+  const sameDepartmentID = ['190019']
+  const teamMemberIds = ['190019', '190059']
+  const inChargeOfID = ['190019', '150008']
+  const targetDate = new Date('2024-10-01')
+  const endOfDay = new Date(targetDate)
+  targetDate.setHours(0, 0, 0, 0)
+  endOfDay.setHours(23, 59, 59, 999)
+
+  test('fetch arrangements in batches for department', async () => {
+    const mockGet = db.collection().get
+    mockGet.mockResolvedValueOnce({
+      empty: false,
+      forEach: (callback) => {
+        callback({
+          data: () => ({
+            reason: '',
+            Staff_LName: 'Sim',
+            Staff_FName: 'Heng',
+            approvedBy: '150008',
+            time: 'PM',
+            Staff_ID: '190019',
+            status: 'approved',
+            startDate: {
+              _seconds: 1728316800,
+              _nanoseconds: 393000000
+            },
+            endDate: {
+              _seconds: 1728316800,
+              _nanoseconds: 713000000
+            },
+            requestCreated: {
+              _seconds: 1727539200,
+              _nanoseconds: 331000000
+            },
+            Approved_FName: 'Eric',
+            Approved_LName: 'Loh',
+            attachment: ''
+          })
+        })
+      }
+    })
+    
+    await fetchWorkingArrangementsInBatches(sameDepartmentID, endOfDay, targetDate, "department")
+    expect(db.collection().where).toHaveBeenCalledWith("status", "!=", "rejected")
+  })
+
+  test('fetch arrangements in batches for team', async () => {
+    const mockGet = db.collection().get
+    mockGet.mockResolvedValueOnce({
+      empty: false,
+      forEach: (callback) => {
+        callback({
+          data: () => ({
+            Staff_ID: '190019',
+            startDate: {
+              _seconds: 1728316800,
+              _nanoseconds: 393000000
+            },
+            endDate: {
+              _seconds: 1728316800,
+              _nanoseconds: 713000000
+            },
+            reason: '',
+            status: 'approved',
+            Staff_LName: 'Sim',
+            Staff_FName: 'Heng',
+            approvedBy: '150008',
+            time: 'PM',
+            requestCreated: {
+              _seconds: 1727539200,
+              _nanoseconds: 331000000
+            },
+            Approved_FName: 'Eric',
+            Approved_LName: 'Loh',
+            attachment: ''
+          })
+        })
+        callback({
+          data: () => ({
+            Staff_ID: '190059',
+            startDate: {
+              _seconds: 1728316800,
+              _nanoseconds: 393000000
+            },
+            endDate: {
+              _seconds: 1728316800,
+              _nanoseconds: 713000000
+            },
+            reason: '',
+            status: 'approved',
+            Staff_LName: 'Phuc',
+            Staff_FName: 'Le',
+            approvedBy: '150008',
+            time: 'PM',
+            requestCreated: {
+              _seconds: 1727539200,
+              _nanoseconds: 331000000
+            },
+            Approved_FName: 'Eric',
+            Approved_LName: 'Loh',
+            attachment: ''
+          })
+        })
+      },
+    })
+
+    await fetchWorkingArrangementsInBatches(teamMemberIds, endOfDay, targetDate, "team")
+    expect(db.collection().where).toHaveBeenCalledWith("status", "==", "approved")
+  })
+
+  test('fetch arrangements in batches for manager\'s team in charge of', async () => {
+    const mockGet = db.collection().get
+    mockGet.mockResolvedValueOnce({
+      empty: false,
+      forEach: (callback) => {
+        callback({
+          data: () => ({
+            Staff_ID: '190019',
+            startDate: {
+              _seconds: 1728316800,
+              _nanoseconds: 393000000
+            },
+            endDate: {
+              _seconds: 1728316800,
+              _nanoseconds: 713000000
+            },
+            reason: '',
+            status: 'pending',
+            Staff_LName: 'Sim',
+            Staff_FName: 'Heng',
+            approvedBy: '',
+            time: 'PM',
+            requestCreated: {
+              _seconds: 1727539200,
+              _nanoseconds: 331000000
+            },
+            Approved_FName: '',
+            Approved_LName: '',
+            attachment: ''
+          })
+        })
+        callback({
+          data: () => ({
+            Staff_ID: '150008',
+            startDate: {
+              _seconds: 1728316800,
+              _nanoseconds: 393000000
+            },
+            endDate: {
+              _seconds: 1728316800,
+              _nanoseconds: 713000000
+            },
+            reason: '',
+            status: 'approved',
+            Staff_LName: 'Eric',
+            Staff_FName: 'Loh',
+            approvedBy: '130002',
+            time: 'PM',
+            requestCreated: {
+              _seconds: 1727539200,
+              _nanoseconds: 331000000
+            },
+            Approved_FName: 'Jack',
+            Approved_LName: 'Sim',
+            attachment: ''
+          })
+        })
+      },
+    })
+
+    await fetchWorkingArrangementsInBatches(inChargeOfID, endOfDay, targetDate, "manager")
+    expect(db.collection().where).toHaveBeenCalledWith("status", "!=", "rejected")
+  })
+})
+
 //test login
 describe('POST /login', () => {
   //login successful
@@ -66,6 +242,47 @@ describe('POST /login', () => {
       .post('/login')
       .send({
         emailAddress: 'philip.lee@allinone.com.sg',
+        password: '123',
+      })
+
+    expect(res.body).toEqual({
+      message: 'Login successful',
+      user: {
+        Staff_ID: "151408",
+        Staff_FName: "Philip",
+        Staff_LName: "Lee",
+        Dept: "Engineering",
+        Position: "Director",
+        Role: "1",
+        Reporting_Manager: "130002",
+      },
+    })
+  })
+
+  test('login existing user with valid password but uppercased email', async () => {
+    const mockGet = db.collection().get
+    mockGet.mockResolvedValueOnce({
+      empty: false, // User exists
+      forEach: (callback) => {
+        callback({
+          data: () => ({
+            password: '123',
+            Staff_ID: '151408',
+            Staff_FName: 'Philip',
+            Staff_LName: 'Lee',
+            Dept: 'Engineering',
+            Position: 'Director',
+            Role: '1',
+            Reporting_Manager: '130002',
+          }),
+        })
+      },
+    })
+
+    const res = await request(app)
+      .post('/login')
+      .send({
+        emailAddress: 'pHiLiP.LeE@allinone.com.sg',
         password: '123',
       })
 
@@ -174,7 +391,9 @@ describe('GET /working-arrangements/:employeeid', () => {
             endDate: "2024-10-08",
             requestCreated: "2024-10-05",
             status: "pending",
-            time: "PM"
+            time: "PM",
+            reason: '',
+            attachment: ''
           })
         })
       },
@@ -196,7 +415,9 @@ describe('GET /working-arrangements/:employeeid', () => {
       endDate: "2024-10-08",
       requestCreated: "2024-10-05",
       status: "pending",
-      time: "PM"
+      time: "PM",
+      reason: '',
+      attachment: ''
     }])
   })
 
@@ -263,7 +484,7 @@ describe('GET /working-arrangements/department/:department/:date', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            reason: 'Take care of sick cat',
+            reason: '',
             Staff_LName: 'Sim',
             Staff_FName: 'Heng',
             approvedBy: '150008',
@@ -283,7 +504,8 @@ describe('GET /working-arrangements/department/:department/:date', () => {
               _nanoseconds: 331000000
             },
             Approved_FName: 'Eric',
-            Approved_LName: 'Loh'
+            Approved_LName: 'Loh',
+            attachment: ''
           })
         })
       },
@@ -310,7 +532,7 @@ describe('GET /working-arrangements/department/:department/:date', () => {
     ])
     expect(response.body.workingArrangements).toEqual([
       {
-        reason: 'Take care of sick cat',
+        reason: '',
         Staff_LName: 'Sim',
         Staff_FName: 'Heng',
         approvedBy: '150008',
@@ -330,7 +552,8 @@ describe('GET /working-arrangements/department/:department/:date', () => {
           _nanoseconds: 331000000
         },
         Approved_FName: 'Eric',
-        Approved_LName: 'Loh'
+        Approved_LName: 'Loh',
+        attachment: ''
       }
     ])
   })
@@ -375,7 +598,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
             Staff_ID: '150008',
             Staff_FName: 'Eric',
             Staff_LName: 'Loh',
-            Reporting_Manager: '150008',
+            Reporting_Manager: '130002',
             Dept: 'Solutioning',
             Position: 'Director',
             Email: 'eric.loh@allinone.com.sg',
@@ -399,8 +622,19 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
               _seconds: 1728316800,
               _nanoseconds: 713000000
             },
-            reason: 'Medical leave',
+            reason: '',
             status: 'pending',
+            Staff_LName: 'Sim',
+            Staff_FName: 'Heng',
+            approvedBy: '',
+            time: 'PM',
+            requestCreated: {
+              _seconds: 1727539200,
+              _nanoseconds: 331000000
+            },
+            Approved_FName: '',
+            Approved_LName: '',
+            attachment: ''
           })
         })
         callback({
@@ -414,8 +648,19 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
               _seconds: 1728316800,
               _nanoseconds: 713000000
             },
-            reason: 'Project work',
+            reason: '',
             status: 'approved',
+            Staff_LName: 'Eric',
+            Staff_FName: 'Loh',
+            approvedBy: '130002',
+            time: 'PM',
+            requestCreated: {
+              _seconds: 1727539200,
+              _nanoseconds: 331000000
+            },
+            Approved_FName: 'Jack',
+            Approved_LName: 'Sim',
+            attachment: ''
           })
         })
       },
@@ -440,7 +685,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
         Staff_ID: '150008',
         Staff_FName: 'Eric',
         Staff_LName: 'Loh',
-        Reporting_Manager: '150008',
+        Reporting_Manager: '130002',
         Dept: 'Solutioning',
         Position: 'Director',
         Email: 'eric.loh@allinone.com.sg',
@@ -457,8 +702,19 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
           _seconds: 1728316800,
           _nanoseconds: 713000000
         },
-        reason: 'Medical leave',
+        reason: '',
         status: 'pending',
+        Staff_LName: 'Sim',
+        Staff_FName: 'Heng',
+        approvedBy: '',
+        time: 'PM',
+        requestCreated: {
+          _seconds: 1727539200,
+          _nanoseconds: 331000000
+        },
+        Approved_FName: '',
+        Approved_LName: '',
+        attachment: ''
       },
       {
         Staff_ID: '150008',
@@ -470,8 +726,19 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
           _seconds: 1728316800,
           _nanoseconds: 713000000
         },
-        reason: 'Project work',
+        reason: '',
         status: 'approved',
+        Staff_LName: 'Eric',
+        Staff_FName: 'Loh',
+        approvedBy: '130002',
+        time: 'PM',
+        requestCreated: {
+          _seconds: 1727539200,
+          _nanoseconds: 331000000
+        },
+        Approved_FName: 'Jack',
+        Approved_LName: 'Sim',
+        attachment: ''
       }
     ])
   })
@@ -552,8 +819,19 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
               _seconds: 1728316800,
               _nanoseconds: 713000000
             },
-            reason: 'Medical leave',
+            reason: '',
             status: 'approved',
+            Staff_LName: 'Sim',
+            Staff_FName: 'Heng',
+            approvedBy: '150008',
+            time: 'PM',
+            requestCreated: {
+              _seconds: 1727539200,
+              _nanoseconds: 331000000
+            },
+            Approved_FName: 'Eric',
+            Approved_LName: 'Loh',
+            attachment: ''
           })
         })
         callback({
@@ -567,8 +845,19 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
               _seconds: 1728316800,
               _nanoseconds: 713000000
             },
-            reason: 'Project work',
+            reason: '',
             status: 'approved',
+            Staff_LName: 'Phuc',
+            Staff_FName: 'Le',
+            approvedBy: '150008',
+            time: 'PM',
+            requestCreated: {
+              _seconds: 1727539200,
+              _nanoseconds: 331000000
+            },
+            Approved_FName: 'Eric',
+            Approved_LName: 'Loh',
+            attachment: ''
           })
         })
       },
@@ -606,8 +895,19 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
           _seconds: 1728316800,
           _nanoseconds: 713000000
         },
-        reason: 'Medical leave',
+        reason: '',
         status: 'approved',
+        Staff_LName: 'Sim',
+        Staff_FName: 'Heng',
+        approvedBy: '150008',
+        time: 'PM',
+        requestCreated: {
+          _seconds: 1727539200,
+          _nanoseconds: 331000000
+        },
+        Approved_FName: 'Eric',
+        Approved_LName: 'Loh',
+        attachment: ''
       },
       {
         Staff_ID: '190059',
@@ -619,8 +919,19 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
           _seconds: 1728316800,
           _nanoseconds: 713000000
         },
-        reason: 'Project work',
+        reason: '',
         status: 'approved',
+        Staff_LName: 'Phuc',
+        Staff_FName: 'Le',
+        approvedBy: '150008',
+        time: 'PM',
+        requestCreated: {
+          _seconds: 1727539200,
+          _nanoseconds: 331000000
+        },
+        Approved_FName: 'Eric',
+        Approved_LName: 'Loh',
+        attachment: ''
       }
     ])
   })
@@ -665,7 +976,7 @@ describe('POST /request', () => {
     const dates = [{
       date: '2024-10-01',
       time: 'PM',
-      attachment: null
+      attachment: ''
     }]
 
     const response = await request(app)
@@ -708,7 +1019,7 @@ describe('POST /request', () => {
     const dates = [{
       date: '2024-10-01',
       time: 'PM',
-      attachment: null
+      attachment: ''
     }]
     db.batch().commit.mockRejectedValueOnce(new Error('Firestore error'))
 
