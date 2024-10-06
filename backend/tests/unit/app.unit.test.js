@@ -117,14 +117,12 @@ describe('POST /login', () => {
     expect(response.status).toBe(401)
     expect(response.body.message).toBe('Invalid email address or password')
   })
-
-  
 })
 
 //test personal employee
 describe('GET /working-arrangements/:employeeid', () => {
   //successful
-  test('working arrangements for valid employeeid', async () => {
+  test('get arrangements for an employee', async () => {
     // Mock Firestore to return working arrangements
     const mockGet = admin.firestore().collection().get
     mockGet.mockResolvedValueOnce({
@@ -149,7 +147,7 @@ describe('GET /working-arrangements/:employeeid', () => {
     })
 
     const response = await request(app)
-      .get('/working-arrangements/151408')
+      .get('/working-arrangements/190019')
       .send()
 
     expect(response.status).toBe(200) // Expect 200 OK
@@ -169,7 +167,7 @@ describe('GET /working-arrangements/:employeeid', () => {
   })
 
   //unsuccessful
-  test('no working arrangements for staff', async () => {
+  test('get non-existent arrangements for an employee', async () => {
     // Mock Firestore to return an empty snapshot
     const mockGet = admin.firestore().collection().get
     mockGet.mockResolvedValueOnce({ empty: true })
@@ -186,7 +184,7 @@ describe('GET /working-arrangements/:employeeid', () => {
   })
 
   //unsuccessful - something wrong with backend code
-  test('should return 500 when there is a server error', async () => {
+  test('get arrangements for an employee with firestore error', async () => {
     //get firestore to throw error
     const mockGet = admin.firestore().collection().get
     mockGet.mockRejectedValueOnce(new Error('Firestore error'))
