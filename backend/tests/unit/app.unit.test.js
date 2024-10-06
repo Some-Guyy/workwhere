@@ -26,7 +26,7 @@ afterEach(() => {
 //test login
 describe('POST /login', () => {
   //login successful
-  test('login existing user with valid data', async () => {
+  test('login existing user with valid password', async () => {
     const mockGet = admin.firestore().collection().get
     mockGet.mockResolvedValueOnce({
       empty: false, // User exists
