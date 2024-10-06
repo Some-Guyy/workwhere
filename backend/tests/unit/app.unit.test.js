@@ -26,9 +26,9 @@ afterEach(() => {
 //test login
 describe('POST /login', () => {
   //login successful
-  test('return user details for a valid login', async () => {
+  test('login existing user with valid data', async () => {
     const mockGet = admin.firestore().collection().get
-    mockGet.mockResolvedValueOnce({
+    mockGet.mockResolvedValue({
       empty: false, // User exists
       forEach: (callback) => {
         callback({
@@ -49,7 +49,7 @@ describe('POST /login', () => {
     const res = await request(app)
       .post('/login')
       .send({
-        emailAddress: 'Philip.Lee@allinone.com.sg',
+        emailAddress: 'philip.lee@allinone.com.sg',
         password: '123',
       })
 
@@ -68,7 +68,7 @@ describe('POST /login', () => {
   })
 
   //login unsuccessful - wrong email
-  test('return error message when wrong email', async () => {
+  test('login non-existent user', async () => {
     // return nothing back
     const mockGet = admin.firestore().collection().get
     mockGet.mockResolvedValueOnce({
@@ -79,15 +79,15 @@ describe('POST /login', () => {
     const response = await request(app)
       .post('/login')
       .send({ 
-        emailAddress: 'Philip.Lee@allinone.com.sg', 
-        password: '12345' })
+        emailAddress: 'philip.lee@allinone.com.sg', 
+        password: '123' })
 
     expect(response.status).toBe(401)
     expect(response.body.message).toBe('Invalid email address or password')
   })
 
   //login unsuccessful - wrong password
-  test('return error message when wrong password', async () => {
+  test('login existing user with invalid password', async () => {
     // return user
     const mockGet = admin.firestore().collection().get
     mockGet.mockResolvedValueOnce({
@@ -111,7 +111,7 @@ describe('POST /login', () => {
     const response = await request(app)
       .post('/login')
       .send({ 
-        emailAddress: 'Philip.Lee@allinone.com.sg', 
+        emailAddress: 'philip.lee@allinone.com.sg', 
         password: '1231' })
 
     expect(response.status).toBe(401)
