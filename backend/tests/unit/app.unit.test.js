@@ -83,6 +83,47 @@ describe('POST /login', () => {
     })
   })
 
+  test('login existing user with valid password but uppercased email', async () => {
+    const mockGet = db.collection().get
+    mockGet.mockResolvedValueOnce({
+      empty: false, // User exists
+      forEach: (callback) => {
+        callback({
+          data: () => ({
+            password: '123',
+            Staff_ID: '151408',
+            Staff_FName: 'Philip',
+            Staff_LName: 'Lee',
+            Dept: 'Engineering',
+            Position: 'Director',
+            Role: '1',
+            Reporting_Manager: '130002',
+          }),
+        })
+      },
+    })
+
+    const res = await request(app)
+      .post('/login')
+      .send({
+        emailAddress: 'pHiLiP.LeE@allinone.com.sg',
+        password: '123',
+      })
+
+    expect(res.body).toEqual({
+      message: 'Login successful',
+      user: {
+        Staff_ID: "151408",
+        Staff_FName: "Philip",
+        Staff_LName: "Lee",
+        Dept: "Engineering",
+        Position: "Director",
+        Role: "1",
+        Reporting_Manager: "130002",
+      },
+    })
+  })
+
   //login unsuccessful - wrong email
   test('login non-existent user', async () => {
     // return nothing back
