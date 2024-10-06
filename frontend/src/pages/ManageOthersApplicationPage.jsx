@@ -20,7 +20,7 @@ const ManageOthersApplicationPage = () => {
     // Fetch the role from localStorage when the component mounts
     useEffect(() => {
       const localStoreaged = localStorage.getItem('state');
-      const storedRole = JSON.parse(localStoreaged).role;
+      const storedRole = JSON.parse(localStoreaged).Role;
       if (storedRole) {
         setUserRole(storedRole);
       }

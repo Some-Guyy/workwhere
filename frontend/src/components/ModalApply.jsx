@@ -79,7 +79,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
       <>
           <button className="btn btn-outline btn-sm ml-5" onClick={checkMoreThanTwoAndShowModal}>Apply</button>
           <dialog id="apply_modal" className="modal">
-          <div className="modal-box">
+          <div className="modal-box max-h-[780px] mt-10">
                 <h3 className="font-bold text-lg">Do you want to apply for WFH arrangement?</h3><br/>
                 
                 {/* Alert for 2 or more WFH days */}

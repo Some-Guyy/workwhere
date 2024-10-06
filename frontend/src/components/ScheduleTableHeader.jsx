@@ -1,12 +1,22 @@
-const ScheduleTableHeader = ({activeSchedule, isWFODate, isManageOwnApplication}) => {
+const ScheduleTableHeader = ({activeSchedule, isWFODate, isManageOwnApplication, isPending}) => {
   return (
         <>
-            {activeSchedule == "Your Schedule"  && isManageOwnApplication == true?
+            {activeSchedule == "Your Schedule"  && isPending == true?
                 <>
                 <tr className="text-center">
                     <th>S/N</th>
                     <th>Date</th>
                     <th>Type</th>
+                </tr>
+                </>
+                : activeSchedule == "Your Schedule" && isManageOwnApplication == true? 
+                <>
+                <tr className="text-center">
+                    <th>S/N</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Approved By</th>
+                    {/* <th></th> */}
                 </tr>
                 </>
                 : activeSchedule == "Your Schedule"? 

@@ -117,6 +117,7 @@ const Navbar = () => {
                 </NavLink>
               </li>
               
+              <li>
               {EmployeeRole == 2? null:
                 <NavLink
                     to="/other"
@@ -127,6 +128,7 @@ const Navbar = () => {
                     Manage Other's Applications
                   </NavLink>              
               }
+              </li>
 
             </ul>
 

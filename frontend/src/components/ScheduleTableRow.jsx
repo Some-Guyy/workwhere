@@ -1,5 +1,5 @@
 import ModalWithdraw from "./ModalWithdraw";
-
+import ModalCancel from "./ModalCancel";
 
 const ScheduleTableRow = ({details, index, activeSchedule, isWFODate, isPending, isManageOwnApplication}) => {
   // convert seconds to date
@@ -22,13 +22,22 @@ const ScheduleTableRow = ({details, index, activeSchedule, isWFODate, isPending,
 
   return (
     <>
-    {activeSchedule == "Your Schedule" && isManageOwnApplication == true?
+    {activeSchedule == "Your Schedule" && isPending == true?
       <>
         <tr className="hover">
             <th>{index+1}</th>
             <td>{convert_to_date(details.startDate._seconds)}</td>
             <td>{details.time}</td>
-            {/* <td>{details.Approved_Fname} {details.Approved_Lname}</td> */}
+            <td><ModalCancel /></td>
+        </tr>
+      </>
+      : activeSchedule == "Your Schedule" && isManageOwnApplication == true? 
+      <>
+        <tr className="hover">
+            <th>{index+1}</th>
+            <td>{convert_to_date(details.startDate._seconds)}</td>
+            <td>{details.time}</td>
+            <td>{details.Approved_Fname} {details.Approved_Lname}</td>
             <td><ModalWithdraw /></td>
         </tr>
       </>

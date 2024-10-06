@@ -5,30 +5,30 @@ import {useState,useEffect} from "react"
 const ScheduleTable = ({data, headCount, activeSchedule, isWFODate, isPending, isManageOwnApplication}) => {
     const [First, setFirst] = useState(0); 
     const [Second, setSecond] = useState(10); 
-        const dataLength = data.length
+    const dataLength = data.length
 
-        const ShowNext = ()=>{
-            if (First + 10 < dataLength){
-                setFirst(First+10)
-            }
-            if (Second + 10 < dataLength){
-                setSecond(Second + 10)
-            }
-            else{
-                setSecond(dataLength)
-            }
+    const ShowNext = ()=>{
+        if (First + 10 < dataLength){
+            setFirst(First+10)
         }
-        const ShowPrevious = () =>{
-            if (First - 10 >= 0){
-                setFirst(First-10)
-            }
-            if (Second%10 == 0 && Second >= 20){
-                setSecond(Second - 10)
-            }
-            else if (Second%10 != 0){
-                setSecond(Second - (Second%10))
-            }
+        if (Second + 10 < dataLength){
+            setSecond(Second + 10)
         }
+        else{
+            setSecond(dataLength)
+        }
+    }
+    const ShowPrevious = () =>{
+        if (First - 10 >= 0){
+            setFirst(First-10)
+        }
+        if (Second%10 == 0 && Second >= 20){
+            setSecond(Second - 10)
+        }
+        else if (Second%10 != 0){
+            setSecond(Second - (Second%10))
+        }
+    }
         
 
     // console.log(data)
@@ -48,7 +48,7 @@ const ScheduleTable = ({data, headCount, activeSchedule, isWFODate, isPending, i
              :null}
                 <table className="table table-pin-rows overflow-x-auto">
                     <thead>
-                        <ScheduleTableHeader activeSchedule={activeSchedule} isWFODate={isWFODate} isManageOwnApplication={isManageOwnApplication}/>
+                        <ScheduleTableHeader activeSchedule={activeSchedule} isWFODate={isWFODate} isManageOwnApplication={isManageOwnApplication} isPending={isPending}/>
                     </thead>
                     <tbody>
                         {data.slice(First,Second).map((d, index) => (
