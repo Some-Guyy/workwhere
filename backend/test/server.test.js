@@ -1,5 +1,5 @@
 const request = require('supertest')
-const app = require('../server')
+const app = require('../app')
 const admin = require('firebase-admin')
 
 jest.mock('firebase-admin', () => {
@@ -25,7 +25,7 @@ describe('POST /login', () => {
   })
 
   //login successful
-  it('return user details for a valid login', async () => {
+  test('return user details for a valid login', async () => {
     const mockGet = require('firebase-admin').firestore().collection().get
     mockGet.mockResolvedValueOnce({
       empty: false, // User exists
@@ -67,7 +67,7 @@ describe('POST /login', () => {
   })
 
   //login unsuccessful - wrong email
-  it('return error message when wrong email', async () => {
+  test('return error message when wrong email', async () => {
     // return nothing back
     const mockGet = require('firebase-admin').firestore().collection().get
     mockGet.mockResolvedValueOnce({
@@ -86,7 +86,7 @@ describe('POST /login', () => {
   })
 
   //login unsuccessful - wrong password
-  it('return error message when wrong password', async () => {
+  test('return error message when wrong password', async () => {
     // return user
     const mockGet = require('firebase-admin').firestore().collection().get
     mockGet.mockResolvedValueOnce({
@@ -127,7 +127,7 @@ describe('GET /working-arrangements/:employeeid', () => {
   })
 
   //successful
-  it('working arrangements for valid employeeid', async () => {
+  test('working arrangements for valid employeeid', async () => {
     // Mock Firestore to return working arrangements
     const mockGet = require('firebase-admin').firestore().collection().get
     mockGet.mockResolvedValueOnce({
@@ -172,7 +172,7 @@ describe('GET /working-arrangements/:employeeid', () => {
   })
 
   //unsuccessful
-  it('no working arrangements for staff', async () => {
+  test('no working arrangements for staff', async () => {
     // Mock Firestore to return an empty snapshot
     const mockGet = require('firebase-admin').firestore().collection().get
     mockGet.mockResolvedValueOnce({ empty: true })
@@ -189,7 +189,7 @@ describe('GET /working-arrangements/:employeeid', () => {
   })
 
   //unsuccessful - something wrong with backend code
-  it('should return 500 when there is a server error', async () => {
+  test('should return 500 when there is a server error', async () => {
     //get firestore to throw error
     const mockGet = require('firebase-admin').firestore().collection().get
     mockGet.mockRejectedValueOnce(new Error('Firestore error'))
@@ -210,7 +210,7 @@ describe('GET /working-arrangements/department/:department/:date', () => {
   })
 
   //successful
-  it('return deparments and their working arrangements', async () => {
+  test('return deparments and their working arrangements', async () => {
 
     const mockGet = require('firebase-admin').firestore().collection().get
     mockGet.mockResolvedValueOnce({
@@ -312,7 +312,7 @@ describe('GET /working-arrangements/department/:department/:date', () => {
   })
 
   //unsuccessful - something wrong with backend code
-  it('should return 500 when there is a server error', async () => {
+  test('should return 500 when there is a server error', async () => {
     // Mock Firestore to throw an error
     const mockGet = require('firebase-admin').firestore().collection().get
     mockGet.mockRejectedValueOnce(new Error('Firestore error'))
@@ -332,7 +332,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
     jest.clearAllMocks() // Reset the mocks after each test
   })
 
-  it('should return employees and their approved and pending working arrangements for a manager', async () => {
+  test('should return employees and their approved and pending working arrangements for a manager', async () => {
     const mockGet = require('firebase-admin').firestore().collection().get
     
     // Mock Firestore to return employees under the manager
@@ -457,7 +457,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
   })
 
   //unsuccessful - something wrong with backend code
-  it('should return 500 when Firestore throws an error', async () => {
+  test('should return 500 when Firestore throws an error', async () => {
     const mockGet = require('firebase-admin').firestore().collection().get
     
     // Mock Firestore to throw an error when fetching employees
@@ -479,7 +479,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
   })
 
   //successful
-  it('return team members and approved working arrangements', async () => {
+  test('return team members and approved working arrangements', async () => {
     const mockGet = require('firebase-admin').firestore().collection().get
 
     // Mock Firestore to return the employee data
@@ -610,7 +610,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
   })
 
   //unsuccessful - employee cant be found
-  it('should return 404 when the employee is not found', async () => {
+  test('should return 404 when the employee is not found', async () => {
     const mockGet = require('firebase-admin').firestore().collection().get
 
     // Mock Firestore to return an empty employee snapshot
@@ -625,7 +625,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
   })
 
   //unsuccessful - backend code 
-  it('should return 500 when Firestore throws an error', async () => {
+  test('should return 500 when Firestore throws an error', async () => {
     const mockGet = require('firebase-admin').firestore().collection().get
 
 
