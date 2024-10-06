@@ -151,57 +151,57 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
                 </div>
                 
                 <p className="py-4">Press ESC key or click outside to close</p>
-          </div>
-            <form method="dialog" className="modal-backdrop">
-                {/* warning for more than 2 wfh popup */}
-                {showMoreThanTwoAlert && (
-                    <div role="alert" className="alert alert-warning fixed top-0 left-0 w-full z-50">
-                        <div className="flex items-center">
+                </div>
+                <form method="dialog" className="modal-backdrop">
+                    {/* warning for more than 2 wfh popup */}
+                    {showMoreThanTwoAlert && (
+                        <div role="alert" className="alert alert-warning fixed top-0 left-0 w-full z-50">
                             <div className="flex items-center">
-                                <CiWarning size={25}/>
-                                <span className="mx-2">You will have 2 or more WFH days.</span>
-                            </div>
-                            <div className="absolute top-4 right-7">
-                                {/* Right side: Close icon */}
-                                <IoMdClose size={30} onClick={() => setShowMoreThanTwoAlert(false)}/>
+                                <div className="flex items-center">
+                                    <CiWarning size={25}/>
+                                    <span className="mx-2">You will have 2 or more WFH days.</span>
+                                </div>
+                                <div className="absolute top-4 right-7">
+                                    {/* Right side: Close icon */}
+                                    <IoMdClose size={30} onClick={() => setShowMoreThanTwoAlert(false)}/>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
 
-                {/* warning for successful wfh */}
-                {successfulApplication == true && (
-                    <div role="alert" className="alert alert-success fixed top-0 left-0 w-full z-50">
-                        <div className="flex items-center">
+                    {/* warning for successful wfh */}
+                    {successfulApplication == true && (
+                        <div role="alert" className="alert alert-success fixed top-0 left-0 w-full z-50">
                             <div className="flex items-center">
-                                <GrStatusGood size={25}/>
-                                <span className="mx-2">Successfully created arrangement</span>
-                            </div>
-                            <div className="absolute top-4 right-7">
-                                {/* Right side: Close icon */}
-                                <IoMdClose size={30} onClick={() => setSuccessfulApplication(null)}/>
+                                <div className="flex items-center">
+                                    <GrStatusGood size={25}/>
+                                    <span className="mx-2">Successfully created arrangement</span>
+                                </div>
+                                <div className="absolute top-4 right-7">
+                                    {/* Right side: Close icon */}
+                                    <IoMdClose size={30} onClick={() => setSuccessfulApplication(null)}/>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
 
-                {/* warning for successful wfh */}
-                {successfulApplication == false && (
-                    <div role="alert" className="alert alert-error fixed top-0 left-0 w-full z-50">
-                        <div className="flex items-center">
+                    {/* warning for successful wfh */}
+                    {successfulApplication == false && (
+                        <div role="alert" className="alert alert-error fixed top-0 left-0 w-full z-50">
                             <div className="flex items-center">
-                                <PiWarningDiamondFill size={25}/>
-                                <span className="mx-2">Error creating arrangement</span>
-                            </div>
-                            <div className="absolute top-4 right-7">
-                                {/* Right side: Close icon */}
-                                <IoMdClose size={30} onClick={() => setSuccessfulApplication(null)}/>
+                                <div className="flex items-center">
+                                    <PiWarningDiamondFill size={25}/>
+                                    <span className="mx-2">Error creating arrangement</span>
+                                </div>
+                                <div className="absolute top-4 right-7">
+                                    {/* Right side: Close icon */}
+                                    <IoMdClose size={30} onClick={() => setSuccessfulApplication(null)}/>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
-                <button>close</button>
-            </form>
+                    )}
+                    <button>close</button>
+                </form>
           </dialog>
       </>
     )

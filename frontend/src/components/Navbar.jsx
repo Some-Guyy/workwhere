@@ -1,9 +1,12 @@
 import { MdMapsHomeWork } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
-import { useState,useEffect } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useState,useEffect, useRef } from "react";
 
 const Navbar = () => {
   const [EmployeeRole,setEmployeeRole] = useState(null)
+  const navigate = useNavigate();
+  const location = useLocation();
+  const drawerCheckboxRef = useRef(null);
   
   // extract users role to conditionally render links
   useEffect(()=>{
@@ -11,8 +14,14 @@ const Navbar = () => {
       setEmployeeRole(data.Role)
   },[])
 
+  // Close the drawer when navigating to another page
+  useEffect(() => {
+    if (drawerCheckboxRef.current) {
+      drawerCheckboxRef.current.checked = false; // uncheck the drawer checkbox
+    }
+  }, [location]);
+
   // logout logic which clears local storage when logged out
-  const navigate = useNavigate();
   const logout = () => {
     localStorage.clear();
     navigate("/");
@@ -21,7 +30,7 @@ const Navbar = () => {
   return (
     <>
       <div className="drawer">
-        <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
+        <input id="my-drawer-3" type="checkbox" className="drawer-toggle" ref={drawerCheckboxRef}/>
         <div className="drawer-content flex flex-col">
           {/* Navbar */}
           <div className="navbar bg-neutral w-full text-primary-content fixed z-10">
@@ -79,12 +88,48 @@ const Navbar = () => {
           <div className="flex flex-col min-h-full w-80 bg-base-200 p-4">
             <ul className="menu flex-grow">
               {/* Sidebar content here */}
-              <li><strong className="text-3xl mb-5 ">Hi Ryan!</strong></li>
-              <li><Link to="/home" className="active">View Schedule</Link></li>
-              <li><Link to="/my">Manage My Applications</Link></li>
-              {EmployeeRole == 2? null:
-              <li><Link to="/other">Manage Other's Applications</Link></li>
-              }
+              
+              <li>
+                <strong className="text-3xl mb-5 ">
+                Hi Ryan!
+                </strong>
+              </li>
+
+              <li>
+                <NavLink
+                  to="/home"
+                  className={({ isActive }) =>
+                    isActive ? "active text-primary" : ""
+                  }
+                >
+                  View Schedule
+                </NavLink>
+              </li>
+
+              <li>
+                <NavLink
+                  to="/my"
+                  className={({ isActive }) =>
+                    isActive ? "active text-primary" : ""
+                  }
+                >
+                  Manage My Applications
+                </NavLink>
+              </li>
+
+              {EmployeeRole !== 2 && (
+                <li>
+                  <NavLink
+                    to="/other"
+                    className={({ isActive }) =>
+                      isActive ? "active text-primary" : ""
+                    }
+                  >
+                    Manage Other's Applications
+                  </NavLink>
+                </li>
+              )}
+
             </ul>
 
             <button className="btn btn-primary" onClick={logout}>Logout</button>
