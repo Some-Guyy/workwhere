@@ -201,8 +201,7 @@ describe('GET /working-arrangements/:employeeid', () => {
 //test department
 describe('GET /working-arrangements/department/:department/:date', () => {
   //successful
-  test('return deparments and their working arrangements', async () => {
-
+  test('get arrangements for department on a date', async () => {
     const mockGet = admin.firestore().collection().get
     mockGet.mockResolvedValueOnce({
       empty: false,
@@ -214,7 +213,7 @@ describe('GET /working-arrangements/department/:department/:date', () => {
             Staff_LName: 'Sim',
             Reporting_Manager: '150008',
             Role: '2',
-            Email: 'Heng.Sim@allinone.com.sg',
+            Email: 'heng.sim@allinone.com.sg',
             Dept: 'Solutioning',
             Position: 'Developers',
             Country: 'Singapore',
@@ -257,10 +256,24 @@ describe('GET /working-arrangements/department/:department/:date', () => {
     })
 
     const response = await request(app)
-      .get('/working-arrangements/department/Engineering/2024-10-01')
+      .get('/working-arrangements/department/Solutioning/2024-10-01')
       .send()
 
     expect(response.status).toBe(200) // Expect 200 OK
+    expect(response.body.sameDepart).toEqual([
+      {
+        Staff_ID: '190019',
+        Staff_FName: 'Heng',
+        Staff_LName: 'Sim',
+        Reporting_Manager: '150008',
+        Role: '2',
+        Email: 'heng.sim@allinone.com.sg',
+        Dept: 'Solutioning',
+        Position: 'Developers',
+        Country: 'Singapore',
+        password: '123',
+      }
+    ])
     expect(response.body.workingArrangements).toEqual([
       {
         reason: 'Take care of sick cat',
@@ -286,30 +299,16 @@ describe('GET /working-arrangements/department/:department/:date', () => {
         Approved_LName: 'Loh'
       }
     ])
-    expect(response.body.sameDepart).toEqual([
-      {
-        Staff_ID: '190019',
-        Staff_FName: 'Heng',
-        Staff_LName: 'Sim',
-        Reporting_Manager: '150008',
-        Role: '2',
-        Email: 'Heng.Sim@allinone.com.sg',
-        Dept: 'Solutioning',
-        Position: 'Developers',
-        Country: 'Singapore',
-        password: '123',
-      }
-    ])
   })
 
   //unsuccessful - something wrong with backend code
-  test('should return 500 when there is a server error', async () => {
+  test('get arrangements for department on a date with firestore error', async () => {
     // Mock Firestore to throw an error
     const mockGet = admin.firestore().collection().get
     mockGet.mockRejectedValueOnce(new Error('Firestore error'))
 
     const response = await request(app)
-      .get('/working-arrangements/department/Engineering/2024-10-01')
+      .get('/working-arrangements/department/Solutioning/2024-10-01')
       .send()
 
     expect(response.status).toBe(500) // Expect 500 Internal Server Error
