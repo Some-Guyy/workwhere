@@ -117,6 +117,21 @@ describe('POST /login', () => {
     expect(response.status).toBe(401)
     expect(response.body.message).toBe('Invalid email address or password')
   })
+
+  test('login with firestore error', async () => {
+    // Mock Firestore to throw an error
+    const mockGet = admin.firestore().collection().get
+    mockGet.mockRejectedValueOnce(new Error('Firestore error'))
+
+    const response = await request(app)
+      .post('/login')
+      .send({ 
+        emailAddress: 'philip.lee@allinone.com.sg', 
+        password: '123' })
+
+    expect(response.status).toBe(500) // Expect 500 Internal Server Error
+    expect(response.body.error).toBe('Internal server error')
+  })
 })
 
 //test personal employee
