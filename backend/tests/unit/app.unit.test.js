@@ -1,7 +1,8 @@
 const request = require('supertest')
-const app = require('../app')
+const app = require('../../app')
 const admin = require('firebase-admin')
 
+// Fixtures
 jest.mock('firebase-admin', () => {
   return {
     initializeApp: jest.fn(),
@@ -18,15 +19,15 @@ jest.mock('firebase-admin', () => {
   }
 })
 
+afterEach(() => {
+  jest.clearAllMocks() // Reset the mocks after each test
+})
+
 //test login
 describe('POST /login', () => {
-  afterEach(() => {
-    jest.clearAllMocks() //reset mock
-  })
-
   //login successful
   test('return user details for a valid login', async () => {
-    const mockGet = require('firebase-admin').firestore().collection().get
+    const mockGet = admin.firestore().collection().get
     mockGet.mockResolvedValueOnce({
       empty: false, // User exists
       forEach: (callback) => {
@@ -69,7 +70,7 @@ describe('POST /login', () => {
   //login unsuccessful - wrong email
   test('return error message when wrong email', async () => {
     // return nothing back
-    const mockGet = require('firebase-admin').firestore().collection().get
+    const mockGet = admin.firestore().collection().get
     mockGet.mockResolvedValueOnce({
       empty: true, 
       forEach: jest.fn(), 
@@ -88,7 +89,7 @@ describe('POST /login', () => {
   //login unsuccessful - wrong password
   test('return error message when wrong password', async () => {
     // return user
-    const mockGet = require('firebase-admin').firestore().collection().get
+    const mockGet = admin.firestore().collection().get
     mockGet.mockResolvedValueOnce({
       empty: false, // User exists
       forEach: (callback) => {
@@ -122,14 +123,10 @@ describe('POST /login', () => {
 
 //test personal employee
 describe('GET /working-arrangements/:employeeid', () => {
-  afterEach(() => {
-    jest.clearAllMocks() // Reset the mocks after each test
-  })
-
   //successful
   test('working arrangements for valid employeeid', async () => {
     // Mock Firestore to return working arrangements
-    const mockGet = require('firebase-admin').firestore().collection().get
+    const mockGet = admin.firestore().collection().get
     mockGet.mockResolvedValueOnce({
       empty: false,
       forEach: (callback) => {
@@ -174,7 +171,7 @@ describe('GET /working-arrangements/:employeeid', () => {
   //unsuccessful
   test('no working arrangements for staff', async () => {
     // Mock Firestore to return an empty snapshot
-    const mockGet = require('firebase-admin').firestore().collection().get
+    const mockGet = admin.firestore().collection().get
     mockGet.mockResolvedValueOnce({ empty: true })
 
     const response = await request(app)
@@ -191,7 +188,7 @@ describe('GET /working-arrangements/:employeeid', () => {
   //unsuccessful - something wrong with backend code
   test('should return 500 when there is a server error', async () => {
     //get firestore to throw error
-    const mockGet = require('firebase-admin').firestore().collection().get
+    const mockGet = admin.firestore().collection().get
     mockGet.mockRejectedValueOnce(new Error('Firestore error'))
 
     const response = await request(app)
@@ -205,14 +202,10 @@ describe('GET /working-arrangements/:employeeid', () => {
 
 //test department
 describe('GET /working-arrangements/department/:department/:date', () => {
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   //successful
   test('return deparments and their working arrangements', async () => {
 
-    const mockGet = require('firebase-admin').firestore().collection().get
+    const mockGet = admin.firestore().collection().get
     mockGet.mockResolvedValueOnce({
       empty: false,
       forEach: (callback) => {
@@ -314,7 +307,7 @@ describe('GET /working-arrangements/department/:department/:date', () => {
   //unsuccessful - something wrong with backend code
   test('should return 500 when there is a server error', async () => {
     // Mock Firestore to throw an error
-    const mockGet = require('firebase-admin').firestore().collection().get
+    const mockGet = admin.firestore().collection().get
     mockGet.mockRejectedValueOnce(new Error('Firestore error'))
 
     const response = await request(app)
@@ -328,12 +321,8 @@ describe('GET /working-arrangements/department/:department/:date', () => {
 
 //test manager
 describe('GET /working-arrangements/manager/:managerId/:date', () => {
-  afterEach(() => {
-    jest.clearAllMocks() // Reset the mocks after each test
-  })
-
   test('should return employees and their approved and pending working arrangements for a manager', async () => {
-    const mockGet = require('firebase-admin').firestore().collection().get
+    const mockGet = admin.firestore().collection().get
     
     // Mock Firestore to return employees under the manager
     mockGet.mockResolvedValueOnce({
@@ -458,7 +447,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
 
   //unsuccessful - something wrong with backend code
   test('should return 500 when Firestore throws an error', async () => {
-    const mockGet = require('firebase-admin').firestore().collection().get
+    const mockGet = admin.firestore().collection().get
     
     // Mock Firestore to throw an error when fetching employees
     mockGet.mockRejectedValueOnce(new Error('Firestore error'))
@@ -474,13 +463,9 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
 
 //test team members
 describe('GET /working-arrangements/team/:employeeId/:date', () => {
-  afterEach(() => {
-    jest.clearAllMocks() // Reset the mocks after each test
-  })
-
   //successful
   test('return team members and approved working arrangements', async () => {
-    const mockGet = require('firebase-admin').firestore().collection().get
+    const mockGet = admin.firestore().collection().get
 
     // Mock Firestore to return the employee data
     mockGet.mockResolvedValueOnce({
@@ -611,7 +596,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
 
   //unsuccessful - employee cant be found
   test('should return 404 when the employee is not found', async () => {
-    const mockGet = require('firebase-admin').firestore().collection().get
+    const mockGet = admin.firestore().collection().get
 
     // Mock Firestore to return an empty employee snapshot
     mockGet.mockResolvedValueOnce({ empty: true })
@@ -626,7 +611,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
 
   //unsuccessful - backend code 
   test('should return 500 when Firestore throws an error', async () => {
-    const mockGet = require('firebase-admin').firestore().collection().get
+    const mockGet = admin.firestore().collection().get
 
 
     // Mock Firestore to throw an error
