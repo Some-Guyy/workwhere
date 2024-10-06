@@ -706,7 +706,7 @@ describe('POST /request', () => {
     const dates = [{
       date: '2024-10-01',
       time: 'PM',
-      attachment: null
+      attachment: ''
     }]
 
     const response = await request(app)
@@ -749,7 +749,7 @@ describe('POST /request', () => {
     const dates = [{
       date: '2024-10-01',
       time: 'PM',
-      attachment: null
+      attachment: ''
     }]
     db.batch().commit.mockRejectedValueOnce(new Error('Firestore error'))
 
