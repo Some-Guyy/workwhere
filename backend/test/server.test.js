@@ -2,6 +2,7 @@ const request = require('supertest')
 const app = require('../app')
 const admin = require('firebase-admin')
 
+// Fixtures
 jest.mock('firebase-admin', () => {
   return {
     initializeApp: jest.fn(),
@@ -18,12 +19,12 @@ jest.mock('firebase-admin', () => {
   }
 })
 
+afterEach(() => {
+  jest.clearAllMocks() // Reset the mocks after each test
+})
+
 //test login
 describe('POST /login', () => {
-  afterEach(() => {
-    jest.clearAllMocks() //reset mock
-  })
-
   //login successful
   test('return user details for a valid login', async () => {
     const mockGet = require('firebase-admin').firestore().collection().get
@@ -122,10 +123,6 @@ describe('POST /login', () => {
 
 //test personal employee
 describe('GET /working-arrangements/:employeeid', () => {
-  afterEach(() => {
-    jest.clearAllMocks() // Reset the mocks after each test
-  })
-
   //successful
   test('working arrangements for valid employeeid', async () => {
     // Mock Firestore to return working arrangements
@@ -205,10 +202,6 @@ describe('GET /working-arrangements/:employeeid', () => {
 
 //test department
 describe('GET /working-arrangements/department/:department/:date', () => {
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   //successful
   test('return deparments and their working arrangements', async () => {
 
@@ -328,10 +321,6 @@ describe('GET /working-arrangements/department/:department/:date', () => {
 
 //test manager
 describe('GET /working-arrangements/manager/:managerId/:date', () => {
-  afterEach(() => {
-    jest.clearAllMocks() // Reset the mocks after each test
-  })
-
   test('should return employees and their approved and pending working arrangements for a manager', async () => {
     const mockGet = require('firebase-admin').firestore().collection().get
     
@@ -474,10 +463,6 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
 
 //test team members
 describe('GET /working-arrangements/team/:employeeId/:date', () => {
-  afterEach(() => {
-    jest.clearAllMocks() // Reset the mocks after each test
-  })
-
   //successful
   test('return team members and approved working arrangements', async () => {
     const mockGet = require('firebase-admin').firestore().collection().get
