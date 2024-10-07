@@ -230,7 +230,7 @@ app.post('/login', async (req, res) => {
         });
 
         //check if password matches
-        if (staffDetails.password !== password) {
+        if (staffDetails.Password !== password) {
             return res.status(401).json({ message: 'Invalid email address or password' })
         }
 
