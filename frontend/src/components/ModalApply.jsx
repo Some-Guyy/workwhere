@@ -169,7 +169,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
                         </div>
                     )}
 
-                    {/* warning for successful wfh */}
+                    {/* alert for successful wfh */}
                     {successfulApplication == true && (
                         <div role="alert" className="alert alert-success fixed top-0 left-0 w-full z-50">
                             <div className="flex items-center">
@@ -185,7 +185,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
                         </div>
                     )}
 
-                    {/* warning for successful wfh */}
+                    {/* alert for unsuccessful wfh */}
                     {successfulApplication == false && (
                         <div role="alert" className="alert alert-error fixed top-0 left-0 w-full z-50">
                             <div className="flex items-center">

@@ -2,7 +2,7 @@ import ScheduleTableRow from "./ScheduleTableRow"
 import ScheduleTableHeader from "./ScheduleTableHeader"
 import {useState,useEffect} from "react"
 
-const ScheduleTable = ({data, headCount, activeSchedule, isWFODate, isPending, isManageOwnApplication}) => {
+const ScheduleTable = ({data, headCount, activeSchedule, isWFODate, isPending, isManageOwnApplication, successfulCancellation, setSuccessfulCancellation, isForCancel}) => {
     const [First, setFirst] = useState(0); 
     const [Second, setSecond] = useState(10); 
     const dataLength = data.length
@@ -52,7 +52,7 @@ const ScheduleTable = ({data, headCount, activeSchedule, isWFODate, isPending, i
                     </thead>
                     <tbody>
                         {data.slice(First,Second).map((d, index) => (
-                            <ScheduleTableRow key={index} details={d} index={index+First} activeSchedule={activeSchedule} isWFODate={isWFODate} isPending={isPending} isManageOwnApplication={isManageOwnApplication}></ScheduleTableRow>
+                            <ScheduleTableRow key={index} details={d} index={index+First} activeSchedule={activeSchedule} isWFODate={isWFODate} isPending={isPending} isManageOwnApplication={isManageOwnApplication} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} isForCancel={isForCancel} />
                         ))}
                     </tbody>
                 </table>

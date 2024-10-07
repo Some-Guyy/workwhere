@@ -1,6 +1,6 @@
 import AccordionRow from "./AccordionRow";
 
-const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnApplication}) => {
+const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnApplication, successfulCancellation, setSuccessfulCancellation, isForCancel}) => {
     const wfhData = [];
     const pendingData = [];
     const leaveData = []; 
@@ -83,7 +83,7 @@ const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnAppl
             <>
                 <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={false} isManageOwnApplication={isManageOwnApplication}/>
                 <AccordionRow rowName={"Leave Dates"} loading={loading} data={leaveData} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={false} isManageOwnApplication={isManageOwnApplication}/>
-                <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingData} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={false} isManageOwnApplication={isManageOwnApplication} isPending={true}/>
+                <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingData} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={false} isManageOwnApplication={isManageOwnApplication} isPending={true} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} isForCancel={isForCancel} />
             </>
              : 
             <>
