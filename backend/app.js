@@ -215,7 +215,7 @@ app.post('/login', async (req, res) => {
     try {
         // find user from user db
         const snapshot = await db.collection('mock_employee')
-            .where('Email', '==', emailAddress)
+            .where('Email', '==', emailAddress.toLowerCase())
             .limit(1)
             .get()
 
