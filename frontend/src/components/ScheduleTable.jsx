@@ -43,7 +43,7 @@ const ScheduleTable = ({data, headCount, activeSchedule, isWFODate, isPending, i
 
         <div className="flex justify-center w-11/12">
             <div className=" m-4 overflow-x-auto">
-             {activeSchedule != 'Your Schedule'?   
+             {activeSchedule != 'Your Schedule' && isPending == null?   
             <span className="font-semibold text-lg text-black-500">HeadCount: {dataLength}/{headCount}</span>
              :null}
                 <table className="table table-pin-rows overflow-x-auto">

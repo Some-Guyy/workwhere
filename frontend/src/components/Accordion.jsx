@@ -12,7 +12,7 @@ const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnAppl
         let nameOfWFH = [];
 
         // console.log(data)
-        if(activeSchedule=="Your Schedule"){
+        if(activeSchedule=="Your Schedule" && data != null){
             for (const d of data) {
                 // console.log(d);
                 if(d.status == "approved"){
@@ -47,7 +47,7 @@ const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnAppl
                     continue;
                 }
             }
-        }else if(activeSchedule=="Your Overall Schedule"){
+        }else if(activeSchedule=="Your Overall Schedule" && data.workingArrangements != null){
             // working arrangements
             for (const d of data.workingArrangements) {
                 // console.log(d);
@@ -79,7 +79,7 @@ const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnAppl
     
     return (
         <div className="">
-            {yourSchedule ? 
+            {yourSchedule? 
             <>
                 <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={false} isManageOwnApplication={isManageOwnApplication}/>
                 <AccordionRow rowName={"Leave Dates"} loading={loading} data={leaveData} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={false} isManageOwnApplication={isManageOwnApplication}/>
@@ -89,6 +89,8 @@ const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnAppl
             <>
                 <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={false}/>
                 <AccordionRow rowName={"Work From Office Dates"} loading={loading} data={nameOfOtherStaffs} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={true}/>
+                <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingData} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={false} isManageOwnApplication={isManageOwnApplication} isPending={true} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} isForCancel={isForCancel} />
+
                 {/* <AccordionRow rowName={"Leave Dates"} loading={loading} data={leaveData}/> */}
             </>}
         </div>

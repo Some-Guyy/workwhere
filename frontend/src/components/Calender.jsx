@@ -40,7 +40,7 @@ const Calender = ({data}) => {
         const tempWfhDays = [];
         const tempLeaveDays = [];
         const tempPendingDays = [];
-
+        if (data!=null){
         for (const d of data) {
             let seconds = d.startDate._seconds;
 
@@ -60,6 +60,7 @@ const Calender = ({data}) => {
           setWfhDays(tempWfhDays);
           setLeaveDays(tempLeaveDays);
           setPendingDays(tempPendingDays);
+        }
 
       };
 

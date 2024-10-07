@@ -35,7 +35,7 @@ const Stats = ({loading, data}) => {
             let leaves = 0;
             let tempWfhDay = null;
             let tempLeaveDay = null;
-            
+            if (data!=null){
             for (const d of data) {
                 if(d.status === "approved"){
                     if(tempWfhDay == null){
@@ -57,6 +57,7 @@ const Stats = ({loading, data}) => {
                     pendingReq++;
                 }
             }
+        }
 
             setNoOfWfhDays(wfhDays);
             setNoOfPendingReq(pendingReq);

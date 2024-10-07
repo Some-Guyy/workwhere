@@ -4,6 +4,7 @@ import { useState,useEffect, useRef } from "react";
 
 const Navbar = () => {
   const [EmployeeRole,setEmployeeRole] = useState(null)
+  const [EmployeePosition,setEmployeePosition] = useState(null)
   const navigate = useNavigate();
   const location = useLocation();
   const drawerCheckboxRef = useRef(null);
@@ -12,6 +13,7 @@ const Navbar = () => {
   useEffect(()=>{
       const data = JSON.parse(localStorage.getItem('state'));
       setEmployeeRole(data.Role)
+      setEmployeePosition(data.Position)
   },[])
 
   // Close the drawer when navigating to another page
@@ -118,7 +120,7 @@ const Navbar = () => {
               </li>
               
               <li>
-              {EmployeeRole == 2? null:
+              {EmployeeRole == 2 || EmployeePosition == "HR Team"? null:
                 <NavLink
                     to="/other"
                     className={({ isActive }) =>

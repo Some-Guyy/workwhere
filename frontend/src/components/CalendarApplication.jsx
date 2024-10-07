@@ -48,7 +48,6 @@ const CalendarApplication = ({data, addWFH, successfulApplication, setSuccessful
         const tempPendingDays = [];
         const tempUnselectableDays = [];
         const disabled = new Date(today);
-        console.log(disabled.getDay())
         if(disabled.getDay() == 5){
           disabled.setDate(today.getDate() + 4)
         }
@@ -60,7 +59,7 @@ const CalendarApplication = ({data, addWFH, successfulApplication, setSuccessful
         }
         setdisabledDays(disabled)
         
-
+        if(data != null){
         for (const d of data) {
             let seconds = d.startDate._seconds;
             let newDate = convert_to_date_for_calander(seconds);
@@ -81,6 +80,7 @@ const CalendarApplication = ({data, addWFH, successfulApplication, setSuccessful
           setPendingDays(tempPendingDays);
           setUnselectableDays(tempUnselectableDays);
       };
+    }
 
       countDays();
     }, [data]);

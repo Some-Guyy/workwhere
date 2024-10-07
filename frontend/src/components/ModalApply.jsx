@@ -44,8 +44,20 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
     // Handle form input changes
     const handleInputChange = (index, field, value) => {
         const updatedDates = [...dates];
+        if (value && (value.type === 'image/jpg' || value.type === 'image/png')) { // Check if it's a JPEG or PNG
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                value = reader.result; // Base64 string
+                updatedDates[index][field] = value;
+                setDates(updatedDates);
+                
+            }
+            reader.readAsDataURL(value); // Read the file as a Data URL
+        }
+        else{
         updatedDates[index][field] = value;
         setDates(updatedDates);
+        }
     };
 
     // Update dates state whenever selectedDates changes
@@ -69,7 +81,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
             dates
         }
             
-        addWFH(formData)
+        // addWFH(formData)
         console.log(formData);
         // console.log(successfulApplication);
 
@@ -134,7 +146,8 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
                                 {/* File Input */}
                                 <input 
                                     type="file" 
-                                    className="file-input file-input-bordered w-full mt-2" 
+                                    className="file-input file-input-bordered w-full mt-2"
+                                    accept=".jpg, .png"  // Accept only JPG and PNG files 
                                     onChange={(e) => handleInputChange(index, "file", e.target.files[0])} // Update state
                                 />
                               </>
