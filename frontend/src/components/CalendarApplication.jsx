@@ -23,6 +23,7 @@ const CalendarApplication = ({data, addWFH, successfulApplication, setSuccessful
     const [leaveDays, setLeaveDays] = useState([]);
     const [pendingDays, setPendingDays] = useState([]);
     const [unselectableDays, setUnselectableDays] = useState([]);
+    const [disabledDays, setdisabledDays] = useState([]);
 
     // convert seconds to date
     const convert_to_date_for_calander = (seconds) => {
@@ -46,6 +47,19 @@ const CalendarApplication = ({data, addWFH, successfulApplication, setSuccessful
         const tempLeaveDays = [];
         const tempPendingDays = [];
         const tempUnselectableDays = [];
+        const disabled = new Date(today);
+        console.log(disabled.getDay())
+        if(disabled.getDay() == 5){
+          disabled.setDate(today.getDate() + 4)
+        }
+        else if(disabled.getDay() == 6){
+          disabled.setDate(today.getDate() + 3)
+        }
+        else{
+          disabled.setDate(today.getDate() + 2);
+        }
+        setdisabledDays(disabled)
+        
 
         for (const d of data) {
             let seconds = d.startDate._seconds;
@@ -101,10 +115,10 @@ const CalendarApplication = ({data, addWFH, successfulApplication, setSuccessful
                   pendingDays: "pendingDays",
                   leaveDays: "leaveDays"
                 }}
-
-                disabled={
-                  unselectableDays
-                }
+                disabled={[
+                  ...unselectableDays,
+                  { before: disabledDays }     
+                ]}
                 className="justify-center"
                 ></DayPicker>
 
