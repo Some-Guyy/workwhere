@@ -12,8 +12,11 @@ const cors = require("cors")
 const express = require('express')
 const app = express()
 
-app.use(express.json())
+
 app.use(cors())
+app.use(express.json({ limit: '10mb' })); // Body parser after CORS
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+app.use(express.json())
 
 /*
  note to self:
@@ -256,7 +259,6 @@ app.post('/login', async (req, res) => {
 app.post('/request', async (req, res) => {
     try {
         const { Staff_ID, Staff_FName, Staff_LName, dates } = req.body;
-
         // create a working arrangement for each date
         const batch = db.batch()
 
@@ -265,7 +267,6 @@ app.post('/request', async (req, res) => {
         
             // Convert the date string to a JavaScript Date object
             const dateValue = new Date(date); 
-        
             const newDocRef = db.collection('mock_working_arrangements').doc();
             batch.set(newDocRef, {
                 Staff_ID: Staff_ID,
@@ -280,7 +281,7 @@ app.post('/request', async (req, res) => {
                 Approved_FName: null, 
                 Approved_LName: null,
                 time: time,
-                attachment: attachment === null ? null : attachment
+                attachment: attachment == null ? null : attachment
             })
         })
         
