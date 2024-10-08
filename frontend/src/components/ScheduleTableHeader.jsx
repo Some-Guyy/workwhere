@@ -45,6 +45,15 @@ const ScheduleTableHeader = ({activeSchedule, isWFODate, isManageOwnApplication,
                     <th>Approved By</th>
                 </tr>
                 </>
+                : activeSchedule == "Your Overall Schedule" && isPending == true? 
+                <>
+                <tr className="text-center">
+                    <th>S/N</th>
+                    <th>Staff Name</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                </tr>
+                </>
                 : activeSchedule == "Your Overall Schedule" && isWFODate == true? 
                 <>
                 <tr className="text-center">

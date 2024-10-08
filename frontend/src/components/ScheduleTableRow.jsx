@@ -82,6 +82,15 @@ const ScheduleTableRow = ({details, index, activeSchedule, isWFODate, isPending,
             <td>{details.Staff_FName} {details.Staff_LName}</td>
         </tr>
       </>
+      : activeSchedule == "Your Overall Schedule" && isPending == true? 
+      <>
+        <tr className="hover">
+            <th>{index+1}</th>
+            <td>{details.Staff_FName} {details.Staff_LName}</td>
+            <td>{convert_to_date(details.startDate._seconds)}</td>
+            <td>{details.time}</td>
+        </tr>
+      </>
       : activeSchedule == "Your Overall Schedule" ? 
       <>
         <tr className="hover">
