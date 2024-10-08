@@ -55,7 +55,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            reason: '',
+            reason: null,
             Staff_LName: 'Sim',
             Staff_FName: 'Heng',
             approvedBy: '150008',
@@ -76,7 +76,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
             },
             Approved_FName: 'Eric',
             Approved_LName: 'Loh',
-            attachment: ''
+            attachment: null
           })
         })
       }
@@ -102,7 +102,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
               _seconds: 1728316800,
               _nanoseconds: 713000000
             },
-            reason: '',
+            reason: null,
             status: 'approved',
             Staff_LName: 'Sim',
             Staff_FName: 'Heng',
@@ -114,7 +114,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
             },
             Approved_FName: 'Eric',
             Approved_LName: 'Loh',
-            attachment: ''
+            attachment: null
           })
         })
         callback({
@@ -128,7 +128,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
               _seconds: 1728316800,
               _nanoseconds: 713000000
             },
-            reason: '',
+            reason: null,
             status: 'approved',
             Staff_LName: 'Phuc',
             Staff_FName: 'Le',
@@ -140,7 +140,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
             },
             Approved_FName: 'Eric',
             Approved_LName: 'Loh',
-            attachment: ''
+            attachment: null
           })
         })
       },
@@ -166,19 +166,19 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
               _seconds: 1728316800,
               _nanoseconds: 713000000
             },
-            reason: '',
+            reason: null,
             status: 'pending',
             Staff_LName: 'Sim',
             Staff_FName: 'Heng',
-            approvedBy: '',
+            approvedBy: null,
             time: 'PM',
             requestCreated: {
               _seconds: 1727539200,
               _nanoseconds: 331000000
             },
-            Approved_FName: '',
-            Approved_LName: '',
-            attachment: ''
+            Approved_FName: null,
+            Approved_LName: null,
+            attachment: null
           })
         })
         callback({
@@ -192,7 +192,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
               _seconds: 1728316800,
               _nanoseconds: 713000000
             },
-            reason: '',
+            reason: null,
             status: 'approved',
             Staff_LName: 'Eric',
             Staff_FName: 'Loh',
@@ -204,7 +204,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
             },
             Approved_FName: 'Jack',
             Approved_LName: 'Sim',
-            attachment: ''
+            attachment: null
           })
         })
       },
@@ -225,7 +225,7 @@ describe('POST /login', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            password: '123',
+            Password: '123',
             Staff_ID: '151408',
             Staff_FName: 'Philip',
             Staff_LName: 'Lee',
@@ -266,7 +266,7 @@ describe('POST /login', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            password: '123',
+            Password: '123',
             Staff_ID: '151408',
             Staff_FName: 'Philip',
             Staff_LName: 'Lee',
@@ -329,7 +329,7 @@ describe('POST /login', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            password: '123',
+            Password: '123',
             Staff_ID: '151408',
             Staff_FName: 'Philip',
             Staff_LName: 'Lee',
@@ -392,8 +392,8 @@ describe('GET /working-arrangements/:employeeid', () => {
             requestCreated: "2024-10-05",
             status: "pending",
             time: "PM",
-            reason: '',
-            attachment: ''
+            reason: null,
+            attachment: null
           })
         })
       },
@@ -416,8 +416,8 @@ describe('GET /working-arrangements/:employeeid', () => {
       requestCreated: "2024-10-05",
       status: "pending",
       time: "PM",
-      reason: '',
-      attachment: ''
+      reason: null,
+      attachment: null
     }])
   })
 
@@ -484,7 +484,7 @@ describe('GET /working-arrangements/department/:department/:date', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            reason: '',
+            reason: null,
             Staff_LName: 'Sim',
             Staff_FName: 'Heng',
             approvedBy: '150008',
@@ -505,7 +505,7 @@ describe('GET /working-arrangements/department/:department/:date', () => {
             },
             Approved_FName: 'Eric',
             Approved_LName: 'Loh',
-            attachment: ''
+            attachment: null
           })
         })
       },
@@ -532,7 +532,7 @@ describe('GET /working-arrangements/department/:department/:date', () => {
     ])
     expect(response.body.workingArrangements).toEqual([
       {
-        reason: '',
+        reason: null,
         Staff_LName: 'Sim',
         Staff_FName: 'Heng',
         approvedBy: '150008',
@@ -553,7 +553,7 @@ describe('GET /working-arrangements/department/:department/:date', () => {
         },
         Approved_FName: 'Eric',
         Approved_LName: 'Loh',
-        attachment: ''
+        attachment: null
       }
     ])
   })
@@ -622,19 +622,19 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
               _seconds: 1728316800,
               _nanoseconds: 713000000
             },
-            reason: '',
+            reason: null,
             status: 'pending',
             Staff_LName: 'Sim',
             Staff_FName: 'Heng',
-            approvedBy: '',
+            approvedBy: null,
             time: 'PM',
             requestCreated: {
               _seconds: 1727539200,
               _nanoseconds: 331000000
             },
-            Approved_FName: '',
-            Approved_LName: '',
-            attachment: ''
+            Approved_FName: null,
+            Approved_LName: null,
+            attachment: null
           })
         })
         callback({
@@ -648,7 +648,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
               _seconds: 1728316800,
               _nanoseconds: 713000000
             },
-            reason: '',
+            reason: null,
             status: 'approved',
             Staff_LName: 'Eric',
             Staff_FName: 'Loh',
@@ -660,7 +660,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
             },
             Approved_FName: 'Jack',
             Approved_LName: 'Sim',
-            attachment: ''
+            attachment: null
           })
         })
       },
@@ -702,19 +702,19 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
           _seconds: 1728316800,
           _nanoseconds: 713000000
         },
-        reason: '',
+        reason: null,
         status: 'pending',
         Staff_LName: 'Sim',
         Staff_FName: 'Heng',
-        approvedBy: '',
+        approvedBy: null,
         time: 'PM',
         requestCreated: {
           _seconds: 1727539200,
           _nanoseconds: 331000000
         },
-        Approved_FName: '',
-        Approved_LName: '',
-        attachment: ''
+        Approved_FName: null,
+        Approved_LName: null,
+        attachment: null
       },
       {
         Staff_ID: '150008',
@@ -726,7 +726,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
           _seconds: 1728316800,
           _nanoseconds: 713000000
         },
-        reason: '',
+        reason: null,
         status: 'approved',
         Staff_LName: 'Eric',
         Staff_FName: 'Loh',
@@ -738,7 +738,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
         },
         Approved_FName: 'Jack',
         Approved_LName: 'Sim',
-        attachment: ''
+        attachment: null
       }
     ])
   })
@@ -819,7 +819,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
               _seconds: 1728316800,
               _nanoseconds: 713000000
             },
-            reason: '',
+            reason: null,
             status: 'approved',
             Staff_LName: 'Sim',
             Staff_FName: 'Heng',
@@ -831,7 +831,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
             },
             Approved_FName: 'Eric',
             Approved_LName: 'Loh',
-            attachment: ''
+            attachment: null
           })
         })
         callback({
@@ -845,7 +845,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
               _seconds: 1728316800,
               _nanoseconds: 713000000
             },
-            reason: '',
+            reason: null,
             status: 'approved',
             Staff_LName: 'Phuc',
             Staff_FName: 'Le',
@@ -857,7 +857,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
             },
             Approved_FName: 'Eric',
             Approved_LName: 'Loh',
-            attachment: ''
+            attachment: null
           })
         })
       },
@@ -895,7 +895,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
           _seconds: 1728316800,
           _nanoseconds: 713000000
         },
-        reason: '',
+        reason: null,
         status: 'approved',
         Staff_LName: 'Sim',
         Staff_FName: 'Heng',
@@ -907,7 +907,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
         },
         Approved_FName: 'Eric',
         Approved_LName: 'Loh',
-        attachment: ''
+        attachment: null
       },
       {
         Staff_ID: '190059',
@@ -919,7 +919,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
           _seconds: 1728316800,
           _nanoseconds: 713000000
         },
-        reason: '',
+        reason: null,
         status: 'approved',
         Staff_LName: 'Phuc',
         Staff_FName: 'Le',
@@ -931,7 +931,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
         },
         Approved_FName: 'Eric',
         Approved_LName: 'Loh',
-        attachment: ''
+        attachment: null
       }
     ])
   })
@@ -976,7 +976,7 @@ describe('POST /request', () => {
     const dates = [{
       date: '2024-10-01',
       time: 'PM',
-      attachment: ''
+      attachment: null
     }]
 
     const response = await request(app)
@@ -996,14 +996,14 @@ describe('POST /request', () => {
       Staff_ID: staffId,
       Staff_FName: staffFName,
       Staff_LName: staffLName,
-      reason: '',
+      reason: null,
       startDate: firestore.Timestamp.fromDate(dateValue),
       endDate: firestore.Timestamp.fromDate(dateValue),
       requestCreated: firestore.Timestamp.now(),
       status: 'pending',
-      approvedBy: '',
-      Approved_FName: '',
-      Approved_LName: '',
+      approvedBy: null,
+      Approved_FName: null,
+      Approved_LName: null,
       time: dates[0].time,
       attachment: dates[0].attachment
     })
@@ -1019,7 +1019,7 @@ describe('POST /request', () => {
     const dates = [{
       date: '2024-10-01',
       time: 'PM',
-      attachment: ''
+      attachment: null
     }]
     db.batch().commit.mockRejectedValueOnce(new Error('Firestore error'))
 
