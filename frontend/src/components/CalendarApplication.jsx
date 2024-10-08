@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "./React_Calander_Styles/Calender.css";
+import ModalApply from "./ModalApply";
 
 
-const Calender = ({data}) => {
-
-    const [selected, setSelected] = useState(false);
+const CalendarApplication = ({data, addWFH, successfulApplication, setSuccessfulApplication}) => {
+    
+    const [selected, setSelected] = useState([]);
     const today = new Date();
     const [month, setMonth] = useState();
 
+    // todays date
     const currentDate = parseInt(today.toLocaleDateString().split("/")[1]);
     const currentMonth = parseInt(today.toLocaleDateString().split("/")[0])-1;
     const currentYear = parseInt(today.toLocaleDateString().split("/")[2]);
@@ -16,9 +18,12 @@ const Calender = ({data}) => {
     // console.log(currentDate,currentMonth,currentYear)
     // console.log(data);
 
+    // holds state to populate calander with colour
     const [wfhDays, setWfhDays] = useState([]);
     const [leaveDays, setLeaveDays] = useState([]);
     const [pendingDays, setPendingDays] = useState([]);
+    const [unselectableDays, setUnselectableDays] = useState([]);
+    const [disabledDays, setdisabledDays] = useState([]);
 
     // convert seconds to date
     const convert_to_date_for_calander = (seconds) => {
@@ -35,51 +40,64 @@ const Calender = ({data}) => {
       // return new Date(year, month, date)
     };
 
+    // function to put colour based on current calendar
     useEffect(() => {
       async function countDays() {
         const tempWfhDays = [];
         const tempLeaveDays = [];
         const tempPendingDays = [];
-        if (data!=null){
+        const tempUnselectableDays = [];
+        const disabled = new Date(today);
+        if(disabled.getDay() == 5){
+          disabled.setDate(today.getDate() + 4)
+        }
+        else if(disabled.getDay() == 6){
+          disabled.setDate(today.getDate() + 3)
+        }
+        else{
+          disabled.setDate(today.getDate() + 2);
+        }
+        setdisabledDays(disabled)
+        
+        if(data != null){
         for (const d of data) {
             let seconds = d.startDate._seconds;
-
-            
-
             let newDate = convert_to_date_for_calander(seconds);
             
             if (d.status === "approved") {
                     tempWfhDays.push(newDate);
+                    tempUnselectableDays.push(newDate);
                 } else if (d.status === "leave") {
                     tempLeaveDays.push(newDate);
                 } else if (d.status === "pending") {
                     tempPendingDays.push(newDate);
+                    tempUnselectableDays.push(newDate);
                 }
           }
 
           setWfhDays(tempWfhDays);
           setLeaveDays(tempLeaveDays);
           setPendingDays(tempPendingDays);
-        }
-
+          setUnselectableDays(tempUnselectableDays);
       };
+    }
 
       countDays();
     }, [data]);
     
-
+    const resetApplicationDates= () => {setSelected([])};
+    // console.log(selected);
     // setSelected(wfhDays);
-
   return (
     <>
       <div className="mt-10 w-9/12 m-auto divider" />
         <div className="flex">
           <div className="basis-1/5 "></div>
-            <div className="basis-3/5 m-5 p-5 ">
+            <div className="basis-3/5 m-5 p-5">
                 <DayPicker
-                mode="single"
+                mode="multiple"
                 selected={selected}
-                // onSelect={setSelected}
+                onSelect={setSelected}
                 month={month} 
                 onMonthChange={setMonth}
                 captionLayout="dropdown"
@@ -97,16 +115,23 @@ const Calender = ({data}) => {
                   pendingDays: "pendingDays",
                   leaveDays: "leaveDays"
                 }}
-                // footer={
-                //     selected ? `Selected: ${selected.toLocaleDateString()}` : "Pick a day."
-                    
-                // }
-                // className="wfhDays"
+                disabled={[
+                  ...unselectableDays,
+                  { before: disabledDays }     
+                ]}
+                className="justify-center"
                 ></DayPicker>
 
-                <button className="btn btn-outline btn-sm" onClick={() => setMonth(today)}>
-                  Go to Today
-                </button>
+                <div className="flex justify-center mt-5">
+                    <button className="btn btn-outline btn-sm" onClick={() => setMonth(today)}>
+                    Go to Today
+                    </button>
+                    <button onClick={resetApplicationDates} className="ml-5 btn btn-outline btn-sm">
+                        Reset Selection
+                    </button>
+                    <ModalApply selectedDates={selected} wfhDays={wfhDays} addWFH={addWFH} successfulApplication={successfulApplication} setSuccessfulApplication={setSuccessfulApplication}/>
+                </div>
+                
             </div>
 
             <div className="basis-1/5"></div>
@@ -116,4 +141,4 @@ const Calender = ({data}) => {
   )
 }
 
-export default Calender
+export default CalendarApplication

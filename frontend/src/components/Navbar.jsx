@@ -1,10 +1,38 @@
 import { MdMapsHomeWork } from "react-icons/md";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useState,useEffect, useRef } from "react";
 
 const Navbar = () => {
+  const [EmployeeRole,setEmployeeRole] = useState(null)
+  const [EmployeePosition,setEmployeePosition] = useState(null)
+  const navigate = useNavigate();
+  const location = useLocation();
+  const drawerCheckboxRef = useRef(null);
+  
+  // extract users role to conditionally render links
+  useEffect(()=>{
+      const data = JSON.parse(localStorage.getItem('state'));
+      setEmployeeRole(data.Role)
+      setEmployeePosition(data.Position)
+  },[])
+
+  // Close the drawer when navigating to another page
+  useEffect(() => {
+    if (drawerCheckboxRef.current) {
+      drawerCheckboxRef.current.checked = false; // uncheck the drawer checkbox
+    }
+  }, [location]);
+
+  // logout logic which clears local storage when logged out
+  const logout = () => {
+    localStorage.clear();
+    navigate("/");
+  }
+
   return (
     <>
       <div className="drawer">
-        <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
+        <input id="my-drawer-3" type="checkbox" className="drawer-toggle" ref={drawerCheckboxRef}/>
         <div className="drawer-content flex flex-col">
           {/* Navbar */}
           <div className="navbar bg-neutral w-full text-primary-content fixed z-10">
@@ -59,14 +87,55 @@ const Navbar = () => {
         </div>
         <div className="drawer-side z-10">
           <label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label>
-          <ul className="menu bg-base-200 min-h-full w-80 p-4">
-            {/* Sidebar content here */}
-            <li><strong className="text-3xl mb-5 outline ">Hi Ryan!</strong></li>
-            <hr></hr>
-            <li><a className="active">View Schedule</a></li>
-            <li><a>Manage My Applications</a></li>
-            <li><a>Manage Other's Applications</a></li>
-          </ul>
+          <div className="flex flex-col min-h-full w-80 bg-base-200 p-4">
+            <ul className="menu flex-grow">
+              {/* Sidebar content here */}
+              
+              <li>
+                <strong className="text-3xl mb-5 ">
+                Hi Ryan!
+                </strong>
+              </li>
+
+              <li>
+                <NavLink
+                  to="/home"
+                  className={({ isActive }) =>
+                    isActive ? "active text-primary" : ""
+                  }
+                >
+                  View Schedule
+                </NavLink>
+              </li>
+
+              <li>
+                <NavLink
+                  to="/my"
+                  className={({ isActive }) =>
+                    isActive ? "active text-primary" : ""
+                  }
+                >
+                  Manage My Applications
+                </NavLink>
+              </li>
+              
+              <li>
+              {EmployeeRole == 2 || EmployeePosition == "HR Team"? null:
+                <NavLink
+                    to="/other"
+                    className={({ isActive }) =>
+                      isActive ? "active text-primary" : ""
+                    }
+                  >
+                    Manage Other's Applications
+                  </NavLink>              
+              }
+              </li>
+
+            </ul>
+
+            <button className="btn btn-primary" onClick={logout}>Logout</button>
+          </div>
         </div>
       </div>
     
