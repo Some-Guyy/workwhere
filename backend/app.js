@@ -26,7 +26,7 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, called
     const workingArrangements = []
     const batchSize = 30 // Firestore limit for 'in' operator
 
-    if (calledFrom === "department" || calledFrom === "team") {
+    if (calledFrom === "team") {
 
         // send back approved working arrangements
         for (let i = 0; i < ids.length; i += batchSize) {
@@ -44,7 +44,7 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, called
           }
     }
 
-    if (calledFrom === "manager") {
+    if (calledFrom === "manager" || calledFrom === "department") {
         for (let i = 0; i < ids.length; i += batchSize) {
             const batch = ids.slice(i, i + batchSize)
             const snapshot = await db.collection('mock_working_arrangements')
@@ -82,7 +82,7 @@ app.get("/working-arrangements/:employeeid", async (req, res) => {
         res.json(workingArrangements)
 
     } catch (err) {
-        console.error("Error fetching data", err)
+        
         res.status(500).json({error: "Internal server error"})
     }
 })
@@ -117,7 +117,7 @@ app.get("/working-arrangements/department/:department/:date", async (req, res) =
         res.json({workingArrangements, sameDepart})
 
     } catch (err) {
-        console.error("Error fetching data", err)
+        
         res.status(500).json({error: "Internal server error"})
     }
 })
@@ -152,7 +152,7 @@ app.get("/working-arrangements/manager/:managerId/:date", async (req, res) => {
         res.json({workingArrangements, inChargeOf})
 
     } catch (err) {
-        console.error("Error fetching data", err)
+        
         res.status(500).json({error: "Internal server error"})
     }
 })
@@ -174,7 +174,6 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
 
         // if employee cannot be found
         if (employeeSnapshot.empty) {
-            console.error(`Employee with Staff_ID ${employeeId} not found.`)
             return res.status(404).json({ error: `Employee with Staff_ID ${employeeId} not found.` })
         }
 
@@ -203,7 +202,7 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
 
 
     } catch (err) {
-        console.error("Error fetching data", err)
+        
         res.status(500).json({error: "Internal server error"})
     }
 })
@@ -249,7 +248,6 @@ app.post('/login', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Error during login:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
@@ -263,7 +261,7 @@ app.post('/request', async (req, res) => {
         const batch = db.batch()
 
         dates.forEach(dateObject => {
-            const { date, time, reason } = dateObject; // Destructure the object
+            const { date, time, attachment} = dateObject; // Destructure the object
         
             // Convert the date string to a JavaScript Date object
             const dateValue = new Date(date); 
@@ -273,26 +271,26 @@ app.post('/request', async (req, res) => {
                 Staff_ID: Staff_ID,
                 Staff_FName: Staff_FName,
                 Staff_LName: Staff_LName,
-                reason,  
+                reason: null,  
                 startDate: firestore.Timestamp.fromDate(dateValue),
                 endDate: firestore.Timestamp.fromDate(dateValue),
                 requestCreated: firestore.Timestamp.now(),
                 status: 'pending',
-                approvedBy: '', 
-                Approved_FName: '', 
-                Approved_LName: '',
-                time: time 
+                approvedBy: null, 
+                Approved_FName: null, 
+                Approved_LName: null,
+                time: time,
+                attachment: attachment === null ? null : attachment
             })
         })
         
         // commit operation to create all documents
         await batch.commit()
 
-        res.json({ message: 'Request created successfully' });
+        res.status(201).json({ message: 'Request created successfully' });
 
     } catch (error) {
-        console.error('Error creating your request', error);
-        res.status(500).json({ message: "Error creating your request", error: 'Internal server error' });
+        res.status(500).json({ message: "Error creating your request", error: 'Internal server error' })
     }
 });
 
@@ -320,7 +318,6 @@ app.delete('/delete-all/', async (req, res) => {
 
         res.status(200).json({ message: `All documents from test_create deleted successfully` })
     } catch (error) {
-        console.error('Error deleting documents:', error)
         res.status(500).json({ error: 'Failed to delete documents', details: error.message })
     }
 })
