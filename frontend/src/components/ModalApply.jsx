@@ -81,7 +81,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
             dates
         }
             
-        // addWFH(formData)
+        addWFH(formData)
         console.log(formData);
         // console.log(successfulApplication);
 
