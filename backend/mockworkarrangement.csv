@@ -1,0 +1,5 @@
+Staff_ID,Staff_FName,Staff_LName,approvedBy,Approved_Fname,Approved_Lname,startDate,endDate,reason,requestCreated,status,time
+130002,Jack,Sim,130002,Jack,Sim,8/10/2024,8/10/2024,No meetings today,1/10/2024,approved,full day
+140001,Derek,Tan,130002,Jack,Sim,8/10/2024,8/10/2024,Nothing to do,29/9/2024,rejected,full day
+180001,Ernst,Sim,130002,Jack,Sim,8/10/2024,8/10/2024,Take care of sick mother,1/10/2024,approved,AM
+190019,Heng,Sim,150008,Eric,Loh,8/10/2024,8/10/2024,Take care of sick cat,29/9/2024,approved,PM
