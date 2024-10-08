@@ -65,8 +65,8 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
         setDates(selectedDates.map((d) => ({
             date: `${d.toLocaleDateString().split("/")[2]}-${d.toLocaleDateString().split("/")[0]}-${d.toLocaleDateString().split("/")[1]}` ,
             time: "am",
-            // reason: "",
-            file: null
+            reason: "",
+            attachment: null
         })));
     }, [selectedDates]);
 
@@ -81,7 +81,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
             dates
         }
             
-        addWFH(formData)
+        addWFH(formData);
         console.log(formData);
         // console.log(successfulApplication);
 
@@ -148,7 +148,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
                                     type="file" 
                                     className="file-input file-input-bordered w-full mt-2"
                                     accept=".jpg, .png, .jpeg"  // Accept only JPG and PNG files 
-                                    onChange={(e) => handleInputChange(index, "file", e.target.files[0])} // Update state
+                                    onChange={(e) => handleInputChange(index, "attachment", e.target.files[0])} // Update state
                                 />
                               </>
                             )}
