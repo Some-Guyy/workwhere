@@ -65,7 +65,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
         setDates(selectedDates.map((d) => ({
             date: `${d.toLocaleDateString().split("/")[2]}-${d.toLocaleDateString().split("/")[0]}-${d.toLocaleDateString().split("/")[1]}` ,
             time: "am",
-            reason: "",
+            // reason: "",
             file: null
         })));
     }, [selectedDates]);
@@ -130,7 +130,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
                                     </select>
                                 </label>
 
-                                {/* Reasoning data */}
+                                {/* Reasoning data
                                 <label className="input input-bordered flex items-center gap-2">
                                     Reason
                                     <input 
@@ -141,7 +141,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
                                         value={dates[index].reason} // Binding to state
                                         onChange={(e) => handleInputChange(index, "reason", e.target.value)} // Update state
                                     />
-                                </label>
+                                </label> */}
 
                                 {/* File Input */}
                                 <input 
