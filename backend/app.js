@@ -82,7 +82,7 @@ app.get("/working-arrangements/:employeeid", async (req, res) => {
         res.json(workingArrangements)
 
     } catch (err) {
-        console.error("Error fetching data", err)
+        
         res.status(500).json({error: "Internal server error"})
     }
 })
@@ -117,7 +117,7 @@ app.get("/working-arrangements/department/:department/:date", async (req, res) =
         res.json({workingArrangements, sameDepart})
 
     } catch (err) {
-        console.error("Error fetching data", err)
+        
         res.status(500).json({error: "Internal server error"})
     }
 })
@@ -152,7 +152,7 @@ app.get("/working-arrangements/manager/:managerId/:date", async (req, res) => {
         res.json({workingArrangements, inChargeOf})
 
     } catch (err) {
-        console.error("Error fetching data", err)
+        
         res.status(500).json({error: "Internal server error"})
     }
 })
@@ -174,7 +174,6 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
 
         // if employee cannot be found
         if (employeeSnapshot.empty) {
-            console.error(`Employee with Staff_ID ${employeeId} not found.`)
             return res.status(404).json({ error: `Employee with Staff_ID ${employeeId} not found.` })
         }
 
@@ -203,7 +202,7 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
 
 
     } catch (err) {
-        console.error("Error fetching data", err)
+        
         res.status(500).json({error: "Internal server error"})
     }
 })
@@ -249,7 +248,6 @@ app.post('/login', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Error during login:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
@@ -292,7 +290,6 @@ app.post('/request', async (req, res) => {
         res.status(201).json({ message: 'Request created successfully' });
 
     } catch (error) {
-        console.error('Error creating your request', error)
         res.status(500).json({ message: "Error creating your request", error: 'Internal server error' })
     }
 });
@@ -321,7 +318,6 @@ app.delete('/delete-all/', async (req, res) => {
 
         res.status(200).json({ message: `All documents from test_create deleted successfully` })
     } catch (error) {
-        console.error('Error deleting documents:', error)
         res.status(500).json({ error: 'Failed to delete documents', details: error.message })
     }
 })
