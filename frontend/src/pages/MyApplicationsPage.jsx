@@ -10,6 +10,7 @@ const MyApplicationsPage = () => {
     const[isForCancel, setIsForCancel] = useState(true);
     const [successfulApplication, setSuccessfulApplication] = useState(null);
     const [successfulCancellation, setSuccessfulCancellation] = useState(null);
+    
     // function to addWFH
     const addWFH = async (newArrangement) => {
       try {
