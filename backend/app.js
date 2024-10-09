@@ -7,11 +7,12 @@ admin.initializeApp({
     databaseURL: "workwhere-2b031"
 })
 const db = admin.firestore()
+const collectionEmployee = "mock_employee"
+const collectionWa = "mock_working_arrangements"
 
 const cors = require("cors")
 const express = require('express')
 const app = express()
-
 
 app.use(cors())
 app.use(express.json({ limit: '10mb' })); // Body parser after CORS
@@ -34,7 +35,7 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, called
         // send back approved working arrangements
         for (let i = 0; i < ids.length; i += batchSize) {
             const batch = ids.slice(i, i + batchSize)
-            const snapshot = await db.collection('mock_working_arrangements')
+            const snapshot = await db.collection(collectionWa)
               .where('Staff_ID', 'in', batch)
               .where("startDate", "<=", startDate)
               .where("endDate", ">=", endDate)
@@ -50,7 +51,7 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, called
     if (calledFrom === "manager" || calledFrom === "department") {
         for (let i = 0; i < ids.length; i += batchSize) {
             const batch = ids.slice(i, i + batchSize)
-            const snapshot = await db.collection('mock_working_arrangements')
+            const snapshot = await db.collection(collectionWa)
               .where('Staff_ID', 'in', batch)
               .where("startDate", "<=", startDate)
               .where("endDate", ">=", endDate)
@@ -70,7 +71,7 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, called
 app.get("/working-arrangements/:employeeid", async (req, res) => {
     try {
         const { employeeid } = req.params
-        const snapshot = await db.collection('mock_working_arrangements')
+        const snapshot = await db.collection(collectionWa)
         .where('Staff_ID', '==', employeeid)
         .get()
 
@@ -102,7 +103,7 @@ app.get("/working-arrangements/department/:department/:date", async (req, res) =
         endOfDay.setHours(23, 59, 59, 999)
 
         // find department teammates
-        const snapshot = await db.collection("mock_employee")
+        const snapshot = await db.collection(collectionEmployee)
         .where("Dept", "==", department)
         .get()
 
@@ -137,7 +138,7 @@ app.get("/working-arrangements/manager/:managerId/:date", async (req, res) => {
         endOfDay.setHours(23, 59, 59, 999)
 
         // find employees you're in charge of
-        const snapshot = await db.collection("mock_employee")
+        const snapshot = await db.collection(collectionEmployee)
         .where("Reporting_Manager", "==", managerId)
         .get()
 
@@ -170,7 +171,7 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
         targetDate.setHours(0, 0, 0, 0)
         endOfDay.setHours(23, 59, 59, 999)
 
-        const employeeSnapshot = await db.collection('mock_employee')
+        const employeeSnapshot = await db.collection(collectionEmployee)
         .where('Staff_ID', '==', employeeId)
         .limit(1)
         .get()
@@ -185,7 +186,7 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
         const position = employeeData.Position
 
         // then call db again to find those same reporting managers
-        const teamSnapshot = await db.collection('mock_employee')
+        const teamSnapshot = await db.collection(collectionEmployee)
         .where('Position', '==', position)
         .get()
 
@@ -216,7 +217,7 @@ app.post('/login', async (req, res) => {
 
     try {
         // find user from user db
-        const snapshot = await db.collection('mock_employee')
+        const snapshot = await db.collection(collectionEmployee)
             .where('Email', '==', emailAddress.toLowerCase())
             .limit(1)
             .get()
@@ -267,7 +268,7 @@ app.post('/request', async (req, res) => {
         
             // Convert the date string to a JavaScript Date object
             const dateValue = new Date(date); 
-            const newDocRef = db.collection('mock_working_arrangements').doc();
+            const newDocRef = db.collection(collectionWa).doc();
             batch.set(newDocRef, {
                 Staff_ID: Staff_ID,
                 Staff_FName: Staff_FName,
