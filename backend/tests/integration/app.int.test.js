@@ -578,31 +578,288 @@ describe('GET /working-arrangements/department/:department/:date', () => {
 describe('GET /working-arrangements/manager/:managerId/:date', () => {
     test('get arrangements of manager\'s team in charge of on a date', async () => {
         // Get from A as the manager
+        const response = await request(app)
+            .get(`/working-arrangements/manager/140001/${testDate}`)
+            .send()
+
         // Expect arrangements of both B and C
         // Expect arrangements to be both approved and pending
+        expect(response.status).toBe(200)
+        expect(response.body).toEqual({
+            workingArrangements: [
+                {
+                    Staff_ID: "140894",
+                    Staff_FName: "Rahim",
+                    Staff_LName: "Khalid",
+                    reason: null,
+                    startDate: {
+                        _seconds: 69,
+                        _nanoseconds: 69,
+                    },
+                    endDate: {
+                        _seconds: 69,
+                        _nanoseconds: 69,
+                    },
+                    requestCreated: {
+                        _seconds: 69,
+                        _nanoseconds: 69,
+                    },
+                    status: 'pending',
+                    approvedBy: null,
+                    Approved_FName: null,
+                    Approved_LName: null,
+                    time: "AM",
+                    attachment: null
+                },
+                {
+                    Staff_ID: "140894",
+                    Staff_FName: "Rahim",
+                    Staff_LName: "Khalid",
+                    reason: null,
+                    startDate: {
+                        _seconds: 69,
+                        _nanoseconds: 69,
+                    },
+                    endDate: {
+                        _seconds: 69,
+                        _nanoseconds: 69,
+                    },
+                    requestCreated: {
+                        _seconds: 69,
+                        _nanoseconds: 69,
+                    },
+                    status: 'approved',
+                    approvedBy: "140001",
+                    Approved_FName: "Derek",
+                    Approved_LName: "Tan",
+                    time: "AM",
+                    attachment: null
+                },
+                {
+                    Staff_ID: "140008",
+                    Staff_FName: "Jaclyn",
+                    Staff_LName: "Lee",
+                    reason: null,
+                    startDate: {
+                        _seconds: 69,
+                        _nanoseconds: 69,
+                    },
+                    endDate: {
+                        _seconds: 69,
+                        _nanoseconds: 69,
+                    },
+                    requestCreated: {
+                        _seconds: 69,
+                        _nanoseconds: 69,
+                    },
+                    status: 'pending',
+                    approvedBy: null,
+                    Approved_FName: null,
+                    Approved_LName: null,
+                    time: "AM",
+                    attachment: null
+                },
+                {
+                    Staff_ID: "140008",
+                    Staff_FName: "Jaclyn",
+                    Staff_LName: "Lee",
+                    reason: null,
+                    startDate: {
+                        _seconds: 69,
+                        _nanoseconds: 69,
+                    },
+                    endDate: {
+                        _seconds: 69,
+                        _nanoseconds: 69,
+                    },
+                    requestCreated: {
+                        _seconds: 69,
+                        _nanoseconds: 69,
+                    },
+                    status: 'approved',
+                    approvedBy: "140001",
+                    Approved_FName: "Derek",
+                    Approved_LName: "Tan",
+                    time: "AM",
+                    attachment: null
+                },
+            ],
+            inChargeOf: [
+                {
+                    Staff_ID: "140894",
+                    Staff_FName: "Rahim",
+                    Staff_LName: "Khalid",
+                    Dept: testDept,
+                    Position: "Sales Manager",
+                    Country: "Singapore",
+                    Email: "rahim.khalid@allinone.com.sg",
+                    Reporting_Manager: "140001",
+                    Role: "3",
+                    Password: "123",
+                },
+                {
+                    Staff_ID: "140008",
+                    Staff_FName: "Jaclyn",
+                    Staff_LName: "Lee",
+                    Dept: testDept,
+                    Position: "Sales Manager",
+                    Country: "Singapore",
+                    Email: "jaclyn.lee@allinone.com.sg",
+                    Reporting_Manager: "140001",
+                    Role: "3",
+                    Password: "123",
+                },
+            ],
+        })
     })
 
     test('get non-existent arrangements of manager\'s team in charge of on a date', async () => {
         // Get from C as the manager
+        const response = await request(app)
+            .get(`/working-arrangements/manager/140008/${testDate}`)
+            .send()
+
         // Expect 200 but empty response array cause D has no arrangements
+        expect(response.status).toBe(200)
+        expect(response.body).toEqual({
+            workingArrangements: [],
+            inChargeOf: [
+                {
+                    Staff_ID: "140880",
+                    Staff_FName: "Heng",
+                    Staff_LName: "Chan",
+                    Dept: testDept,
+                    Position: "Account Manager",
+                    Country: "Singapore",
+                    Email: "heng.chan@allinone.com.sg",
+                    Reporting_Manager: "140008",
+                    Role: "2",
+                    Password: "123",
+                },
+            ],
+        })
     })
 })
 
 describe('GET /working-arrangements/team/:employeeId/:date', () => {
     test('get approved arrangements of employee\'s teammates on a date', async () => {
         // Get from B as the employee
+        const response = await request(app)
+            .get(`/working-arrangements/team/140894/${testDate}`)
+            .send()
+
         // Expect arrangements of both B and C
         // Expect arrangements to be approved only
+        expect(response.status).toBe(200)
+        expect(response.body).toEqual({
+            workingArrangements: [
+                {
+                    Staff_ID: "140894",
+                    Staff_FName: "Rahim",
+                    Staff_LName: "Khalid",
+                    reason: null,
+                    startDate: {
+                        _seconds: 69,
+                        _nanoseconds: 69,
+                    },
+                    endDate: {
+                        _seconds: 69,
+                        _nanoseconds: 69,
+                    },
+                    requestCreated: {
+                        _seconds: 69,
+                        _nanoseconds: 69,
+                    },
+                    status: 'approved',
+                    approvedBy: "140001",
+                    Approved_FName: "Derek",
+                    Approved_LName: "Tan",
+                    time: "AM",
+                    attachment: null
+                },
+                {
+                    Staff_ID: "140008",
+                    Staff_FName: "Jaclyn",
+                    Staff_LName: "Lee",
+                    reason: null,
+                    startDate: {
+                        _seconds: 69,
+                        _nanoseconds: 69,
+                    },
+                    endDate: {
+                        _seconds: 69,
+                        _nanoseconds: 69,
+                    },
+                    requestCreated: {
+                        _seconds: 69,
+                        _nanoseconds: 69,
+                    },
+                    status: 'approved',
+                    approvedBy: "140001",
+                    Approved_FName: "Derek",
+                    Approved_LName: "Tan",
+                    time: "AM",
+                    attachment: null
+                },
+            ],
+            teamMembers: [
+                {
+                    Staff_ID: "140894",
+                    Staff_FName: "Rahim",
+                    Staff_LName: "Khalid",
+                    Dept: testDept,
+                    Position: "Sales Manager",
+                    Country: "Singapore",
+                    Email: "rahim.khalid@allinone.com.sg",
+                    Reporting_Manager: "140001",
+                    Role: "3",
+                    Password: "123",
+                },
+                {
+                    Staff_ID: "140008",
+                    Staff_FName: "Jaclyn",
+                    Staff_LName: "Lee",
+                    Dept: testDept,
+                    Position: "Sales Manager",
+                    Country: "Singapore",
+                    Email: "jaclyn.lee@allinone.com.sg",
+                    Reporting_Manager: "140001",
+                    Role: "3",
+                    Password: "123",
+                },
+            ],
+        })
     })
 
     test('get arrangements of non-existent employee\'s teammates on a date', async () => {
         // Get from from employeeid 999999
+        const response = await request(app)
+            .get(`/working-arrangements/team/999999/${testDate}`)
+            .send()
+
         // Expect 404 + body
+        expect(response.status).toBe(404)
+        expect(response.body).toEqual({ error: 'Employee with Staff_ID 999999 not found.' })
     })
 })
 
 describe('POST /request', () => {
     test('create request for an arrangement', async () => {
         // Create a request for employee F
+        const response = await request(app)
+            .post('/request')
+            .send({
+                Staff_ID: "160008",
+                Staff_FName: "Sally",
+                Staff_LName: "Loh",
+                dates: [{
+                    date: testDate,
+                    time: 'AM',
+                    attachment: null
+                }],
+            })
+
+        expect(response.status).toBe(201)
+        expect(response.body).toEqual({ message: 'Request created successfully' })
     })
 })
