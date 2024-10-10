@@ -7,8 +7,13 @@ admin.initializeApp({
     databaseURL: "workwhere-2b031"
 })
 const db = admin.firestore()
-const collectionEmployee = "mock_employee"
-const collectionWa = "mock_working_arrangements"
+
+let collectionEmployee = "mock_employee"
+let collectionWa = "mock_working_arrangements"
+if (process.env.NODE_ENV === 'test') {
+    collectionEmployee = "test_employee"
+    collectionWa = "test_working_arrangements"
+}
 
 const cors = require("cors")
 const express = require('express')
@@ -121,7 +126,7 @@ app.get("/working-arrangements/department/:department/:date", async (req, res) =
         res.json({workingArrangements, sameDepart})
 
     } catch (err) {
-        
+        console.log(err)
         res.status(500).json({error: "Internal server error"})
     }
 })
@@ -295,35 +300,6 @@ app.post('/request', async (req, res) => {
         res.status(500).json({ message: "Error creating your request", error: 'Internal server error' })
     }
 });
-
-//delete all for mock db
-app.delete('/delete-all/', async (req, res) => {
-    const collectionRef = db.collection("test_create")
-
-    try {
-        // Get all documents in the collection
-        const snapshot = await collectionRef.get()
-
-        if (snapshot.empty) {
-            return res.status(200).json({ message: `No documents found in test_create` })
-        }
-
-        // Create a batch to delete all documents in one operation
-        const batch = db.batch()
-
-        snapshot.docs.forEach((doc) => {
-            batch.delete(doc.ref)
-        });
-
-        // Commit the batch
-        await batch.commit()
-
-        res.status(200).json({ message: `All documents from test_create deleted successfully` })
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to delete documents', details: error.message })
-    }
-})
-
 
 // catch rogue calls
 app.all("*", (req, res) => {
