@@ -301,35 +301,6 @@ app.post('/request', async (req, res) => {
     }
 });
 
-//delete all for mock db
-app.delete('/delete-all/', async (req, res) => {
-    const collectionRef = db.collection("test_create")
-
-    try {
-        // Get all documents in the collection
-        const snapshot = await collectionRef.get()
-
-        if (snapshot.empty) {
-            return res.status(200).json({ message: `No documents found in test_create` })
-        }
-
-        // Create a batch to delete all documents in one operation
-        const batch = db.batch()
-
-        snapshot.docs.forEach((doc) => {
-            batch.delete(doc.ref)
-        });
-
-        // Commit the batch
-        await batch.commit()
-
-        res.status(200).json({ message: `All documents from test_create deleted successfully` })
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to delete documents', details: error.message })
-    }
-})
-
-
 // catch rogue calls
 app.all("*", (req, res) => {
     console.log("Unhandled route:", req.path)
