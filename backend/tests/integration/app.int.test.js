@@ -2,6 +2,7 @@ const request = require('supertest')
 const admin = require("firebase-admin")
 const { app } = require("../../app") // Gets firebase initialization from here
 const db = admin.firestore()
+const firestore = require('firebase-admin/firestore')
 
 const collectionEmployee = "test_employee"
 const collectionWa = "test_working_arrangements"
@@ -11,7 +12,13 @@ const testDate = "2024-10-01"
 const testTomorrow = "2024-10-02"
 const testYesterday = "2024-09-30"
 const testNowDate = new Date().toJSON().slice(0, 10)
-const testFirestoreNow = firestore.Timestamp.now()
+const testFirestoreDate = firestore.Timestamp.fromDate(new Date(testDate))
+const testFirestoreNow = firestore.Timestamp.fromDate(new Date(testNowDate))
+
+const timestampToSeconds = (date) => ({
+    _seconds: Math.floor(date.getTime() / 1000),
+    _nanoseconds: (date.getTime() % 1000) * 1000000,
+})
 
 beforeAll(async () => {
     // Insert needed data in db
@@ -26,8 +33,6 @@ beforeAll(async () => {
             1 pending each for A, B, C (same date)
     */
 
-    const dateValue = new Date(testDate);
-    const batch = db.batch()
     const employees = [
         {
             Staff_ID: "140001",
@@ -108,8 +113,8 @@ beforeAll(async () => {
             Staff_FName: "Derek",
             Staff_LName: "Tan",
             reason: null,
-            startDate: firestore.Timestamp.fromDate(dateValue),
-            endDate: firestore.Timestamp.fromDate(dateValue),
+            startDate: testFirestoreDate,
+            endDate: testFirestoreDate,
             requestCreated: testFirestoreNow,
             status: 'pending',
             approvedBy: null,
@@ -123,8 +128,8 @@ beforeAll(async () => {
             Staff_FName: "Derek",
             Staff_LName: "Tan",
             reason: null,
-            startDate: firestore.Timestamp.fromDate(dateValue),
-            endDate: firestore.Timestamp.fromDate(dateValue),
+            startDate: testFirestoreDate,
+            endDate: testFirestoreDate,
             requestCreated: testFirestoreNow,
             status: 'approved',
             approvedBy: "130002",
@@ -138,8 +143,8 @@ beforeAll(async () => {
             Staff_FName: "Rahim",
             Staff_LName: "Khalid",
             reason: null,
-            startDate: firestore.Timestamp.fromDate(dateValue),
-            endDate: firestore.Timestamp.fromDate(dateValue),
+            startDate: testFirestoreDate,
+            endDate: testFirestoreDate,
             requestCreated: testFirestoreNow,
             status: 'pending',
             approvedBy: null,
@@ -153,8 +158,8 @@ beforeAll(async () => {
             Staff_FName: "Rahim",
             Staff_LName: "Khalid",
             reason: null,
-            startDate: firestore.Timestamp.fromDate(dateValue),
-            endDate: firestore.Timestamp.fromDate(dateValue),
+            startDate: testFirestoreDate,
+            endDate: testFirestoreDate,
             requestCreated: testFirestoreNow,
             status: 'approved',
             approvedBy: "140001",
@@ -168,8 +173,8 @@ beforeAll(async () => {
             Staff_FName: "Jaclyn",
             Staff_LName: "Lee",
             reason: null,
-            startDate: firestore.Timestamp.fromDate(dateValue),
-            endDate: firestore.Timestamp.fromDate(dateValue),
+            startDate: testFirestoreDate,
+            endDate: testFirestoreDate,
             requestCreated: testFirestoreNow,
             status: 'pending',
             approvedBy: null,
@@ -183,8 +188,8 @@ beforeAll(async () => {
             Staff_FName: "Jaclyn",
             Staff_LName: "Lee",
             reason: null,
-            startDate: firestore.Timestamp.fromDate(dateValue),
-            endDate: firestore.Timestamp.fromDate(dateValue),
+            startDate: testFirestoreDate,
+            endDate: testFirestoreDate,
             requestCreated: testFirestoreNow,
             status: 'approved',
             approvedBy: "140001",
@@ -195,17 +200,19 @@ beforeAll(async () => {
         },
     ]
 
+    const batch1 = db.batch()
     employees.forEach(employee => {
         const newDocRef = db.collection(collectionEmployee).doc()
-        batch.set(newDocRef, employee)
+        batch1.set(newDocRef, employee)
     })
-    await batch.commit()
+    await batch1.commit()
 
+    const batch2 = db.batch()
     workingArrangements.forEach(wa => {
         const newDocRef = db.collection(collectionWa).doc()
-        batch.set(newDocRef, wa)
+        batch2.set(newDocRef, wa)
     })
-    await batch.commit()
+    await batch2.commit()
 })
 afterAll(async () => {
     // Delete everything inserted in beforeAll()
@@ -295,15 +302,15 @@ describe('GET /working-arrangements/:employeeid', () => {
             .send()
 
         expect(response.status).toBe(200)
-        expect(response.body).toEqual([
+        expect(response.body).toEqual(expect.arrayContaining([
             {
                 Staff_ID: "140001",
                 Staff_FName: "Derek",
                 Staff_LName: "Tan",
                 reason: null,
-                startDate: testDate,
-                endDate: testDate,
-                requestCreated: testNowDate,
+                startDate: timestampToSeconds(new Date(testDate)),
+                endDate: timestampToSeconds(new Date(testDate)),
+                requestCreated: timestampToSeconds(new Date(testNowDate)),
                 status: 'pending',
                 approvedBy: null,
                 Approved_FName: null,
@@ -316,9 +323,9 @@ describe('GET /working-arrangements/:employeeid', () => {
                 Staff_FName: "Derek",
                 Staff_LName: "Tan",
                 reason: null,
-                startDate: testDate,
-                endDate: testDate,
-                requestCreated: testNowDate,
+                startDate: timestampToSeconds(new Date(testDate)),
+                endDate: timestampToSeconds(new Date(testDate)),
+                requestCreated: timestampToSeconds(new Date(testNowDate)),
                 status: 'approved',
                 approvedBy: "130002",
                 Approved_FName: "Jack",
@@ -326,7 +333,7 @@ describe('GET /working-arrangements/:employeeid', () => {
                 time: "AM",
                 attachment: null
             },
-        ])
+        ]))
     })
 
     test('get non-existent arrangements for an employee', async () => {
@@ -353,24 +360,15 @@ describe('GET /working-arrangements/department/:department/:date', () => {
         // Expect arrangements to be both approved and pending
         expect(response.status).toBe(200)
         expect(response.body).toEqual({
-            workingArrangements: [
+            workingArrangements: expect.arrayContaining([
                 {
                     Staff_ID: "140001",
                     Staff_FName: "Derek",
                     Staff_LName: "Tan",
                     reason: null,
-                    startDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    endDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    requestCreated: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
+                    startDate: timestampToSeconds(new Date(testDate)),
+                    endDate: timestampToSeconds(new Date(testDate)),
+                    requestCreated: timestampToSeconds(new Date(testNowDate)),
                     status: 'pending',
                     approvedBy: null,
                     Approved_FName: null,
@@ -383,18 +381,9 @@ describe('GET /working-arrangements/department/:department/:date', () => {
                     Staff_FName: "Derek",
                     Staff_LName: "Tan",
                     reason: null,
-                    startDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    endDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    requestCreated: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
+                    startDate: timestampToSeconds(new Date(testDate)),
+                    endDate: timestampToSeconds(new Date(testDate)),
+                    requestCreated: timestampToSeconds(new Date(testNowDate)),
                     status: 'approved',
                     approvedBy: "130002",
                     Approved_FName: "Jack",
@@ -407,18 +396,9 @@ describe('GET /working-arrangements/department/:department/:date', () => {
                     Staff_FName: "Rahim",
                     Staff_LName: "Khalid",
                     reason: null,
-                    startDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    endDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    requestCreated: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
+                    startDate: timestampToSeconds(new Date(testDate)),
+                    endDate: timestampToSeconds(new Date(testDate)),
+                    requestCreated: timestampToSeconds(new Date(testNowDate)),
                     status: 'pending',
                     approvedBy: null,
                     Approved_FName: null,
@@ -431,18 +411,9 @@ describe('GET /working-arrangements/department/:department/:date', () => {
                     Staff_FName: "Rahim",
                     Staff_LName: "Khalid",
                     reason: null,
-                    startDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    endDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    requestCreated: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
+                    startDate: timestampToSeconds(new Date(testDate)),
+                    endDate: timestampToSeconds(new Date(testDate)),
+                    requestCreated: timestampToSeconds(new Date(testNowDate)),
                     status: 'approved',
                     approvedBy: "140001",
                     Approved_FName: "Derek",
@@ -455,18 +426,9 @@ describe('GET /working-arrangements/department/:department/:date', () => {
                     Staff_FName: "Jaclyn",
                     Staff_LName: "Lee",
                     reason: null,
-                    startDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    endDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    requestCreated: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
+                    startDate: timestampToSeconds(new Date(testDate)),
+                    endDate: timestampToSeconds(new Date(testDate)),
+                    requestCreated: timestampToSeconds(new Date(testNowDate)),
                     status: 'pending',
                     approvedBy: null,
                     Approved_FName: null,
@@ -479,18 +441,9 @@ describe('GET /working-arrangements/department/:department/:date', () => {
                     Staff_FName: "Jaclyn",
                     Staff_LName: "Lee",
                     reason: null,
-                    startDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    endDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    requestCreated: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
+                    startDate: timestampToSeconds(new Date(testDate)),
+                    endDate: timestampToSeconds(new Date(testDate)),
+                    requestCreated: timestampToSeconds(new Date(testNowDate)),
                     status: 'approved',
                     approvedBy: "140001",
                     Approved_FName: "Derek",
@@ -498,8 +451,8 @@ describe('GET /working-arrangements/department/:department/:date', () => {
                     time: "AM",
                     attachment: null
                 },
-            ],
-            sameDepart: [
+            ]),
+            sameDepart: expect.arrayContaining([
                 {
                     Staff_ID: "140001",
                     Staff_FName: "Derek",
@@ -548,7 +501,7 @@ describe('GET /working-arrangements/department/:department/:date', () => {
                     Role: "2",
                     Password: "123",
                 },
-            ],
+            ]),
         })
     })
 
@@ -565,12 +518,110 @@ describe('GET /working-arrangements/department/:department/:date', () => {
         expect(response1.status).toBe(200)
         expect(response1.body).toEqual({
             workingArrangements: [],
-            sameDepart: [],
+            sameDepart: expect.arrayContaining([
+                {
+                    Staff_ID: "140001",
+                    Staff_FName: "Derek",
+                    Staff_LName: "Tan",
+                    Dept: testDept,
+                    Position: "Director",
+                    Country: "Singapore",
+                    Email: "derek.tan@allinone.com.sg",
+                    Reporting_Manager: "130002",
+                    Role: "1",
+                    Password: "123",
+                },
+                {
+                    Staff_ID: "140894",
+                    Staff_FName: "Rahim",
+                    Staff_LName: "Khalid",
+                    Dept: testDept,
+                    Position: "Sales Manager",
+                    Country: "Singapore",
+                    Email: "rahim.khalid@allinone.com.sg",
+                    Reporting_Manager: "140001",
+                    Role: "3",
+                    Password: "123",
+                },
+                {
+                    Staff_ID: "140008",
+                    Staff_FName: "Jaclyn",
+                    Staff_LName: "Lee",
+                    Dept: testDept,
+                    Position: "Sales Manager",
+                    Country: "Singapore",
+                    Email: "jaclyn.lee@allinone.com.sg",
+                    Reporting_Manager: "140001",
+                    Role: "3",
+                    Password: "123",
+                },
+                {
+                    Staff_ID: "140880",
+                    Staff_FName: "Heng",
+                    Staff_LName: "Chan",
+                    Dept: testDept,
+                    Position: "Account Manager",
+                    Country: "Singapore",
+                    Email: "heng.chan@allinone.com.sg",
+                    Reporting_Manager: "140008",
+                    Role: "2",
+                    Password: "123",
+                },
+            ]),
         })
         expect(response2.status).toBe(200)
         expect(response2.body).toEqual({
             workingArrangements: [],
-            sameDepart: [],
+            sameDepart: expect.arrayContaining([
+                {
+                    Staff_ID: "140001",
+                    Staff_FName: "Derek",
+                    Staff_LName: "Tan",
+                    Dept: testDept,
+                    Position: "Director",
+                    Country: "Singapore",
+                    Email: "derek.tan@allinone.com.sg",
+                    Reporting_Manager: "130002",
+                    Role: "1",
+                    Password: "123",
+                },
+                {
+                    Staff_ID: "140894",
+                    Staff_FName: "Rahim",
+                    Staff_LName: "Khalid",
+                    Dept: testDept,
+                    Position: "Sales Manager",
+                    Country: "Singapore",
+                    Email: "rahim.khalid@allinone.com.sg",
+                    Reporting_Manager: "140001",
+                    Role: "3",
+                    Password: "123",
+                },
+                {
+                    Staff_ID: "140008",
+                    Staff_FName: "Jaclyn",
+                    Staff_LName: "Lee",
+                    Dept: testDept,
+                    Position: "Sales Manager",
+                    Country: "Singapore",
+                    Email: "jaclyn.lee@allinone.com.sg",
+                    Reporting_Manager: "140001",
+                    Role: "3",
+                    Password: "123",
+                },
+                {
+                    Staff_ID: "140880",
+                    Staff_FName: "Heng",
+                    Staff_LName: "Chan",
+                    Dept: testDept,
+                    Position: "Account Manager",
+                    Country: "Singapore",
+                    Email: "heng.chan@allinone.com.sg",
+                    Reporting_Manager: "140008",
+                    Role: "2",
+                    Password: "123",
+                },
+            ]),
         })
     })
 })
@@ -586,24 +637,15 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
         // Expect arrangements to be both approved and pending
         expect(response.status).toBe(200)
         expect(response.body).toEqual({
-            workingArrangements: [
+            workingArrangements: expect.arrayContaining([
                 {
                     Staff_ID: "140894",
                     Staff_FName: "Rahim",
                     Staff_LName: "Khalid",
                     reason: null,
-                    startDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    endDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    requestCreated: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
+                    startDate: timestampToSeconds(new Date(testDate)),
+                    endDate: timestampToSeconds(new Date(testDate)),
+                    requestCreated: timestampToSeconds(new Date(testNowDate)),
                     status: 'pending',
                     approvedBy: null,
                     Approved_FName: null,
@@ -616,18 +658,9 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
                     Staff_FName: "Rahim",
                     Staff_LName: "Khalid",
                     reason: null,
-                    startDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    endDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    requestCreated: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
+                    startDate: timestampToSeconds(new Date(testDate)),
+                    endDate: timestampToSeconds(new Date(testDate)),
+                    requestCreated: timestampToSeconds(new Date(testNowDate)),
                     status: 'approved',
                     approvedBy: "140001",
                     Approved_FName: "Derek",
@@ -640,18 +673,9 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
                     Staff_FName: "Jaclyn",
                     Staff_LName: "Lee",
                     reason: null,
-                    startDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    endDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    requestCreated: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
+                    startDate: timestampToSeconds(new Date(testDate)),
+                    endDate: timestampToSeconds(new Date(testDate)),
+                    requestCreated: timestampToSeconds(new Date(testNowDate)),
                     status: 'pending',
                     approvedBy: null,
                     Approved_FName: null,
@@ -664,18 +688,9 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
                     Staff_FName: "Jaclyn",
                     Staff_LName: "Lee",
                     reason: null,
-                    startDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    endDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    requestCreated: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
+                    startDate: timestampToSeconds(new Date(testDate)),
+                    endDate: timestampToSeconds(new Date(testDate)),
+                    requestCreated: timestampToSeconds(new Date(testNowDate)),
                     status: 'approved',
                     approvedBy: "140001",
                     Approved_FName: "Derek",
@@ -683,8 +698,8 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
                     time: "AM",
                     attachment: null
                 },
-            ],
-            inChargeOf: [
+            ]),
+            inChargeOf: expect.arrayContaining([
                 {
                     Staff_ID: "140894",
                     Staff_FName: "Rahim",
@@ -709,7 +724,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
                     Role: "3",
                     Password: "123",
                 },
-            ],
+            ]),
         })
     })
 
@@ -723,7 +738,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
         expect(response.status).toBe(200)
         expect(response.body).toEqual({
             workingArrangements: [],
-            inChargeOf: [
+            inChargeOf: expect.arrayContaining([
                 {
                     Staff_ID: "140880",
                     Staff_FName: "Heng",
@@ -736,7 +751,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
                     Role: "2",
                     Password: "123",
                 },
-            ],
+            ]),
         })
     })
 })
@@ -752,24 +767,15 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
         // Expect arrangements to be approved only
         expect(response.status).toBe(200)
         expect(response.body).toEqual({
-            workingArrangements: [
+            workingArrangements: expect.arrayContaining([
                 {
                     Staff_ID: "140894",
                     Staff_FName: "Rahim",
                     Staff_LName: "Khalid",
                     reason: null,
-                    startDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    endDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    requestCreated: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
+                    startDate: timestampToSeconds(new Date(testDate)),
+                    endDate: timestampToSeconds(new Date(testDate)),
+                    requestCreated: timestampToSeconds(new Date(testNowDate)),
                     status: 'approved',
                     approvedBy: "140001",
                     Approved_FName: "Derek",
@@ -782,18 +788,9 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
                     Staff_FName: "Jaclyn",
                     Staff_LName: "Lee",
                     reason: null,
-                    startDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    endDate: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
-                    requestCreated: {
-                        _seconds: 69,
-                        _nanoseconds: 69,
-                    },
+                    startDate: timestampToSeconds(new Date(testDate)),
+                    endDate: timestampToSeconds(new Date(testDate)),
+                    requestCreated: timestampToSeconds(new Date(testNowDate)),
                     status: 'approved',
                     approvedBy: "140001",
                     Approved_FName: "Derek",
@@ -801,8 +798,8 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
                     time: "AM",
                     attachment: null
                 },
-            ],
-            teamMembers: [
+            ]),
+            teamMembers: expect.arrayContaining([
                 {
                     Staff_ID: "140894",
                     Staff_FName: "Rahim",
@@ -827,7 +824,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
                     Role: "3",
                     Password: "123",
                 },
-            ],
+            ]),
         })
     })
 

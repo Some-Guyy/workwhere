@@ -7,8 +7,13 @@ admin.initializeApp({
     databaseURL: "workwhere-2b031"
 })
 const db = admin.firestore()
-const collectionEmployee = "mock_employee"
-const collectionWa = "mock_working_arrangements"
+
+let collectionEmployee = "mock_employee"
+let collectionWa = "mock_working_arrangements"
+if (process.env.NODE_ENV === 'test') {
+    collectionEmployee = "test_employee"
+    collectionWa = "test_working_arrangements"
+}
 
 const cors = require("cors")
 const express = require('express')
@@ -121,7 +126,7 @@ app.get("/working-arrangements/department/:department/:date", async (req, res) =
         res.json({workingArrangements, sameDepart})
 
     } catch (err) {
-        
+        console.log(err)
         res.status(500).json({error: "Internal server error"})
     }
 })
