@@ -1,3 +1,4 @@
+const request = require('supertest')
 const admin = require("firebase-admin")
 const { app } = require("../../app") // Gets firebase initialization from here
 const db = admin.firestore()
@@ -10,7 +11,7 @@ beforeAll(async () => {
     /*
         Insert employees A, B, C, D, E, F
         Hierarchy:
-            A -> B, C -> D (All from sales department)
+            A -> B, C -> D (All from Sales department)
             E -> F (E is Jack Sim, F can be any director that is not Sales)
 
         Insert working arrangements:
@@ -31,6 +32,7 @@ beforeAll(async () => {
             Email: "derek.tan@allinone.com.sg",
             Reporting_Manager: "130002",
             Role: "1",
+            Password: "123",
         },
         {
             Staff_ID: "140894",
@@ -42,6 +44,7 @@ beforeAll(async () => {
             Email: "rahim.khalid@allinone.com.sg",
             Reporting_Manager: "140001",
             Role: "3",
+            Password: "123",
         },
         {
             Staff_ID: "140008",
@@ -53,6 +56,7 @@ beforeAll(async () => {
             Email: "jaclyn.lee@allinone.com.sg",
             Reporting_Manager: "140001",
             Role: "3",
+            Password: "123",
         },
         {
             Staff_ID: "140880",
@@ -64,6 +68,7 @@ beforeAll(async () => {
             Email: "heng.chan@allinone.com.sg",
             Reporting_Manager: "140008",
             Role: "2",
+            Password: "123",
         },
         {
             Staff_ID: "130002",
@@ -75,6 +80,7 @@ beforeAll(async () => {
             Email: "jack.sim@allinone.com.sg",
             Reporting_Manager: "130002",
             Role: "1",
+            Password: "123",
         },
         {
             Staff_ID: "160008",
@@ -86,6 +92,7 @@ beforeAll(async () => {
             Email: "sally.loh@allinone.com.sg",
             Reporting_Manager: "130002",
             Role: "1",
+            Password: "123",
         },
     ]
     const workingArrangements = [
