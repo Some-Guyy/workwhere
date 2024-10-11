@@ -68,7 +68,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
             },
             endDate: {
               _seconds: 1728316800,
-              _nanoseconds: 713000000
+              _nanoseconds: 393000000
             },
             requestCreated: {
               _seconds: 1727539200,
@@ -100,7 +100,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
             },
             endDate: {
               _seconds: 1728316800,
-              _nanoseconds: 713000000
+              _nanoseconds: 393000000
             },
             reason: null,
             status: 'approved',
@@ -126,7 +126,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
             },
             endDate: {
               _seconds: 1728316800,
-              _nanoseconds: 713000000
+              _nanoseconds: 393000000
             },
             reason: null,
             status: 'approved',
@@ -164,7 +164,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
             },
             endDate: {
               _seconds: 1728316800,
-              _nanoseconds: 713000000
+              _nanoseconds: 393000000
             },
             reason: null,
             status: 'pending',
@@ -190,7 +190,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
             },
             endDate: {
               _seconds: 1728316800,
-              _nanoseconds: 713000000
+              _nanoseconds: 393000000
             },
             reason: null,
             status: 'approved',
@@ -387,9 +387,18 @@ describe('GET /working-arrangements/:employeeid', () => {
             Staff_ID: "190019",
             Staff_FName: "Heng",
             Staff_LName: "Sim",
-            startDate: "2024-10-08",
-            endDate: "2024-10-08",
-            requestCreated: "2024-10-05",
+            startDate: {
+              _seconds: 1728316800,
+              _nanoseconds: 393000000
+            },
+            endDate: {
+              _seconds: 1728316800,
+              _nanoseconds: 393000000
+            },
+            requestCreated: {
+              _seconds: 1727539200,
+              _nanoseconds: 331000000
+            },
             status: "pending",
             time: "PM",
             reason: null,
@@ -411,9 +420,18 @@ describe('GET /working-arrangements/:employeeid', () => {
       Staff_ID: "190019",
       Staff_FName: "Heng",
       Staff_LName: "Sim",
-      startDate: "2024-10-08",
-      endDate: "2024-10-08",
-      requestCreated: "2024-10-05",
+      startDate: {
+        _seconds: 1728316800,
+        _nanoseconds: 393000000
+      },
+      endDate: {
+        _seconds: 1728316800,
+        _nanoseconds: 393000000
+      },
+      requestCreated: {
+        _seconds: 1727539200,
+        _nanoseconds: 331000000
+      },
       status: "pending",
       time: "PM",
       reason: null,
@@ -497,7 +515,7 @@ describe('GET /working-arrangements/department/:department/:date', () => {
             },
             endDate: {
               _seconds: 1728316800,
-              _nanoseconds: 713000000
+              _nanoseconds: 393000000
             },
             requestCreated: {
               _seconds: 1727539200,
@@ -620,7 +638,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
             },
             endDate: {
               _seconds: 1728316800,
-              _nanoseconds: 713000000
+              _nanoseconds: 393000000
             },
             reason: null,
             status: 'pending',
@@ -646,7 +664,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
             },
             endDate: {
               _seconds: 1728316800,
-              _nanoseconds: 713000000
+              _nanoseconds: 393000000
             },
             reason: null,
             status: 'approved',
@@ -817,7 +835,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
             },
             endDate: {
               _seconds: 1728316800,
-              _nanoseconds: 713000000
+              _nanoseconds: 393000000
             },
             reason: null,
             status: 'approved',
@@ -843,7 +861,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
             },
             endDate: {
               _seconds: 1728316800,
-              _nanoseconds: 713000000
+              _nanoseconds: 393000000
             },
             reason: null,
             status: 'approved',
