@@ -1,6 +1,8 @@
 // firebase db setup
 const admin = require("firebase-admin")
 const firestore = require("firebase-admin/firestore")
+console.log("TESTYTEST")
+console.log(process.env.TESTY)
 var serviceAccount = require("./workwhere_firebase_env.json")
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
