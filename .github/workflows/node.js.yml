@@ -25,7 +25,7 @@ jobs:
     - name: Install dependencies
       working-directory: ./backend
       run: npm ci
-    - name: Create firebase secret
+    - name: Create firebase secret for running tests
       working-directory: ./backend
       run: |
         touch workwhere_firebase_env.json
