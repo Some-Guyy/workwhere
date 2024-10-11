@@ -41,32 +41,32 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, called
         for (let i = 0; i < ids.length; i += batchSize) {
             const batch = ids.slice(i, i + batchSize)
             const snapshot = await db.collection(collectionWa)
-                .where('Staff_ID', 'in', batch)
-                .where("startDate", "<=", startDate)
-                .where("endDate", ">=", endDate)
-                .where("status", "==", "approved")
-                .get()
-
+              .where('Staff_ID', 'in', batch)
+              .where("startDate", "<=", startDate)
+              .where("endDate", ">=", endDate)
+              .where("status", "==", "approved")
+              .get()
+      
             snapshot.forEach((doc) => {
-                workingArrangements.push(doc.data())
+              workingArrangements.push(doc.data())
             })
-        }
+          }
     }
 
     if (calledFrom === "manager" || calledFrom === "department") {
         for (let i = 0; i < ids.length; i += batchSize) {
             const batch = ids.slice(i, i + batchSize)
             const snapshot = await db.collection(collectionWa)
-                .where('Staff_ID', 'in', batch)
-                .where("startDate", "<=", startDate)
-                .where("endDate", ">=", endDate)
-                .where("status", "!=", "rejected")
-                .get()
-
+              .where('Staff_ID', 'in', batch)
+              .where("startDate", "<=", startDate)
+              .where("endDate", ">=", endDate)
+              .where("status", "!=", "rejected")
+              .get()
+      
             snapshot.forEach((doc) => {
-                workingArrangements.push(doc.data())
+              workingArrangements.push(doc.data())
             })
-        }
+          }
     }
 
     return workingArrangements
@@ -77,11 +77,11 @@ app.get("/working-arrangements/:employeeid", async (req, res) => {
     try {
         const { employeeid } = req.params
         const snapshot = await db.collection(collectionWa)
-            .where('Staff_ID', '==', employeeid)
-            .get()
+        .where('Staff_ID', '==', employeeid)
+        .get()
 
         if (snapshot.empty) {
-            return res.status(404).json({ error: 'No working arrangements found for the given employee', workingArrangements: null })
+            return res.status(404).json({ error: 'No working arrangements found for the given employee', workingArrangements: null})
         }
         const workingArrangements = []
         snapshot.forEach((doc) => {
@@ -91,8 +91,8 @@ app.get("/working-arrangements/:employeeid", async (req, res) => {
         res.json(workingArrangements)
 
     } catch (err) {
-
-        res.status(500).json({ error: "Internal server error" })
+        
+        res.status(500).json({error: "Internal server error"})
     }
 })
 
@@ -109,8 +109,8 @@ app.get("/working-arrangements/department/:department/:date", async (req, res) =
 
         // find department teammates
         const snapshot = await db.collection(collectionEmployee)
-            .where("Dept", "==", department)
-            .get()
+        .where("Dept", "==", department)
+        .get()
 
         // create list based on these teammates
         const sameDepartmentID = []
@@ -123,11 +123,11 @@ app.get("/working-arrangements/department/:department/:date", async (req, res) =
         // fetch working arrangements based on these department mates
         const workingArrangements = await fetchWorkingArrangementsInBatches(sameDepartmentID, endOfDay, targetDate, "department")
 
-        res.json({ workingArrangements, sameDepart })
+        res.json({workingArrangements, sameDepart})
 
     } catch (err) {
         console.log(err)
-        res.status(500).json({ error: "Internal server error" })
+        res.status(500).json({error: "Internal server error"})
     }
 })
 
@@ -144,8 +144,8 @@ app.get("/working-arrangements/manager/:managerId/:date", async (req, res) => {
 
         // find employees you're in charge of
         const snapshot = await db.collection(collectionEmployee)
-            .where("Reporting_Manager", "==", managerId)
-            .get()
+        .where("Reporting_Manager", "==", managerId)
+        .get()
 
         // create list based on these employees
         const inChargeOf = []
@@ -158,11 +158,11 @@ app.get("/working-arrangements/manager/:managerId/:date", async (req, res) => {
         // fetch working arrangements based on these department mates
         const workingArrangements = await fetchWorkingArrangementsInBatches(inChargeOfID, endOfDay, targetDate, "manager")
 
-        res.json({ workingArrangements, inChargeOf })
+        res.json({workingArrangements, inChargeOf})
 
     } catch (err) {
-
-        res.status(500).json({ error: "Internal server error" })
+        
+        res.status(500).json({error: "Internal server error"})
     }
 })
 
@@ -177,9 +177,9 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
         endOfDay.setHours(23, 59, 59, 999)
 
         const employeeSnapshot = await db.collection(collectionEmployee)
-            .where('Staff_ID', '==', employeeId)
-            .limit(1)
-            .get()
+        .where('Staff_ID', '==', employeeId)
+        .limit(1)
+        .get()
 
         // if employee cannot be found
         if (employeeSnapshot.empty) {
@@ -192,8 +192,8 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
 
         // then call db again to find those same reporting managers
         const teamSnapshot = await db.collection(collectionEmployee)
-            .where('Position', '==', position)
-            .get()
+        .where('Position', '==', position)
+        .get()
 
         // get list of team members id
         const teamMemberIds = []
@@ -207,12 +207,12 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
         const workingArrangements = await fetchWorkingArrangementsInBatches(teamMemberIds, endOfDay, targetDate, "team")
 
         // Return the list of working arrangements for the team members
-        res.json({ workingArrangements, teamMembers })
+        res.json({workingArrangements, teamMembers})
 
 
     } catch (err) {
-
-        res.status(500).json({ error: "Internal server error" })
+        
+        res.status(500).json({error: "Internal server error"})
     }
 })
 
@@ -269,28 +269,28 @@ app.post('/request', async (req, res) => {
         const batch = db.batch()
 
         dates.forEach(dateObject => {
-            const { date, time, attachment } = dateObject; // Destructure the object
-
+            const { date, time, attachment} = dateObject; // Destructure the object
+        
             // Convert the date string to a JavaScript Date object
-            const dateValue = new Date(date);
+            const dateValue = new Date(date); 
             const newDocRef = db.collection(collectionWa).doc();
             batch.set(newDocRef, {
                 Staff_ID: Staff_ID,
                 Staff_FName: Staff_FName,
                 Staff_LName: Staff_LName,
-                reason: null,
+                reason: null,  
                 startDate: firestore.Timestamp.fromDate(dateValue),
                 endDate: firestore.Timestamp.fromDate(dateValue),
                 requestCreated: firestore.Timestamp.now(),
                 status: 'pending',
-                approvedBy: null,
-                Approved_FName: null,
+                approvedBy: null, 
+                Approved_FName: null, 
                 Approved_LName: null,
                 time: time,
                 attachment: attachment == null ? null : attachment
             })
         })
-
+        
         // commit operation to create all documents
         await batch.commit()
 
@@ -305,6 +305,6 @@ app.post('/request', async (req, res) => {
 app.all("*", (req, res) => {
     console.log("Unhandled route:", req.path)
     res.status(404).send("Route not found")
-})
+}) 
 
 module.exports = { app, fetchWorkingArrangementsInBatches }
