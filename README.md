@@ -5,6 +5,7 @@ A Work-from-Home tracking system for the company All-in-One. It comprises of a w
 <img src="https://static.structurizr.com/workspace/95869/diagrams/Diagram1.png" width=300 />
 <img src="https://static.structurizr.com/workspace/95869/diagrams/Diagram2.png" width=300 />
 
+
 ## Setup
 ### Prerequisites:
 - [Node.js](https://nodejs.org/en/) v20.15.0 (_or above_)
