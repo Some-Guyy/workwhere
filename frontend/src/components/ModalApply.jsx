@@ -66,7 +66,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
             date: `${d.toLocaleDateString().split("/")[2]}-${d.toLocaleDateString().split("/")[0]}-${d.toLocaleDateString().split("/")[1]}` ,
             time: "am",
             reason: "",
-            file: null
+            attachment: null
         })));
     }, [selectedDates]);
 
@@ -81,7 +81,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
             dates
         }
             
-        addWFH(formData)
+        addWFH(formData);
         console.log(formData);
         // console.log(successfulApplication);
 
@@ -130,7 +130,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
                                     </select>
                                 </label>
 
-                                {/* Reasoning data */}
+                                {/* Reasoning data
                                 <label className="input input-bordered flex items-center gap-2">
                                     Reason
                                     <input 
@@ -141,14 +141,14 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
                                         value={dates[index].reason} // Binding to state
                                         onChange={(e) => handleInputChange(index, "reason", e.target.value)} // Update state
                                     />
-                                </label>
+                                </label> */}
 
                                 {/* File Input */}
                                 <input 
                                     type="file" 
                                     className="file-input file-input-bordered w-full mt-2"
                                     accept=".jpg, .png, .jpeg"  // Accept only JPG and PNG files 
-                                    onChange={(e) => handleInputChange(index, "file", e.target.files[0])} // Update state
+                                    onChange={(e) => handleInputChange(index, "attachment", e.target.files[0])} // Update state
                                 />
                               </>
                             )}

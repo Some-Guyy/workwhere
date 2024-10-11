@@ -18,7 +18,7 @@ const HomePage = () => {
     const [selectedDate, setSelectedDate] = useState(`${today[1]}/${today[0]}/${today[2]}`);
 
 
-    const loginEmployeeId = 190019; // to be changed based on logins initial fetch for users employee id
+    const [loginEmployeeId, setLoginEmployeeId] = useState(null); // to be changed based on logins initial fetch for users employee id
     const [teamOrOverall, setTeamOrOverall] = useState(null);
     const [selectedDepartment, setSelectedDepartment] = useState("Sales"); // to be changed based on logins initial fetch for users department
     const [dateTriggered, setDateTriggered] = useState(false); // Separate state to track when date is being fetched
@@ -34,6 +34,8 @@ const HomePage = () => {
       if (storedRole) {
         setTeamOrOverall(storedRole);
         setUserRole(storedRole);
+        setLoginEmployeeId(JSON.parse(localStoreaged).Staff_ID);
+        // console.log(localStoreaged);
       }
       else{
         // navigate("/");
@@ -129,7 +131,7 @@ const HomePage = () => {
     }] 
 
     // function to fetch personal schedule
-    const fetchPersonalData = async (employeeId=190019) => {
+    const fetchPersonalData = async (employeeId=loginEmployeeId) => {
       
       const apiUrl = `http://localhost:3000/working-arrangements/${employeeId}`;      
 
