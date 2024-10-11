@@ -15,4 +15,32 @@ A Work-from-Home tracking system for the company All-in-One. It comprises of a w
 
 1. Run the backend server.
 
-    
+    `~/workwhere/backend$ npm start`
+
+1. Install dependencies in the `frontend` directory.
+
+    `~/workwhere/frontend$ npm install`
+
+1. Build the frontend React app.
+
+    `~/workwhere/frontend$ npm run build`
+
+1. Run the frontend server. It will be on http://localhost:3000 by default.
+
+    `~/workwhere/frontend$ npm start`
+
+## Testing
+We use Jest testing for our unit and integration tests. Note that you need run the commands in the `backend` directory and have the `workwhere_firebase_env.json` file in it to successfully run the tests.
+
+### Test scripts:
+- All tests with coverage:
+
+    `~/workwhere/backend$ npm test`
+
+- Integration tests:
+
+    `~/workwhere/backend$ npm run it`
+
+- Unit tests:
+
+    `~/workwhere/backend$ npm run ut`
