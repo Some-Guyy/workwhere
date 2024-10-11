@@ -38,10 +38,10 @@ We use [Jest](https://jestjs.io/) testing for our unit and integration tests. No
 
     `~/workwhere/backend$ npm test`
 
-- Integration tests:
+- Integration tests only:
 
     `~/workwhere/backend$ npm run it`
 
-- Unit tests:
+- Unit tests only:
 
     `~/workwhere/backend$ npm run ut`
