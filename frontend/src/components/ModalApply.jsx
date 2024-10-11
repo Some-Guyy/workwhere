@@ -65,7 +65,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
         setDates(selectedDates.map((d) => ({
             date: `${d.toLocaleDateString().split("/")[2]}-${d.toLocaleDateString().split("/")[0]}-${d.toLocaleDateString().split("/")[1]}` ,
             time: "am",
-            reason: "",
+            // reason: "",
             attachment: null
         })));
     }, [selectedDates]);
@@ -80,9 +80,9 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
             Staff_LName: userDetails.Staff_LName, 
             dates
         }
-            
+        console.log(formData);    
         addWFH(formData);
-        console.log(formData);
+        // console.log(formData);
         // console.log(successfulApplication);
 
     };

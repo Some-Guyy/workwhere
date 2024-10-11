@@ -25,12 +25,14 @@ const MyApplicationsPage = () => {
         // Check if the response is OK
         if (!res.ok) {
           throw new Error(`Failed to add WFH arrangement: ${res.status} ${res.statusText}`);
+        }else{
+          // Successful response
+          console.log("WFH arrangement added successfully!");
+          setSuccessfulApplication(true);  // Update the state to indicate success
+          return await res.json();          // Ensure we return a parsed response
         }
-    
-        // Successful response
-        console.log("WFH arrangement added successfully!");
-        setSuccessfulApplication(true);  // Update the state to indicate success
-        return await res.json();          // Ensure we return a parsed response
+        
+
     
       } catch (error) {
         // Error handling, set the failure state
@@ -50,15 +52,17 @@ const MyApplicationsPage = () => {
       //     body: JSON.stringify(newArrangement),
       //   });
     
-      //   // Check if the response is OK
-      //   if (!res.ok) {
-      //     throw new Error(`Failed to add WFH arrangement: ${res.status} ${res.statusText}`);
-      //   }
+        // Check if the response is OK
+        // if (!res.ok) {
+        //   throw new Error(`Failed to add WFH arrangement: ${res.status} ${res.statusText}`);
+        // }else{
+        //   // Successful response
+        //   console.log("WFH arrangement added successfully!");
+        //   setSuccessfulCancellation(true);  // Update the state to indicate success
+        //   return await res.json();          // Ensure we return a parsed response
+        // }
     
-      //   // Successful response
-      //   console.log("WFH arrangement added successfully!");
-      //   setSuccessfulCancellation(true);  // Update the state to indicate success
-      //   return await res.json();          // Ensure we return a parsed response
+        
     
       // } catch (error) {
       //   // Error handling, set the failure state
