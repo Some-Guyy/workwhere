@@ -11,6 +11,7 @@ on:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
     strategy:
@@ -28,8 +29,6 @@ jobs:
     - name: Install dependencies
       working-directory: ./backend
       run: npm ci
-    - name: Set environment variables for tests
-      run: echo "TESTY=123" >> $GITHUB_ENV
     - name: Run all tests
       working-directory: ./backend
       run: npm test
