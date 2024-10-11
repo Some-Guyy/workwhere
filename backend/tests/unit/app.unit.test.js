@@ -68,7 +68,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
             },
             endDate: {
               _seconds: 1728316800,
-              _nanoseconds: 713000000
+              _nanoseconds: 393000000
             },
             requestCreated: {
               _seconds: 1727539200,
@@ -81,7 +81,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
         })
       }
     })
-    
+
     await fetchWorkingArrangementsInBatches(sameDepartmentID, endOfDay, targetDate, "department")
     expect(db.collection().where).toHaveBeenCalledWith("status", "!=", "rejected")
   })
@@ -100,7 +100,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
             },
             endDate: {
               _seconds: 1728316800,
-              _nanoseconds: 713000000
+              _nanoseconds: 393000000
             },
             reason: null,
             status: 'approved',
@@ -126,7 +126,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
             },
             endDate: {
               _seconds: 1728316800,
-              _nanoseconds: 713000000
+              _nanoseconds: 393000000
             },
             reason: null,
             status: 'approved',
@@ -164,7 +164,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
             },
             endDate: {
               _seconds: 1728316800,
-              _nanoseconds: 713000000
+              _nanoseconds: 393000000
             },
             reason: null,
             status: 'pending',
@@ -190,7 +190,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
             },
             endDate: {
               _seconds: 1728316800,
-              _nanoseconds: 713000000
+              _nanoseconds: 393000000
             },
             reason: null,
             status: 'approved',
@@ -387,9 +387,18 @@ describe('GET /working-arrangements/:employeeid', () => {
             Staff_ID: "190019",
             Staff_FName: "Heng",
             Staff_LName: "Sim",
-            startDate: "2024-10-08",
-            endDate: "2024-10-08",
-            requestCreated: "2024-10-05",
+            startDate: {
+              _seconds: 1728316800,
+              _nanoseconds: 393000000
+            },
+            endDate: {
+              _seconds: 1728316800,
+              _nanoseconds: 393000000
+            },
+            requestCreated: {
+              _seconds: 1727539200,
+              _nanoseconds: 331000000
+            },
             status: "pending",
             time: "PM",
             reason: null,
@@ -411,9 +420,18 @@ describe('GET /working-arrangements/:employeeid', () => {
       Staff_ID: "190019",
       Staff_FName: "Heng",
       Staff_LName: "Sim",
-      startDate: "2024-10-08",
-      endDate: "2024-10-08",
-      requestCreated: "2024-10-05",
+      startDate: {
+        _seconds: 1728316800,
+        _nanoseconds: 393000000
+      },
+      endDate: {
+        _seconds: 1728316800,
+        _nanoseconds: 393000000
+      },
+      requestCreated: {
+        _seconds: 1727539200,
+        _nanoseconds: 331000000
+      },
       status: "pending",
       time: "PM",
       reason: null,
@@ -497,7 +515,7 @@ describe('GET /working-arrangements/department/:department/:date', () => {
             },
             endDate: {
               _seconds: 1728316800,
-              _nanoseconds: 713000000
+              _nanoseconds: 393000000
             },
             requestCreated: {
               _seconds: 1727539200,
@@ -545,7 +563,7 @@ describe('GET /working-arrangements/department/:department/:date', () => {
         },
         endDate: {
           _seconds: 1728316800,
-          _nanoseconds: 713000000
+          _nanoseconds: 393000000
         },
         requestCreated: {
           _seconds: 1727539200,
@@ -620,7 +638,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
             },
             endDate: {
               _seconds: 1728316800,
-              _nanoseconds: 713000000
+              _nanoseconds: 393000000
             },
             reason: null,
             status: 'pending',
@@ -646,7 +664,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
             },
             endDate: {
               _seconds: 1728316800,
-              _nanoseconds: 713000000
+              _nanoseconds: 393000000
             },
             reason: null,
             status: 'approved',
@@ -700,7 +718,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
         },
         endDate: {
           _seconds: 1728316800,
-          _nanoseconds: 713000000
+          _nanoseconds: 393000000
         },
         reason: null,
         status: 'pending',
@@ -724,7 +742,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
         },
         endDate: {
           _seconds: 1728316800,
-          _nanoseconds: 713000000
+          _nanoseconds: 393000000
         },
         reason: null,
         status: 'approved',
@@ -817,7 +835,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
             },
             endDate: {
               _seconds: 1728316800,
-              _nanoseconds: 713000000
+              _nanoseconds: 393000000
             },
             reason: null,
             status: 'approved',
@@ -843,7 +861,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
             },
             endDate: {
               _seconds: 1728316800,
-              _nanoseconds: 713000000
+              _nanoseconds: 393000000
             },
             reason: null,
             status: 'approved',
@@ -893,7 +911,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
         },
         endDate: {
           _seconds: 1728316800,
-          _nanoseconds: 713000000
+          _nanoseconds: 393000000
         },
         reason: null,
         status: 'approved',
@@ -917,7 +935,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
         },
         endDate: {
           _seconds: 1728316800,
-          _nanoseconds: 713000000
+          _nanoseconds: 393000000
         },
         reason: null,
         status: 'approved',
@@ -1006,6 +1024,70 @@ describe('POST /request', () => {
       Approved_LName: null,
       time: dates[0].time,
       attachment: dates[0].attachment
+    })
+    expect(response.body).toEqual({
+      message: 'Request created successfully'
+    })
+  })
+
+  test('create request for multiple arrangements', async () => {
+    const staffId = '190019'
+    const staffFName = 'Heng'
+    const staffLName = 'Sim'
+    const dates = [{
+      date: '2024-10-01',
+      time: 'PM',
+      attachment: null
+    },
+    {
+      date: '2024-10-02',
+      time: 'AM',
+      attachment: "b64string"
+    }]
+
+    const response = await request(app)
+      .post('/request')
+      .send({
+        Staff_ID: staffId,
+        Staff_FName: staffFName,
+        Staff_LName: staffLName,
+        dates: dates
+      })
+
+    const dateValue1 = new Date(dates[0].date);
+    const dateValue2 = new Date(dates[1].date);
+    const newDocRef = db.collection('mock_working_arrangements').doc();
+
+    expect(response.status).toBe(201)
+    expect(db.batch().set).toHaveBeenCalledWith(newDocRef, {
+      Staff_ID: staffId,
+      Staff_FName: staffFName,
+      Staff_LName: staffLName,
+      reason: null,
+      startDate: firestore.Timestamp.fromDate(dateValue1),
+      endDate: firestore.Timestamp.fromDate(dateValue1),
+      requestCreated: firestore.Timestamp.now(),
+      status: 'pending',
+      approvedBy: null,
+      Approved_FName: null,
+      Approved_LName: null,
+      time: dates[0].time,
+      attachment: dates[0].attachment
+    })
+    expect(db.batch().set).toHaveBeenCalledWith(newDocRef, {
+      Staff_ID: staffId,
+      Staff_FName: staffFName,
+      Staff_LName: staffLName,
+      reason: null,
+      startDate: firestore.Timestamp.fromDate(dateValue2),
+      endDate: firestore.Timestamp.fromDate(dateValue2),
+      requestCreated: firestore.Timestamp.now(),
+      status: 'pending',
+      approvedBy: null,
+      Approved_FName: null,
+      Approved_LName: null,
+      time: dates[1].time,
+      attachment: dates[1].attachment
     })
     expect(response.body).toEqual({
       message: 'Request created successfully'

@@ -8,10 +8,16 @@ admin.initializeApp({
 })
 const db = admin.firestore()
 
+let collectionEmployee = "mock_employee"
+let collectionWa = "mock_working_arrangements"
+if (process.env.NODE_ENV === 'test') {
+    collectionEmployee = "test_employee"
+    collectionWa = "test_working_arrangements"
+}
+
 const cors = require("cors")
 const express = require('express')
 const app = express()
-
 
 app.use(cors())
 app.use(express.json({ limit: '10mb' })); // Body parser after CORS
@@ -34,7 +40,7 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, called
         // send back approved working arrangements
         for (let i = 0; i < ids.length; i += batchSize) {
             const batch = ids.slice(i, i + batchSize)
-            const snapshot = await db.collection('mock_working_arrangements')
+            const snapshot = await db.collection(collectionWa)
               .where('Staff_ID', 'in', batch)
               .where("startDate", "<=", startDate)
               .where("endDate", ">=", endDate)
@@ -50,7 +56,7 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, called
     if (calledFrom === "manager" || calledFrom === "department") {
         for (let i = 0; i < ids.length; i += batchSize) {
             const batch = ids.slice(i, i + batchSize)
-            const snapshot = await db.collection('mock_working_arrangements')
+            const snapshot = await db.collection(collectionWa)
               .where('Staff_ID', 'in', batch)
               .where("startDate", "<=", startDate)
               .where("endDate", ">=", endDate)
@@ -70,7 +76,7 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, called
 app.get("/working-arrangements/:employeeid", async (req, res) => {
     try {
         const { employeeid } = req.params
-        const snapshot = await db.collection('mock_working_arrangements')
+        const snapshot = await db.collection(collectionWa)
         .where('Staff_ID', '==', employeeid)
         .get()
 
@@ -102,7 +108,7 @@ app.get("/working-arrangements/department/:department/:date", async (req, res) =
         endOfDay.setHours(23, 59, 59, 999)
 
         // find department teammates
-        const snapshot = await db.collection("mock_employee")
+        const snapshot = await db.collection(collectionEmployee)
         .where("Dept", "==", department)
         .get()
 
@@ -120,7 +126,7 @@ app.get("/working-arrangements/department/:department/:date", async (req, res) =
         res.json({workingArrangements, sameDepart})
 
     } catch (err) {
-        
+        console.log(err)
         res.status(500).json({error: "Internal server error"})
     }
 })
@@ -137,7 +143,7 @@ app.get("/working-arrangements/manager/:managerId/:date", async (req, res) => {
         endOfDay.setHours(23, 59, 59, 999)
 
         // find employees you're in charge of
-        const snapshot = await db.collection("mock_employee")
+        const snapshot = await db.collection(collectionEmployee)
         .where("Reporting_Manager", "==", managerId)
         .get()
 
@@ -170,7 +176,7 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
         targetDate.setHours(0, 0, 0, 0)
         endOfDay.setHours(23, 59, 59, 999)
 
-        const employeeSnapshot = await db.collection('mock_employee')
+        const employeeSnapshot = await db.collection(collectionEmployee)
         .where('Staff_ID', '==', employeeId)
         .limit(1)
         .get()
@@ -185,7 +191,7 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
         const position = employeeData.Position
 
         // then call db again to find those same reporting managers
-        const teamSnapshot = await db.collection('mock_employee')
+        const teamSnapshot = await db.collection(collectionEmployee)
         .where('Position', '==', position)
         .get()
 
@@ -216,7 +222,7 @@ app.post('/login', async (req, res) => {
 
     try {
         // find user from user db
-        const snapshot = await db.collection('mock_employee')
+        const snapshot = await db.collection(collectionEmployee)
             .where('Email', '==', emailAddress.toLowerCase())
             .limit(1)
             .get()
@@ -267,7 +273,7 @@ app.post('/request', async (req, res) => {
         
             // Convert the date string to a JavaScript Date object
             const dateValue = new Date(date); 
-            const newDocRef = db.collection('mock_working_arrangements').doc();
+            const newDocRef = db.collection(collectionWa).doc();
             batch.set(newDocRef, {
                 Staff_ID: Staff_ID,
                 Staff_FName: Staff_FName,
@@ -294,35 +300,6 @@ app.post('/request', async (req, res) => {
         res.status(500).json({ message: "Error creating your request", error: 'Internal server error' })
     }
 });
-
-//delete all for mock db
-app.delete('/delete-all/', async (req, res) => {
-    const collectionRef = db.collection("test_create")
-
-    try {
-        // Get all documents in the collection
-        const snapshot = await collectionRef.get()
-
-        if (snapshot.empty) {
-            return res.status(200).json({ message: `No documents found in test_create` })
-        }
-
-        // Create a batch to delete all documents in one operation
-        const batch = db.batch()
-
-        snapshot.docs.forEach((doc) => {
-            batch.delete(doc.ref)
-        });
-
-        // Commit the batch
-        await batch.commit()
-
-        res.status(200).json({ message: `All documents from test_create deleted successfully` })
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to delete documents', details: error.message })
-    }
-})
-
 
 // catch rogue calls
 app.all("*", (req, res) => {
