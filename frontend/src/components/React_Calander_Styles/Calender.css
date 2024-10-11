@@ -304,3 +304,21 @@ background: revert;
 .rdp-focusable {
 cursor: pointer;
 }
+
+.leaveDays {
+background-color: #2563eb;
+/* color: white; */
+border-radius: 50%;
+}   
+
+.pendingDays {
+background-color: #facc15;
+/* color: white; */
+border-radius: 50%;
+}
+
+.wfhDays {
+    background-color: #22c55e;
+    /* color: white; */
+    border-radius: 50%;
+    }

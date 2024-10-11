@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "jest --coverage",
-    "ut" : "jest unit",
-    "it" : "jest integration",
+    "ut": "jest unit",
+    "it": "jest integration",
     "start": "node server.js"
   },
   "keywords": [],

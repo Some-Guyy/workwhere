@@ -1,0 +1,36 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - name: Install dependencies
+      working-directory: ./backend
+      run: npm ci
+    - name: Create firebase secret
+      working-directory: ./backend
+      run: |
+        touch workwhere_firebase_env.json
+        echo '{"type": ${{ secrets.TYPE }},"project_id": ${{ secrets.PROJECT_ID }},"private_key_id": ${{ secrets.PRIVATE_KEY_ID }},"private_key": ${{ secrets.PRIVATE_KEY }},"client_email": ${{ secrets.CLIENT_EMAIL }},"client_id": ${{ secrets.CLIENT_ID }},"auth_uri": ${{ secrets.AUTH_URI }},"token_uri": ${{ secrets.TOKEN_URI }},"auth_provider_x509_cert_url": ${{ secrets.AUTH_PROVIDER_X509_CERT_URL }},"client_x509_cert_url": ${{ secrets.CLIENT_X509_CERT_URL }},"universe_domain": ${{ secrets.UNIVERSE_DOMAIN }}}' >> workwhere_firebase_env.json
+      shell: bash
+    - name: Run all tests
+      working-directory: ./backend
+      run: npm test

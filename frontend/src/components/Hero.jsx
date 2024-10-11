@@ -1,10 +1,10 @@
 import Calender from "./Calender";
 import Stats from "./Stats";
 
-const Hero = () => {
+const Hero = ({loading, data}) => {
   return (
     <div className="mt-20">
-        <div className="bg-primary min-h-screen glass w-full min-w-[450px]">
+        <div className="bg-primary min-h-screen glass w-full min-w-[490px]">
             <div className="flex flex-col lg:flex-row-reverse items-center w-full">
                 <div className="text-center lg:text-left lg:ml-5 text-base-100 w-full p-4">
                     <div className="glass p-4 w-full">
@@ -17,12 +17,12 @@ const Hero = () => {
                         </p>
                     </div>
                     <div className="glass my-4 p-4">
-                        <Stats />
+                        <Stats loading={loading} data={data}/>
                     </div>
                 </div>
 
                 <div className="card bg-base-300 w-full max-w-sm shrink-0 shadow-2xl m-5">
-                    <Calender />
+                    <Calender data={data}/>
                 </div>
 
             </div>
