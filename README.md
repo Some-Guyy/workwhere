@@ -30,7 +30,7 @@ A Work-from-Home tracking system for the company All-in-One. It comprises of a w
     `~/workwhere/frontend$ npm start`
 
 ## Testing
-We use Jest testing for our unit and integration tests. Note that you need run the commands in the `backend` directory and have the `workwhere_firebase_env.json` file in it to successfully run the tests.
+We use [Jest](https://jestjs.io/) testing for our unit and integration tests. Note that you need run the commands in the `backend` directory and have the `workwhere_firebase_env.json` file in it to successfully run the tests.
 
 ### Test scripts:
 - All tests with coverage:
