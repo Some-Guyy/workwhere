@@ -69,6 +69,20 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, called
           }
     }
 
+    if (calledFrom === "supervise") {
+        for (let i = 0; i < ids.length; i += batchSize) {
+            const batch = ids.slice(i, i + batchSize)
+            const snapshot = await db.collection(collectionWa)
+              .where('Staff_ID', 'in', batch)
+              .where("status", "==", "pending")
+              .get()
+      
+            snapshot.forEach((doc) => {
+              workingArrangements.push(doc.data())
+            })
+          }
+    }
+
     return workingArrangements
 }
 
@@ -161,7 +175,6 @@ app.get("/working-arrangements/manager/:managerId/:date", async (req, res) => {
         res.json({workingArrangements, inChargeOf})
 
     } catch (err) {
-        
         res.status(500).json({error: "Internal server error"})
     }
 })
@@ -259,7 +272,7 @@ app.post('/login', async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
     }
-});
+})
 
 //create new working arrangement 
 app.post('/request', async (req, res) => {
@@ -299,7 +312,75 @@ app.post('/request', async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Error creating your request", error: 'Internal server error' })
     }
-});
+})
+
+//cancel own working arrangement
+app.put("/working-arrangements", async (req, res) => {
+
+    try {
+        const { Staff_ID, startDate} = req.body
+
+        const targetDate = new Date(startDate)
+        const endOfDay = new Date(startDate)
+    
+        targetDate.setHours(0, 0, 0, 0)
+        endOfDay.setHours(23, 59, 59, 999)
+
+        const snapshot = await db.collection(collectionWa)
+        .where('Staff_ID', '==', Staff_ID)
+        .where("startDate", "<=", endOfDay)
+        .where("endDate", ">=", targetDate)
+        .where("status", "==", "pending")
+        .get()
+
+        if (snapshot.empty) {
+            return res.status(404).json({ message: "No matching working arrangement found" })
+        }
+    
+        const doc = snapshot.docs[0]
+        console.log(doc)
+        const docRef = db.collection(collectionWa).doc(doc.id)
+    
+        await docRef.update({ status: "cancelled" })
+        return res.status(200).json({ message: "Working arrangement successfully cancelled." })
+    } catch (err) {
+        console.error(err)
+        return res.status(500).json({message: "Internal server error"})
+    }
+})
+
+//get team in charge working arrangements //pending
+app.get("/working-arrangements/supervise/:managerId", async (req, res) => {
+    try {
+        const { managerId } = req.params
+
+        // find employees you're in charge of
+        const snapshot = await db.collection(collectionEmployee)
+        .where("Reporting_Manager", "==", managerId)
+        .get()
+
+        // create list based on these employees
+        const inChargeOf = []
+        const inChargeOfID = []
+        snapshot.forEach((doc) => {
+            inChargeOfID.push(doc.data().Staff_ID)
+            inChargeOf.push(doc.data())
+        })
+
+        // fetch working arrangements based on these department mates
+        const workingArrangements = await fetchWorkingArrangementsInBatches(inChargeOfID, null, null, "supervise")
+
+        res.json({workingArrangements, inChargeOf})
+
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({error: "Internal server error"})
+    }
+})
+
+// to do here: for manager to update pending arrangements to rejected or approved
+
+
 
 // catch rogue calls
 app.all("*", (req, res) => {
