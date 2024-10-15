@@ -2,7 +2,7 @@ import ScheduleTableRow from "./ScheduleTableRow"
 import ScheduleTableHeader from "./ScheduleTableHeader"
 import {useState,useEffect} from "react"
 
-const ScheduleTable = ({data, headCount, activeSchedule, isWFODate, isPending, isManageOwnApplication, successfulCancellation, setSuccessfulCancellation, isForCancel, cancelWFH}) => {
+const ScheduleTable = ({data, headCount, activeSchedule, isWFODate, isPending, isManageOwnApplication, successfulCancellation, setSuccessfulCancellation, isForCancel, cancelWFH, successfulApprovalRejection, setSuccessfulApprovalRejection, approveRejectWFH}) => {
     const [First, setFirst] = useState(0); 
     const [Second, setSecond] = useState(10); 
     const dataLength = data.length
@@ -52,7 +52,7 @@ const ScheduleTable = ({data, headCount, activeSchedule, isWFODate, isPending, i
                     </thead>
                     <tbody>
                         {data.slice(First,Second).map((d, index) => (
-                            <ScheduleTableRow key={index} details={d} index={index+First} activeSchedule={activeSchedule} isWFODate={isWFODate} isPending={isPending} isManageOwnApplication={isManageOwnApplication} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} isForCancel={isForCancel} cancelWFH={cancelWFH}/>
+                            <ScheduleTableRow key={index} modalKey={index} details={d} index={index+First} activeSchedule={activeSchedule} isWFODate={isWFODate} isPending={isPending} isManageOwnApplication={isManageOwnApplication} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} isForCancel={isForCancel} cancelWFH={cancelWFH} successfulApprovalRejection={successfulApprovalRejection} setSuccessfulApprovalRejection={setSuccessfulApprovalRejection} approveRejectWFH={approveRejectWFH}/>
                         ))}
                     </tbody>
                 </table>
