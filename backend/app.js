@@ -281,28 +281,54 @@ app.post('/request', async (req, res) => {
         // create a working arrangement for each date
         const batch = db.batch()
 
-        dates.forEach(dateObject => {
-            const { date, time, attachment} = dateObject; // Destructure the object
-        
-            // Convert the date string to a JavaScript Date object
-            const dateValue = new Date(date); 
-            const newDocRef = db.collection(collectionWa).doc();
-            batch.set(newDocRef, {
-                Staff_ID: Staff_ID,
-                Staff_FName: Staff_FName,
-                Staff_LName: Staff_LName,
-                reason: null,  
-                startDate: firestore.Timestamp.fromDate(dateValue),
-                endDate: firestore.Timestamp.fromDate(dateValue),
-                requestCreated: firestore.Timestamp.now(),
-                status: 'pending',
-                Approved_ID: null, 
-                Approved_FName: null, 
-                Approved_LName: null,
-                time: time,
-                attachment: attachment == null ? null : attachment
+        // for automatic approval (the big boss jack sigma)
+        if (Staff_ID === "130002") {
+            dates.forEach(dateObject => {
+                const { date, time, attachment} = dateObject
+            
+                const dateValue = new Date(date); 
+                const newDocRef = db.collection(collectionWa).doc()
+                batch.set(newDocRef, {
+                    Staff_ID: Staff_ID,
+                    Staff_FName: Staff_FName,
+                    Staff_LName: Staff_LName,
+                    reason: null,  
+                    startDate: firestore.Timestamp.fromDate(dateValue),
+                    endDate: firestore.Timestamp.fromDate(dateValue),
+                    requestCreated: firestore.Timestamp.now(),
+                    status: 'accepted',
+                    Approved_ID: Staff_ID, 
+                    Approved_FName: Staff_FName, 
+                    Approved_LName: Staff_LName,
+                    time: time,
+                    attachment: attachment == null ? null : attachment
+                })
+            })            
+        } else {
+            //for the commoners
+            dates.forEach(dateObject => {
+                const { date, time, attachment} = dateObject
+
+                const dateValue = new Date(date) 
+                const newDocRef = db.collection(collectionWa).doc()
+                batch.set(newDocRef, {
+                    Staff_ID: Staff_ID,
+                    Staff_FName: Staff_FName,
+                    Staff_LName: Staff_LName,
+                    reason: null,  
+                    startDate: firestore.Timestamp.fromDate(dateValue),
+                    endDate: firestore.Timestamp.fromDate(dateValue),
+                    requestCreated: firestore.Timestamp.now(),
+                    status: 'pending',
+                    Approved_ID: null, 
+                    Approved_FName: null, 
+                    Approved_LName: null,
+                    time: time,
+                    attachment: attachment == null ? null : attachment
+                })
             })
-        })
+        }
+
         
         // commit operation to create all documents
         await batch.commit()
