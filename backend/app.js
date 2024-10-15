@@ -106,7 +106,7 @@ app.get("/working-arrangements/:employeeid", async (req, res) => {
 
     } catch (err) {
         
-        res.status(500).json({error: "Internal server error"})
+        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error ${err}`})
     }
 })
 
@@ -141,7 +141,7 @@ app.get("/working-arrangements/department/:department/:date", async (req, res) =
 
     } catch (err) {
         console.log(err)
-        res.status(500).json({error: "Internal server error"})
+        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error ${err}`})
     }
 })
 
@@ -175,7 +175,7 @@ app.get("/working-arrangements/manager/:managerId/:date", async (req, res) => {
         res.json({workingArrangements, inChargeOf})
 
     } catch (err) {
-        res.status(500).json({error: "Internal server error"})
+        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error ${err}`})
     }
 })
 
@@ -225,7 +225,7 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
 
     } catch (err) {
         
-        res.status(500).json({error: "Internal server error"})
+        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error ${err}`})
     }
 })
 
@@ -270,7 +270,7 @@ app.post('/login', async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ message: "Something went wrong trying to login", error: `Internal server error ${err}` });
     }
 })
 
@@ -336,7 +336,7 @@ app.post('/request', async (req, res) => {
         res.status(201).json({ message: 'Request created successfully' });
 
     } catch (error) {
-        res.status(500).json({ message: "Error creating your request", error: 'Internal server error' })
+        res.status(500).json({ message: "Soemthing happened when creating your request", error: `Internal server error ${err}` })
     }
 })
 
@@ -364,14 +364,12 @@ app.put("/working-arrangements", async (req, res) => {
         }
     
         const doc = snapshot.docs[0]
-        console.log(doc)
         const docRef = db.collection(collectionWa).doc(doc.id)
     
         await docRef.update({ status: "cancelled" })
         return res.status(200).json({ message: "Working arrangement successfully cancelled." })
     } catch (err) {
-        console.error(err)
-        return res.status(500).json({message: "Internal server error"})
+        return res.status(500).json({ message: "Something happened when creating your working arrangements", error: `Internal server error ${err}`})
     }
 })
 
@@ -399,13 +397,50 @@ app.get("/working-arrangements/supervise/:managerId", async (req, res) => {
         res.json({workingArrangements, inChargeOf})
 
     } catch (err) {
-        console.error(err)
-        res.status(500).json({error: "Internal server error"})
+        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error ${err}`})
     }
 })
 
-// to do here: for manager to update pending arrangements to rejected or approved
+// manager to update pending arrangements to rejected or approved
+app.put("/working-arrangements/manage", async (req, res) => {
 
+    try {
+        const { Approved_ID, Approved_FName, Approved_LName, Staff_ID, startDate, status, reason} = req.body
+    
+        const targetDate = new Date(startDate)
+        const endOfDay = new Date(startDate)
+    
+        targetDate.setHours(0, 0, 0, 0)
+        endOfDay.setHours(23, 59, 59, 999)
+    
+        //return that specific working arrangement
+        const snapshot = await db.collection(collectionWa)
+        .where("Staff_ID", "==", Staff_ID)
+        .where("startDate", "<=", endOfDay)
+        .where("endDate", ">=", targetDate)
+        .get()
+    
+        if (snapshot.empty) {
+            return res.status(404).json({ message: "No matching working arrangement found" })
+        }
+    
+        const doc = snapshot.docs[0]
+        const docRef = db.collection(collectionWa).doc(doc.id)
+    
+        await docRef.update({
+            Approved_ID,
+            Approved_FName,
+            Approved_LName,
+            reason,
+            status })
+    
+        return res.status(200).json({ message: "Working arrangement successfully updated." })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ message: "Something happened when updating the working arrangements", error: `Internal server error ${err}`})
+    }
+
+})
 
 
 // catch rogue calls
