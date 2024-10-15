@@ -5,8 +5,10 @@ import { useState, useEffect } from "react";
 const ManageOthersApplicationPage = () => {
 
     const [teamInChargeOfData, setTeamInChargeOfData] = useState(null);
+    const [teamInChargeOfDataPendingOnly, setTeamInChargeOfDataPendingOnly] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [showedData, setShowedData] = useState(null);
+    const [showedData, setShowedData] = useState(null); // this is for wfh dates and wfh office to be filtered in child component
+    const [showedDataPendingOnly, setShowedDataPendingOnly] = useState(null); // this is for pending req only, dif from line above
 
     const [loginEmployeeId, setLoginEmployeeId] = useState(null); // to be changed based on logins initial fetch for users employee id
 
@@ -31,6 +33,10 @@ const ManageOthersApplicationPage = () => {
     useEffect(() => {
         if(!teamInChargeOfData && userRole) {
           fetchTeamInChargeOf(loginEmployeeId, `${today[2]}-${today[0]}-${today[1]}`);
+        }
+
+        if(!teamInChargeOfDataPendingOnly && userRole) {
+          fetchTeamInChargeOfPendingOnly(loginEmployeeId);
         }
       }, [userRole]);
 
@@ -67,7 +73,7 @@ const ManageOthersApplicationPage = () => {
         Approved_LName: "Ng"
     }] 
 
-    // function to fetch personal schedule
+    // function to fetch team in charge of schedule
     const fetchTeamInChargeOf = async (employeeId=loginEmployeeId, chosenDate=null) => {
         if (chosenDate==null){
           const selectedDt = today[1];
@@ -106,6 +112,38 @@ const ManageOthersApplicationPage = () => {
         
       };
 
+    
+    // function to fetch team in charge of schedule (FOR PENDING REQUEST, THIS DOESNT CHANGE WITH DATE)
+    const fetchTeamInChargeOfPendingOnly = async (employeeId=loginEmployeeId) => {
+      
+      const apiUrl = `http://localhost:3000/working-arrangements/supervise/${employeeId}`;      
+
+      if(!teamInChargeOfDataPendingOnly) {
+
+        setLoading(true);
+        // console.log(employeeId)
+        try{
+          const res = await fetch(apiUrl);
+          const data = await res.json();
+          console.log(`fetching for ${employeeId} for team in charge of pending requests only`)
+          // const data = deta
+          setTeamInChargeOfDataPendingOnly(data);
+          setLoading(false);
+          setShowedDataPendingOnly(data);
+          console.log(data)
+
+        } catch(error) {
+            console.log("Error fetching team in charge of data for pending requests", error);
+
+        } finally {
+            console.log("We fetched the team in charge of data for pending requests");
+        }
+      } else{
+        setShowedDataPendingOnly(teamInChargeOfDataPendingOnly);
+      }
+      
+    };
+
     return (
         <div className="mt-40">
             <DateFilterTeamInChargeOf 
@@ -117,6 +155,7 @@ const ManageOthersApplicationPage = () => {
             <AccordionTeamInChargeOf 
             loading={loading}
             data={showedData}
+            pendingData={showedDataPendingOnly}
             />
         </div>
     )

@@ -1,9 +1,9 @@
 import AccordionRow from "./AccordionRow";
 
 
-const AccordionTeamInChargeOf = ({loading, data}) => {
+const AccordionTeamInChargeOf = ({loading, data, pendingData}) => {
     const wfhData = [];
-    const pendingData = [];
+    const pendingDataForAccordion = [];
     const leaveData = [];
     var headCount = 0
     const nameOfOtherStaffs = [];
@@ -21,10 +21,8 @@ const AccordionTeamInChargeOf = ({loading, data}) => {
                 if(d.status == "approved"){
                     wfhData.push(d);
                     nameOfWFH.push(d.Staff_ID);
-                }else if (d.status == "pending"){
-                    pendingData.push(d);
                 }else{
-                    leaveData.push(d);
+                    continue;
                 }
             }
 
@@ -39,6 +37,15 @@ const AccordionTeamInChargeOf = ({loading, data}) => {
                 }
             }
         }
+        // console.log(pendingData);
+        if (pendingData != null){
+            for (const d of pendingData.workingArrangements) {
+                // console.log(d);
+                if (d.status == "pending"){
+                    pendingDataForAccordion.push(d);
+                }
+            }
+        }        
     }; 
     
     filterData();
@@ -46,7 +53,7 @@ const AccordionTeamInChargeOf = ({loading, data}) => {
     <div className="">
         <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData} headCount={headCount} activeSchedule={activeSchedule} isWFODate={false}/>
         <AccordionRow rowName={"Work From Office Dates"} loading={loading} data={nameOfOtherStaffs} headCount={headCount} activeSchedule={activeSchedule} isWFODate={true}/>
-        <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingData} activeSchedule={activeSchedule} headCount={headCount} isWFODate={false} isPending={isPending}/>
+        <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingDataForAccordion} activeSchedule={activeSchedule} headCount={headCount} isWFODate={false} isPending={isPending}/>
     </div>
   )
 }

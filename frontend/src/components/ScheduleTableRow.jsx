@@ -1,7 +1,8 @@
 import ModalWithdraw from "./ModalWithdraw";
 import ModalCancel from "./ModalCancel";
+import ModalApproveReject from "./ModalApproveReject";
 
-const ScheduleTableRow = ({details, index, activeSchedule, isWFODate, isPending, isManageOwnApplication, successfulCancellation, setSuccessfulCancellation, isForCancel}) => {
+const ScheduleTableRow = ({details, index, activeSchedule, isWFODate, isPending, isManageOwnApplication, successfulCancellation, setSuccessfulCancellation, isForCancel, cancelWFH}) => {
   // convert seconds to date
   const convert_to_date = (seconds) => {
     const milliseconds = seconds * 1000;
@@ -28,7 +29,7 @@ const ScheduleTableRow = ({details, index, activeSchedule, isWFODate, isPending,
             <th>{index+1}</th>
             <td>{convert_to_date(details.startDate._seconds)}</td>
             <td>{details.time}</td>
-            <td><ModalCancel date={convert_to_date(details.startDate._seconds)} type={details.time} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation}/></td>
+            <td><ModalCancel date={convert_to_date(details.startDate._seconds)} type={details.time} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} cancelWFH={cancelWFH}/></td>
         </tr>
       </>
       : activeSchedule == "Your Schedule" && isPending == true? 
@@ -116,7 +117,7 @@ const ScheduleTableRow = ({details, index, activeSchedule, isWFODate, isPending,
             <td>{convert_to_date(details.startDate._seconds)}</td>
             <td>{details.time}</td>
             <td>{details.Approved_Fname} {details.Approved_Lname}</td>
-            <td>Button to do actions</td>
+            <td><ModalApproveReject /></td>
         </tr>
       </>
       : activeSchedule == "Your team in charge of" ? 

@@ -71,11 +71,20 @@ const ScheduleTableHeader = ({activeSchedule, isWFODate, isManageOwnApplication,
                     <th>Approved By</th>
                 </tr>
                 </>
-                : activeSchedule == "Your team in charge of" &&  isWFODate == true? 
+                : activeSchedule == "Your team in charge of" && isWFODate == true? 
                 <>
                 <tr className="text-center">
                     <th>S/N</th>
                     <th>Staff Name</th>
+                </tr>
+                </>
+                : activeSchedule == "Your team in charge of" && isPending == true? 
+                <>
+                <tr className="text-center">
+                    <th>S/N</th>
+                    <th>Staff Name</th>
+                    <th>Date</th>
+                    <th>Type</th>
                 </tr>
                 </>
                 : activeSchedule == "Your team in charge of"? 
