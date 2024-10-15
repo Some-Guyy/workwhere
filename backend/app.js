@@ -95,7 +95,7 @@ app.get("/working-arrangements/:employeeid", async (req, res) => {
         .get()
 
         if (snapshot.empty) {
-            return res.status(404).json({ error: 'No working arrangements found for the given employee', workingArrangements: null})
+            return res.status(404).json({ message: 'No working arrangements found for the given employee', workingArrangements: null})
         }
         const workingArrangements = []
         snapshot.forEach((doc) => {
@@ -140,7 +140,6 @@ app.get("/working-arrangements/department/:department/:date", async (req, res) =
         res.json({workingArrangements, sameDepart})
 
     } catch (err) {
-        console.log(err)
         res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error ${err}`})
     }
 })
@@ -269,7 +268,7 @@ app.post('/login', async (req, res) => {
             },
         });
 
-    } catch (error) {
+    } catch (err) {
         res.status(500).json({ message: "Something went wrong trying to login", error: `Internal server error ${err}` });
     }
 })
@@ -335,7 +334,7 @@ app.post('/request', async (req, res) => {
 
         res.status(201).json({ message: 'Request created successfully' });
 
-    } catch (error) {
+    } catch (err) {
         res.status(500).json({ message: "Soemthing happened when creating your request", error: `Internal server error ${err}` })
     }
 })
