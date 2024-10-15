@@ -296,7 +296,7 @@ app.post('/request', async (req, res) => {
                 endDate: firestore.Timestamp.fromDate(dateValue),
                 requestCreated: firestore.Timestamp.now(),
                 status: 'pending',
-                approvedBy: null, 
+                Approved_ID: null, 
                 Approved_FName: null, 
                 Approved_LName: null,
                 time: time,
