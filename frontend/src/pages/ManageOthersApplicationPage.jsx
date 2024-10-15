@@ -8,7 +8,7 @@ const ManageOthersApplicationPage = () => {
     const [loading, setLoading] = useState(true);
     const [showedData, setShowedData] = useState(null);
 
-    const loginEmployeeId = 150008; // to be changed based on logins initial fetch for users employee id
+    const [loginEmployeeId, setLoginEmployeeId] = useState(null); // to be changed based on logins initial fetch for users employee id
 
     const today = new Date().toLocaleDateString().split("/"); // todays date
     
@@ -23,6 +23,7 @@ const ManageOthersApplicationPage = () => {
       const storedRole = JSON.parse(localStoreaged).Role;
       if (storedRole) {
         setUserRole(storedRole);
+        setLoginEmployeeId(JSON.parse(localStoreaged).Staff_ID);
       }
     }, []);
     
@@ -67,7 +68,7 @@ const ManageOthersApplicationPage = () => {
     }] 
 
     // function to fetch personal schedule
-    const fetchTeamInChargeOf = async (employeeId, chosenDate=null) => {
+    const fetchTeamInChargeOf = async (employeeId=loginEmployeeId, chosenDate=null) => {
         if (chosenDate==null){
           const selectedDt = today[1];
           const selectedMonth = today[0];
