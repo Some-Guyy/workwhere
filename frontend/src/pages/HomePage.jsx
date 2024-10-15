@@ -1,11 +1,13 @@
 import { useState, useEffect} from "react";
 import ViewScheduleSection from "../components/ViewScheduleSection";
 import Hero from "../components/Hero";
-import { useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom';
+import { IoMdClose } from "react-icons/io";
+import { GrStatusGood } from "react-icons/gr";
 // Note that everytime we change the filter for date or department, we refetch from backend
 // the caches are for between the filter buttons
 
-const HomePage = () => {
+const HomePage = ({}) => {
 
     const [loading, setLoading] = useState(true); // used to show loading sign
 
@@ -25,7 +27,9 @@ const HomePage = () => {
     const [departmentTriggered, setDepartmentTriggered] = useState(false); // Separate state to track when department is being fetched
     const [userRole, setUserRole] = useState(null); // used to hold employee's role
 
-    const navigate = useNavigate();
+    const location = useLocation();
+    const [successfulApplication, setSuccessfulApplication]  = useState(location.state?.successfulApplication || {});
+    const [successfulCancellation, setSuccessfulCancellation]  = useState(location.state?.successfulCancellation || {});
 
     // Fetch the role from localStorage when the component mounts
     useEffect(() => {
@@ -265,6 +269,38 @@ const HomePage = () => {
         setSelectedDepartment={setSelectedDepartment}
         setTeamOrOverall={setTeamOrOverall}
         />
+
+        {/* alert for successful wfh */}
+        {successfulApplication == true && (
+            <div role="alert" className="alert alert-success fixed top-0 left-0 w-full z-50">
+                <div className="flex items-center">
+                    <div className="flex items-center">
+                        <GrStatusGood size={25}/>
+                        <span className="mx-2">Successfully created arrangement</span>
+                    </div>
+                    <div className="absolute top-4 right-7">
+                        {/* Right side: Close icon */}
+                        <IoMdClose size={30} onClick={() => setSuccessfulApplication(null)}/>
+                    </div>
+                </div>
+            </div>
+        )}
+
+        {/* alert for successful cancel */}
+        {successfulCancellation == true && (
+            <div role="alert" className="alert alert-success fixed top-0 left-0 w-full z-50">
+                <div className="flex items-center">
+                    <div className="flex items-center">
+                        <GrStatusGood size={25}/>
+                        <span className="mx-2">Successfully cancelled arrangement</span>
+                    </div>
+                    <div className="absolute top-4 right-7">
+                        {/* Right side: Close icon */}
+                        <IoMdClose size={30} onClick={() => setSuccessfulCancellation(null)}/>
+                    </div>
+                </div>
+            </div>
+        )}
         
     </div>
   )
