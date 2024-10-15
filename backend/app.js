@@ -106,7 +106,7 @@ app.get("/working-arrangements/:employeeid", async (req, res) => {
 
     } catch (err) {
         
-        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error ${err}`})
+        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error`})
     }
 })
 
@@ -140,7 +140,7 @@ app.get("/working-arrangements/department/:department/:date", async (req, res) =
         res.json({workingArrangements, sameDepart})
 
     } catch (err) {
-        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error ${err}`})
+        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error`})
     }
 })
 
@@ -174,7 +174,7 @@ app.get("/working-arrangements/manager/:managerId/:date", async (req, res) => {
         res.json({workingArrangements, inChargeOf})
 
     } catch (err) {
-        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error ${err}`})
+        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error`})
     }
 })
 
@@ -224,7 +224,7 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
 
     } catch (err) {
         
-        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error ${err}`})
+        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error`})
     }
 })
 
@@ -269,7 +269,7 @@ app.post('/login', async (req, res) => {
         });
 
     } catch (err) {
-        res.status(500).json({ message: "Something went wrong trying to login", error: `Internal server error ${err}` });
+        res.status(500).json({ message: "Something went wrong trying to login", error: `Internal server error` });
     }
 })
 
@@ -335,7 +335,7 @@ app.post('/request', async (req, res) => {
         res.status(201).json({ message: 'Request created successfully' });
 
     } catch (err) {
-        res.status(500).json({ message: "Soemthing happened when creating your request", error: `Internal server error ${err}` })
+        res.status(500).json({ message: "Something happened when creating your request", error: `Internal server error` })
     }
 })
 
@@ -368,7 +368,7 @@ app.put("/working-arrangements", async (req, res) => {
         await docRef.update({ status: "cancelled" })
         return res.status(200).json({ message: "Working arrangement successfully cancelled." })
     } catch (err) {
-        return res.status(500).json({ message: "Something happened when creating your working arrangements", error: `Internal server error ${err}`})
+        return res.status(500).json({ message: "Something happened when creating your working arrangements", error: `Internal server error `})
     }
 })
 
@@ -396,7 +396,7 @@ app.get("/working-arrangements/supervise/:managerId", async (req, res) => {
         res.json({workingArrangements, inChargeOf})
 
     } catch (err) {
-        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error ${err}`})
+        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error`})
     }
 })
 
@@ -436,7 +436,7 @@ app.put("/working-arrangements/manage", async (req, res) => {
         return res.status(200).json({ message: "Working arrangement successfully updated." })
     } catch (err) {
         console.log(err)
-        return res.status(500).json({ message: "Something happened when updating the working arrangements", error: `Internal server error ${err}`})
+        return res.status(500).json({ message: "Something happened when updating the working arrangements", error: `Internal server error`})
     }
 
 })
