@@ -2,7 +2,7 @@ import ModalWithdraw from "./ModalWithdraw";
 import ModalCancel from "./ModalCancel";
 import ModalApproveReject from "./ModalApproveReject";
 
-const ScheduleTableRow = ({details, index, activeSchedule, isWFODate, isPending, isManageOwnApplication, successfulCancellation, setSuccessfulCancellation, isForCancel, cancelWFH}) => {
+const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, isPending, isManageOwnApplication, successfulCancellation, setSuccessfulCancellation, isForCancel, cancelWFH, successfulApprovalRejection, setSuccessfulApprovalRejection, approveRejectWFH}) => {
   // convert seconds to date
   const convert_to_date = (seconds) => {
     const milliseconds = seconds * 1000;
@@ -20,6 +20,8 @@ const ScheduleTableRow = ({details, index, activeSchedule, isWFODate, isPending,
 
   // console.log(details)
   // console.log(activeSchedule)
+
+  const modalId = `modal-${index}`; // Unique modal ID for each row
 
   return (
     <>
@@ -116,8 +118,16 @@ const ScheduleTableRow = ({details, index, activeSchedule, isWFODate, isPending,
             <td>{details.Staff_FName} {details.Staff_LName}</td>
             <td>{convert_to_date(details.startDate._seconds)}</td>
             <td>{details.time}</td>
-            <td>{details.Approved_Fname} {details.Approved_Lname}</td>
-            <td><ModalApproveReject /></td>
+            <td><ModalApproveReject 
+              modalId={modalId}
+              date={convert_to_date(details.startDate._seconds)} 
+              type={details.time} 
+              StaffID={details.Staff_ID}
+              staffName={`${details.Staff_FName} ${details.Staff_LName}`} 
+              successfulApprovalRejection={successfulApprovalRejection}
+              setSuccessfulApprovalRejection={setSuccessfulApprovalRejection}
+              approveRejectWFH={approveRejectWFH} 
+            /></td>
         </tr>
       </>
       : activeSchedule == "Your team in charge of" ? 

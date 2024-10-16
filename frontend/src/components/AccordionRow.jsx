@@ -2,7 +2,7 @@ import ScheduleTable from "./ScheduleTable";
 import Spinner from "../components/Spinner";
 import React from 'react'
 
-const AccordionRow = ({rowName, loading, data, headCount, activeSchedule, isWFODate, isPending, isManageOwnApplication, successfulCancellation, setSuccessfulCancellation, isForCancel, cancelWFH}) => {
+const AccordionRow = ({rowName, loading, data, headCount, activeSchedule, isWFODate, isPending, isManageOwnApplication, successfulCancellation, setSuccessfulCancellation, isForCancel, cancelWFH, successfulApprovalRejection, setSuccessfulApprovalRejection, approveRejectWFH}) => {
   
   // console.log(typeof(cancelWFH));
   return (
@@ -12,7 +12,8 @@ const AccordionRow = ({rowName, loading, data, headCount, activeSchedule, isWFOD
             <div className="collapse-title text-xl font-medium">{rowName}</div>
             <div className="collapse-content">
             {loading ? <Spinner loading={loading} /> : (
-                <ScheduleTable data={data} headCount={headCount} activeSchedule={activeSchedule} isWFODate={isWFODate} isPending={isPending} isManageOwnApplication={isManageOwnApplication} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} isForCancel={isForCancel} cancelWFH={cancelWFH}/>
+                <ScheduleTable data={data} headCount={headCount} activeSchedule={activeSchedule} isWFODate={isWFODate} isPending={isPending} isManageOwnApplication={isManageOwnApplication} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} isForCancel={isForCancel} cancelWFH={cancelWFH} successfulApprovalRejection={successfulApprovalRejection}
+                setSuccessfulApprovalRejection={setSuccessfulApprovalRejection} approveRejectWFH={approveRejectWFH}/>
             )}    
             </div>
         </div>

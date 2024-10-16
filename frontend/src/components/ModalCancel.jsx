@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import { PiWarningDiamondFill } from "react-icons/pi";
 import { GrStatusGood } from "react-icons/gr";
@@ -7,6 +8,7 @@ const ModalCancel = ({date, type, successfulCancellation, setSuccessfulCancellat
 
     const [userDetails, setUserDetails] = useState(null); // State to store user details
 
+    const navigate = useNavigate(); // Use navigate hook
 
     // Used to fetch user details
     useEffect(() => {
@@ -14,6 +16,19 @@ const ModalCancel = ({date, type, successfulCancellation, setSuccessfulCancellat
       const userDetailsFromStorage = JSON.parse(localStoreaged);
       setUserDetails(userDetailsFromStorage);
     }, []);
+
+    // Navigate to the Home Page when successfulCancellation becomes true
+    useEffect(() => {
+        if (successfulCancellation === true) {
+            // Wait a moment and then navigate to a different page
+            setTimeout(() => {
+                navigate('/home', {
+                    state: { successfulCancellation: true }, // Send successfulCancellation state
+                });
+            }, 2000); // 2-second delay
+
+        }
+    }, [successfulCancellation, navigate]);
 
     // console.log(date);
     // Handle form submission(cancel the WFH request)
@@ -29,7 +44,7 @@ const ModalCancel = ({date, type, successfulCancellation, setSuccessfulCancellat
         console.log(formData);
         setSuccessfulCancellation(true);
         console.log("cancelled simulation")
-        console.log(successfulCancellation)
+        // console.log(successfulCancellation)
 
     };
 
@@ -54,21 +69,7 @@ const ModalCancel = ({date, type, successfulCancellation, setSuccessfulCancellat
                 <p className="py-4">Press ESC key or click outside to close</p>
             </div>
             <form method="dialog" className="modal-backdrop">
-                {/* alert for successful cancel */}
-                {successfulCancellation == true && (
-                        <div role="alert" className="alert alert-success fixed top-0 left-0 w-full z-50">
-                            <div className="flex items-center">
-                                <div className="flex items-center">
-                                    <GrStatusGood size={25}/>
-                                    <span className="mx-2">Successfully cancelled arrangement</span>
-                                </div>
-                                <div className="absolute top-4 right-7">
-                                    {/* Right side: Close icon */}
-                                    <IoMdClose size={30} onClick={() => setSuccessfulCancellation(null)}/>
-                                </div>
-                            </div>
-                        </div>
-                    )}
+                
 
                     {/* alert for unsuccessful cancel */}
                     {successfulCancellation == false && (

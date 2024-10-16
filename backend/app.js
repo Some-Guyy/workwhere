@@ -295,7 +295,7 @@ app.post('/request', async (req, res) => {
                     startDate: firestore.Timestamp.fromDate(dateValue),
                     endDate: firestore.Timestamp.fromDate(dateValue),
                     requestCreated: firestore.Timestamp.now(),
-                    status: 'accepted',
+                    status: 'approved',
                     Approved_ID: Staff_ID, 
                     Approved_FName: Staff_FName, 
                     Approved_LName: Staff_LName,

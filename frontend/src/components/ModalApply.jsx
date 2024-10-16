@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import { CiWarning } from "react-icons/ci";
 import { PiWarningDiamondFill } from "react-icons/pi";
@@ -12,7 +13,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
     const [dates, setDates] = useState([]); // State to store form data for each date
     
     const [userDetails, setUserDetails] = useState(null); // State to store user details
-
+    const navigate = useNavigate(); // Use navigate hook
 
     // Used to fetch user details
     useEffect(() => {
@@ -21,6 +22,18 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
       setUserDetails(userDetailsFromStorage);
     }, []);
 
+    // Navigate to the Home Page when successfulApplication becomes true
+    useEffect(() => {
+        if (successfulApplication === true) {
+            // Wait a moment and then navigate to a different page
+            setTimeout(() => {
+                navigate('/home', {
+                    state: { successfulApplication: true }, // Send successfulApplication state
+                });
+            }, 2000); // 2-second delay
+
+        }
+    }, [successfulApplication, navigate]);
 
     // shows modal if more than 2 dates and show warning as well
     const checkMoreThanTwoAndShowModal = () => {
@@ -183,20 +196,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
                     )}
 
                     {/* alert for successful wfh */}
-                    {successfulApplication == true && (
-                        <div role="alert" className="alert alert-success fixed top-0 left-0 w-full z-50">
-                            <div className="flex items-center">
-                                <div className="flex items-center">
-                                    <GrStatusGood size={25}/>
-                                    <span className="mx-2">Successfully created arrangement</span>
-                                </div>
-                                <div className="absolute top-4 right-7">
-                                    {/* Right side: Close icon */}
-                                    <IoMdClose size={30} onClick={() => setSuccessfulApplication(null)}/>
-                                </div>
-                            </div>
-                        </div>
-                    )}
+                    
 
                     {/* alert for unsuccessful wfh */}
                     {successfulApplication == false && (

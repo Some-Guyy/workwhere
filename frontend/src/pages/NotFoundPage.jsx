@@ -19,7 +19,7 @@ const NotFoundPage = () => {
       <p className="text-xl mb-5">This page does not exist</p>
       
       <Link
-        to="/"
+        to="/home"
         className="text-white bg-slate-900 hover:bg-slate-400 rounded-md px-3 py-2 mt-8"
         >Go Back to Home Page
       </Link>

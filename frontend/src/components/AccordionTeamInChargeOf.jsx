@@ -1,7 +1,7 @@
 import AccordionRow from "./AccordionRow";
 
 
-const AccordionTeamInChargeOf = ({loading, data, pendingData}) => {
+const AccordionTeamInChargeOf = ({loading, data, pendingData, successfulApprovalRejection, setSuccessfulApprovalRejection, approveRejectWFH}) => {
     const wfhData = [];
     const pendingDataForAccordion = [];
     const leaveData = [];
@@ -53,7 +53,9 @@ const AccordionTeamInChargeOf = ({loading, data, pendingData}) => {
     <div className="">
         <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData} headCount={headCount} activeSchedule={activeSchedule} isWFODate={false}/>
         <AccordionRow rowName={"Work From Office Dates"} loading={loading} data={nameOfOtherStaffs} headCount={headCount} activeSchedule={activeSchedule} isWFODate={true}/>
-        <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingDataForAccordion} activeSchedule={activeSchedule} headCount={headCount} isWFODate={false} isPending={isPending}/>
+        <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingDataForAccordion} activeSchedule={activeSchedule} headCount={headCount} isWFODate={false} isPending={isPending} successfulApprovalRejection={successfulApprovalRejection}
+            setSuccessfulApprovalRejection={setSuccessfulApprovalRejection}
+            approveRejectWFH={approveRejectWFH}/>
     </div>
   )
 }
