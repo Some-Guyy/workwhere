@@ -875,14 +875,26 @@ describe('PUT /working-arrangements', () => {
     test('cancel a non-existent pending working arrangement', async () => {
         // Try to cancel that same pending working arrangement above again
 
-        // Expect 404 and json response body equals
+        // Expect 404 and json response body to equal
     })
 
     test('cancel a non-existent employee\'s pending working arrangement', async () => {
         // Cancel using employee id 999999 as that employee does not exist
 
-        // Expect 404 and json response body equals
+        // Expect 404 and json response body to equal
     })
 })
 
+describe('GET /working-arrangements/supervise/:managerId', () => {
+    test('get all pending arrangements of manager\'s team in charge of', async () => {
+        // Get pending arrangements of Employee A's team in charge of
 
+        // Expect 200 and json response body to equal (use expect.arrayContaining() on arrays so that the order does not matter)
+    })
+
+    test('get non-existent pending arrangements of manager\'s team in charge of', async () => {
+        // Get pending arrangements of Employee C's team in charge of
+
+        // Expect 200 and json response body to equal (workingArrangements would be an empty array but inChargeOf still includes Employee D) 
+    })
+})
