@@ -5,6 +5,7 @@ import { useState,useEffect, useRef } from "react";
 const Navbar = () => {
   const [EmployeeRole,setEmployeeRole] = useState(null)
   const [EmployeePosition,setEmployeePosition] = useState(null)
+  const [EmployeeName, setEmployeeName] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
   const drawerCheckboxRef = useRef(null);
@@ -12,6 +13,8 @@ const Navbar = () => {
   // extract users role to conditionally render links
   useEffect(()=>{
       const data = JSON.parse(localStorage.getItem('state'));
+      // console.log(data)
+      setEmployeeName(data.Staff_FName);
       setEmployeeRole(data.Role)
       setEmployeePosition(data.Position)
   },[])
@@ -93,7 +96,7 @@ const Navbar = () => {
               
               <li>
                 <strong className="text-3xl mb-5 ">
-                Hi Ryan!
+                Hi {EmployeeName}!
                 </strong>
               </li>
 
