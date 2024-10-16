@@ -343,7 +343,7 @@ describe('GET /working-arrangements/:employeeid', () => {
             .send()
         expect(response.status).toBe(404)
         expect(response.body).toEqual({
-            error: 'No working arrangements found for the given employee',
+            message: 'No working arrangements found for the given employee',
             workingArrangements: null,
         })
     })

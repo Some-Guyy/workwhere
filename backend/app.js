@@ -95,7 +95,7 @@ app.get("/working-arrangements/:employeeid", async (req, res) => {
         .get()
 
         if (snapshot.empty) {
-            return res.status(404).json({ error: 'No working arrangements found for the given employee', workingArrangements: null})
+            return res.status(404).json({ message: 'No working arrangements found for the given employee', workingArrangements: null})
         }
         const workingArrangements = []
         snapshot.forEach((doc) => {
@@ -106,7 +106,7 @@ app.get("/working-arrangements/:employeeid", async (req, res) => {
 
     } catch (err) {
         
-        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error ${err}`})
+        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error`})
     }
 })
 
@@ -140,8 +140,7 @@ app.get("/working-arrangements/department/:department/:date", async (req, res) =
         res.json({workingArrangements, sameDepart})
 
     } catch (err) {
-        console.log(err)
-        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error ${err}`})
+        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error`})
     }
 })
 
@@ -175,7 +174,7 @@ app.get("/working-arrangements/manager/:managerId/:date", async (req, res) => {
         res.json({workingArrangements, inChargeOf})
 
     } catch (err) {
-        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error ${err}`})
+        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error`})
     }
 })
 
@@ -225,7 +224,7 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
 
     } catch (err) {
         
-        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error ${err}`})
+        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error`})
     }
 })
 
@@ -269,8 +268,8 @@ app.post('/login', async (req, res) => {
             },
         });
 
-    } catch (error) {
-        res.status(500).json({ message: "Something went wrong trying to login", error: `Internal server error ${err}` });
+    } catch (err) {
+        res.status(500).json({ message: "Something went wrong trying to login", error: `Internal server error` });
     }
 })
 
@@ -335,8 +334,8 @@ app.post('/request', async (req, res) => {
 
         res.status(201).json({ message: 'Request created successfully' });
 
-    } catch (error) {
-        res.status(500).json({ message: "Soemthing happened when creating your request", error: `Internal server error ${err}` })
+    } catch (err) {
+        res.status(500).json({ message: "Something happened when creating your request", error: `Internal server error` })
     }
 })
 
@@ -369,7 +368,7 @@ app.put("/working-arrangements", async (req, res) => {
         await docRef.update({ status: "cancelled" })
         return res.status(200).json({ message: "Working arrangement successfully cancelled." })
     } catch (err) {
-        return res.status(500).json({ message: "Something happened when creating your working arrangements", error: `Internal server error ${err}`})
+        return res.status(500).json({ message: "Something happened when creating your working arrangements", error: `Internal server error `})
     }
 })
 
@@ -397,7 +396,7 @@ app.get("/working-arrangements/supervise/:managerId", async (req, res) => {
         res.json({workingArrangements, inChargeOf})
 
     } catch (err) {
-        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error ${err}`})
+        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error`})
     }
 })
 
@@ -413,11 +412,12 @@ app.put("/working-arrangements/manage", async (req, res) => {
         targetDate.setHours(0, 0, 0, 0)
         endOfDay.setHours(23, 59, 59, 999)
     
-        //return that specific working arrangement
+        //return that specific working arrangement and ensure its pending
         const snapshot = await db.collection(collectionWa)
         .where("Staff_ID", "==", Staff_ID)
         .where("startDate", "<=", endOfDay)
         .where("endDate", ">=", targetDate)
+        .where("status", "==", "pending")
         .get()
     
         if (snapshot.empty) {
@@ -437,7 +437,7 @@ app.put("/working-arrangements/manage", async (req, res) => {
         return res.status(200).json({ message: "Working arrangement successfully updated." })
     } catch (err) {
         console.log(err)
-        return res.status(500).json({ message: "Something happened when updating the working arrangements", error: `Internal server error ${err}`})
+        return res.status(500).json({ message: "Something happened when updating the working arrangements", error: `Internal server error`})
     }
 
 })

@@ -16,7 +16,10 @@
     "cors": "^2.8.5",
     "express": "^4.21.0",
     "firebase-admin": "^12.5.0",
-    "jest": "^29.7.0",
     "supertest": "^7.0.0"
+  },
+  "devDependencies": {
+    "firestore-jest-mock": "^0.25.0",
+    "jest": "^29.7.0"
   }
 }

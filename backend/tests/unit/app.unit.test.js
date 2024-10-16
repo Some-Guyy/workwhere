@@ -366,7 +366,7 @@ describe('POST /login', () => {
       })
 
     expect(response.status).toBe(500) // Expect 500 Internal Server Error
-    expect(response.body.error).toBe('Internal server error')
+    expect(response.body).toEqual({message: "Something went wrong trying to login", error: `Internal server error` })
   })
 })
 
@@ -451,7 +451,7 @@ describe('GET /working-arrangements/:employeeid', () => {
 
     expect(response.status).toBe(404)
     expect(response.body).toEqual({
-      error: 'No working arrangements found for the given employee',
+      message: 'No working arrangements found for the given employee',
       workingArrangements: null,
     })
   })
@@ -467,7 +467,7 @@ describe('GET /working-arrangements/:employeeid', () => {
       .send()
 
     expect(response.status).toBe(500) // Expect 500 Internal Server Error
-    expect(response.body).toEqual({ error: 'Internal server error' })
+    expect(response.body).toEqual({ message: "Something went wrong when fetching your working arrangements", error: `Internal server error` })
   })
 })
 
@@ -1115,7 +1115,7 @@ describe('POST /request', () => {
       })
 
     expect(response.status).toBe(500)
-    expect(response.body.message).toBe('Error creating your request')
+    expect(response.body.message).toBe('Something happened when creating your request')
     expect(response.body.error).toBe('Internal server error')
   })
 })

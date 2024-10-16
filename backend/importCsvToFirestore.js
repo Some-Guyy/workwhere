@@ -32,6 +32,8 @@ const importCsvToFirestore = (filePath,collection) => {
 };
 
 // Run the import function
-importCsvToFirestore('./employeenew.csv','employee');
+// importCsvToFirestore('./employeenew.csv','employee');
 // importCsvToFirestore('./mockemployee.csv','mock_employee')
 // importCsvToFirestore('./mockworkarrangement.csv','mock_working_arrangements')
+
+module.exports=importCsvToFirestore
