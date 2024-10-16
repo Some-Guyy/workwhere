@@ -412,11 +412,12 @@ app.put("/working-arrangements/manage", async (req, res) => {
         targetDate.setHours(0, 0, 0, 0)
         endOfDay.setHours(23, 59, 59, 999)
     
-        //return that specific working arrangement
+        //return that specific working arrangement and ensure its pending
         const snapshot = await db.collection(collectionWa)
         .where("Staff_ID", "==", Staff_ID)
         .where("startDate", "<=", endOfDay)
         .where("endDate", ">=", targetDate)
+        .where("status", "==", "pending")
         .get()
     
         if (snapshot.empty) {
