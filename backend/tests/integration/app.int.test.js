@@ -898,3 +898,23 @@ describe('GET /working-arrangements/supervise/:managerId', () => {
         // Expect 200 and json response body to equal (workingArrangements would be an empty array but inChargeOf still includes Employee D) 
     })
 })
+
+describe('PUT /working-arrangements/manage', () => {
+    test('approve an existing pending arrangement', async () => {
+        // Employee A will approve employee B's pending arrangement
+
+        // Expect 200 and json response body
+    })
+
+    test('reject an existing pending arrangement', async () => {
+        // Employee A will reject employee C's pending arrangement
+
+        // Expect 200 and json response body
+    })
+
+    test('approve a non-existing pending arrangement', async () => {
+        // Employee A will approve employee C's same as above pending arrangement (same day)
+
+        // Expect 404 and json response body
+    })
+})
