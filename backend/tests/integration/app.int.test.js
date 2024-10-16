@@ -25,8 +25,12 @@ beforeAll(async () => {
     /*
         Insert employees A, B, C, D, E, F
         Hierarchy:
-            A -> B, C -> D (All from Sales department)
-            E -> F (E is Jack Sim, F can be any director that is not Sales)
+            (Sales department)
+                A -> (B, C)
+                C -> D
+            
+            (Any)
+                E -> F (E is Jack Sim, F can be any director that is not Sales)
 
         Insert working arrangements:
             1 approved each for A, B, C (same date)
@@ -860,3 +864,25 @@ describe('POST /request', () => {
         expect(response.body).toEqual({ message: 'Request created successfully' })
     })
 })
+
+describe('PUT /working-arrangements', () => {
+    test('cancel existing pending working arrangement', async () => {
+        // Cancel the only existing pending working arrangement of Employee A, use testDate
+
+        // Expect 200 and json response body equals
+    })
+
+    test('cancel a non-existent pending working arrangement', async () => {
+        // Try to cancel that same pending working arrangement above again
+
+        // Expect 404 and json response body equals
+    })
+
+    test('cancel a non-existent employee\'s pending working arrangement', async () => {
+        // Cancel using employee id 999999 as that employee does not exist
+
+        // Expect 404 and json response body equals
+    })
+})
+
+
