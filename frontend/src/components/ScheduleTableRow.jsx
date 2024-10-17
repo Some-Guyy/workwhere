@@ -1,6 +1,7 @@
 import ModalWithdraw from "./ModalWithdraw";
 import ModalCancel from "./ModalCancel";
 import ModalApproveReject from "./ModalApproveReject";
+import ModalAttachment from "./ModalAttachment";
 
 const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, isPending, isManageOwnApplication, successfulCancellation, setSuccessfulCancellation, isForCancel, cancelWFH, successfulApprovalRejection, setSuccessfulApprovalRejection, approveRejectWFH}) => {
   // convert seconds to date
@@ -18,19 +19,22 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
     return `${day}/${month}/${year}`;
   };
 
-  // console.log(details)
   // console.log(activeSchedule)
 
   const modalId = `modal-${index}`; // Unique modal ID for each row
+  const modalIdImage = `modalImage-${index}`
 
   return (
     <>
-    {activeSchedule == "Your Schedule" && isPending == true && isForCancel == true?
+    {activeSchedule == "Your Schedule" && isPending == true && isForCancel == true? 
       <>
         <tr className="hover">
             <th>{index+1}</th>
             <td>{convert_to_date(details.startDate._seconds)}</td>
             <td>{details.time}</td>
+            {details.attachment == null ? <td></td>:
+            <td><ModalAttachment modalId={modalIdImage} file={details.attachment}/></td>
+              }
             <td><ModalCancel date={convert_to_date(details.startDate._seconds)} type={details.time} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} cancelWFH={cancelWFH}/></td>
         </tr>
       </>
@@ -118,6 +122,9 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
             <td>{details.Staff_FName} {details.Staff_LName}</td>
             <td>{convert_to_date(details.startDate._seconds)}</td>
             <td>{details.time}</td>
+            {details.attachment == null ? <td></td>:
+            <td><ModalAttachment modalId={modalIdImage} file={details.attachment}/></td>
+              }
             <td><ModalApproveReject 
               modalId={modalId}
               date={convert_to_date(details.startDate._seconds)} 

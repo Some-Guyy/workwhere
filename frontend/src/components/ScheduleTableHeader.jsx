@@ -7,6 +7,7 @@ const ScheduleTableHeader = ({activeSchedule, isWFODate, isManageOwnApplication,
                     <th>S/N</th>
                     <th>Date</th>
                     <th>Type</th>
+                    <th>Attachment</th>
                 </tr>
                 </>
                 : activeSchedule == "Your Schedule" && isManageOwnApplication == true? 
@@ -85,6 +86,7 @@ const ScheduleTableHeader = ({activeSchedule, isWFODate, isManageOwnApplication,
                     <th>Staff Name</th>
                     <th>Date</th>
                     <th>Type</th>
+                    <th>Attachment</th>
                 </tr>
                 </>
                 : activeSchedule == "Your team in charge of"? 
