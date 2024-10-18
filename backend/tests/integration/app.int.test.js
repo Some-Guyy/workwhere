@@ -25,8 +25,12 @@ beforeAll(async () => {
     /*
         Insert employees A, B, C, D, E, F
         Hierarchy:
-            A -> B, C -> D (All from Sales department)
-            E -> F (E is Jack Sim, F can be any director that is not Sales)
+            (Sales department)
+                A -> (B, C)
+                C -> D
+            
+            (Any)
+                E -> F (E is Jack Sim, F can be any director that is not Sales)
 
         Insert working arrangements:
             1 approved each for A, B, C (same date)
@@ -858,5 +862,59 @@ describe('POST /request', () => {
 
         expect(response.status).toBe(201)
         expect(response.body).toEqual({ message: 'Request created successfully' })
+    })
+})
+
+describe('PUT /working-arrangements', () => {
+    test('cancel existing pending working arrangement', async () => {
+        // Cancel the only existing pending working arrangement of Employee A, use testDate
+
+        // Expect 200 and json response body equals
+    })
+
+    test('cancel a non-existent pending working arrangement', async () => {
+        // Try to cancel that same pending working arrangement above again
+
+        // Expect 404 and json response body to equal
+    })
+
+    test('cancel a non-existent employee\'s pending working arrangement', async () => {
+        // Cancel using employee id 999999 as that employee does not exist
+
+        // Expect 404 and json response body to equal
+    })
+})
+
+describe('GET /working-arrangements/supervise/:managerId', () => {
+    test('get all pending arrangements of manager\'s team in charge of', async () => {
+        // Get pending arrangements of Employee A's team in charge of
+
+        // Expect 200 and json response body to equal (use expect.arrayContaining() on arrays so that the order does not matter)
+    })
+
+    test('get non-existent pending arrangements of manager\'s team in charge of', async () => {
+        // Get pending arrangements of Employee C's team in charge of
+
+        // Expect 200 and json response body to equal (workingArrangements would be an empty array but inChargeOf still includes Employee D) 
+    })
+})
+
+describe('PUT /working-arrangements/manage', () => {
+    test('approve an existing pending arrangement', async () => {
+        // Employee A will approve employee B's pending arrangement
+
+        // Expect 200 and json response body
+    })
+
+    test('reject an existing pending arrangement', async () => {
+        // Employee A will reject employee C's pending arrangement
+
+        // Expect 200 and json response body
+    })
+
+    test('approve a non-existing pending arrangement', async () => {
+        // Employee A will approve employee C's same as above pending arrangement (same day)
+
+        // Expect 404 and json response body
     })
 })
