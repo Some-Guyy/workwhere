@@ -14,7 +14,7 @@ A Work-from-Home tracking system for the company All-in-One. It comprises of a w
 
     `~/workwhere/backend$ npm install`
 
-1. Run the backend server.
+1. Run the backend server. It will be on http://localhost:3000 by default.
 
     `~/workwhere/backend$ npm start`
 
@@ -26,7 +26,7 @@ A Work-from-Home tracking system for the company All-in-One. It comprises of a w
 
     `~/workwhere/frontend$ npm run build`
 
-1. Run the frontend server. It will be on http://localhost:3000 by default.
+1. Run the frontend server. It will be on http://localhost:3000 by default. If port is taken it will take the next port, e.g. http://localhost:3001 if backend is running on port 3000.
 
     `~/workwhere/frontend$ npm start`
 
