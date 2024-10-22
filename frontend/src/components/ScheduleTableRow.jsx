@@ -32,9 +32,9 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
             <th>{index+1}</th>
             <td>{convert_to_date(details.startDate._seconds)}</td>
             <td>{details.time}</td>
-            {details.attachment == null ? <td></td>:
+            {details.attachment == null ? <td>No attachments</td>:
             <td><ModalAttachment modalId={modalIdImage} file={details.attachment}/></td>
-              }
+            }
             <td><ModalCancel date={convert_to_date(details.startDate._seconds)} type={details.time} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} cancelWFH={cancelWFH}/></td>
         </tr>
       </>
@@ -44,6 +44,9 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
             <th>{index+1}</th>
             <td>{convert_to_date(details.startDate._seconds)}</td>
             <td>{details.time}</td>
+            {details.attachment == null ? <td>No attachments</td>:
+            <td><ModalAttachment modalId={modalIdImage} file={details.attachment}/></td>
+            }
         </tr>
       </>
       : activeSchedule == "Your Schedule" && isManageOwnApplication == true? 
@@ -52,7 +55,7 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
             <th>{index+1}</th>
             <td>{convert_to_date(details.startDate._seconds)}</td>
             <td>{details.time}</td>
-            <td>{details.Approved_Fname} {details.Approved_Lname}</td>
+            <td>{details.Approved_FName} {details.Approved_LName}</td>
             <td><ModalWithdraw /></td>
         </tr>
       </>
@@ -62,7 +65,7 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
             <th>{index+1}</th>
             <td>{convert_to_date(details.startDate._seconds)}</td>
             <td>{details.time}</td>
-            <td>{details.Approved_Fname} {details.Approved_Lname}</td>
+            <td>{details.Approved_FName} {details.Approved_LName}</td>
         </tr>
       </>
       : activeSchedule == "Your Team Schedule" && isWFODate == true? 
@@ -79,7 +82,7 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
             <td>{details.Staff_FName} {details.Staff_LName}</td>
             <td>{convert_to_date(details.startDate._seconds)}</td>
             <td>{details.time}</td>
-            <td>{details.Approved_Fname} {details.Approved_Lname}</td>
+            <td>{details.Approved_FName} {details.Approved_LName}</td>
         </tr>
       </>
       : activeSchedule == "Your Overall Schedule" && isWFODate == true? 
@@ -105,7 +108,7 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
             <td>{details.Staff_FName} {details.Staff_LName}</td>
             <td>{convert_to_date(details.startDate._seconds)}</td>
             <td>{details.time}</td>
-            <td>{details.Approved_Fname} {details.Approved_Lname}</td>
+            <td>{details.Approved_FName} {details.Approved_LName}</td>
         </tr>
       </>
       : activeSchedule == "Your team in charge of" && isWFODate == true? 
@@ -122,7 +125,7 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
             <td>{details.Staff_FName} {details.Staff_LName}</td>
             <td>{convert_to_date(details.startDate._seconds)}</td>
             <td>{details.time}</td>
-            {details.attachment == null ? <td></td>:
+            {details.attachment == null ? <td>No attachments</td>:
             <td><ModalAttachment modalId={modalIdImage} file={details.attachment}/></td>
               }
             <td><ModalApproveReject 
@@ -144,7 +147,7 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
             <td>{details.Staff_FName} {details.Staff_LName}</td>
             <td>{convert_to_date(details.startDate._seconds)}</td>
             <td>{details.time}</td>
-            <td>{details.Approved_Fname} {details.Approved_Lname}</td>
+            <td>{details.Approved_FName} {details.Approved_LName}</td>
         </tr>
       </>
       : "A"
