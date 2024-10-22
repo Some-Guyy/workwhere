@@ -208,7 +208,7 @@ const ManageOthersApplicationPage = () => {
                     <div className="flex items-center">
                         <div className="flex items-center">
                             <GrStatusGood size={25}/>
-                            <span className="mx-2">Successfully cancelled arrangement</span>
+                            <span className="mx-2">Successfully Approved/Reject arrangement</span>
                         </div>
                         <div className="absolute top-4 right-7">
                             {/* Right side: Close icon */}
