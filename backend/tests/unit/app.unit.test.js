@@ -16,7 +16,9 @@ jest.mock('firebase-admin', () => {
         where: jest.fn().mockReturnThis(),
         limit: jest.fn().mockReturnThis(),
         get: jest.fn(),
-        doc: jest.fn().mockReturnValue('some-doc-ref')
+        doc: jest.fn().mockReturnValue({
+          update:jest.fn()
+        })
       }),
       batch: jest.fn().mockReturnValue({
         set: jest.fn(),
@@ -1117,6 +1119,266 @@ describe('POST /request', () => {
     expect(response.status).toBe(500)
     expect(response.body.message).toBe('Something happened when creating your request')
     expect(response.body.error).toBe('Internal server error')
+  })
+})
+
+describe('GET /working-arrangements/supervise/:managerId', ()=>{
+  test('successfully get employees working arrangements that I am in charge of ', async ()=>{
+  const mockGet = db.collection().get      
+      // mock inChargeOf
+      mockGet.mockResolvedValueOnce({
+        empty: false,
+        forEach: (callback) => {
+          callback({
+            data: () => ({
+              Reporting_Manager: "130002",
+              Role: "1",
+              Email: "sally.loh@allinone.com.sg",
+              Dept: "HR",
+              Position: "Director",
+              Staff_LName: "Loh",
+              Staff_FName: "Sally",
+              Country: "Singapore",
+              Staff_ID: "160008",
+              Password: "123"
+            })
+          });
+        }
+      });
+
+      //mock workingArrangements
+      mockGet.mockResolvedValueOnce({
+        empty: false,
+        forEach: (callback) => {
+          callback({
+            data: () => ({
+              Approved_FName: "Jack",
+              Approved_LName: "Sim",
+              Approved_ID: "130002",
+              Staff_ID: "130002",
+              Staff_FName: "Jack",
+              Staff_LName: "Sim",
+              startDate: {
+                _seconds: 1728316800,
+                _nanoseconds: 393000000
+              },
+              endDate: {
+                _seconds: 1728316800,
+                _nanoseconds: 393000000
+              },
+              requestCreated: {
+                _seconds: 1727539200,
+                _nanoseconds: 331000000
+              },
+              status: "pending",
+              time: "PM",
+              reason: null,
+              attachment: null
+            })
+          })
+        },
+      })
+      
+      
+      const response = await request(app)
+        .get('/working-arrangements/supervise/130002')
+        .send()
+      expect(response.body.workingArrangements).toEqual([
+        {
+          Approved_FName: "Jack",
+              Approved_LName: "Sim",
+              Approved_ID: "130002",
+              Staff_ID: "130002",
+              Staff_FName: "Jack",
+              Staff_LName: "Sim",
+              startDate: {
+                _seconds: 1728316800,
+                _nanoseconds: 393000000
+              },
+              endDate: {
+                _seconds: 1728316800,
+                _nanoseconds: 393000000
+              },
+              requestCreated: {
+                _seconds: 1727539200,
+                _nanoseconds: 331000000
+              },
+              status: "pending",
+              time: "PM",
+              reason: null,
+              attachment: null
+        }
+      ])
+      expect(response.body.inChargeOf).toEqual([
+        {
+          "Reporting_Manager": "130002",
+          "Role": "1",
+          "Email": "sally.loh@allinone.com.sg",
+          "Dept": "HR",
+          "Position": "Director",
+          "Staff_LName": "Loh",
+          "Staff_FName": "Sally",
+          "Country": "Singapore",
+          "Staff_ID": "160008",
+          "Password": "123"
+      }
+      ])
+    })
+  
+  //unsuccessful - something wrong with backend code
+  test('get arrangements for an employee with firestore error', async () => {
+    //get firestore to throw error
+    const mockGet = db.collection().get
+    mockGet.mockRejectedValueOnce(new Error('Firestore error'))
+
+    const response = await request(app)
+      .get('/working-arrangements/supervise/130002')
+      .send()
+
+    expect(response.status).toBe(500) // Expect 500 Internal Server Error
+    expect(response.body).toEqual({ message: "Something went wrong when fetching your working arrangements", error: `Internal server error` })
+
+  })
+})
+
+describe('PUT /working-arrangements', ()=>{
+  test('successfully cancel own working arrangement', async () => {
+    // Mock Firestore get method to return a snapshot with a matching document
+    const mockGet = db.collection().get;
+    const mockDocRef = { 
+      update: jest.fn().mockResolvedValue() // Mock the update method to resolve successfully
+    };
+  
+    mockGet.mockResolvedValueOnce({
+      empty: false, // Indicating that matching documents were found
+      docs: [
+        { id: 'mock-doc-id', data: () => ({ /* mock data */ }) }
+      ]
+    });
+  
+    // Mock Firestore doc reference
+    db.collection().doc = jest.fn().mockReturnValue(mockDocRef);
+  
+    // Simulate a PUT request with valid data
+    const response = await request(app)
+      .put('/working-arrangements')
+      .send({
+        Staff_ID: "130002",
+        startDate: '2024-10-13T00:00:00.000Z' // Simulating a valid startDate
+      });
+  
+    // Assertions
+    expect(response.status).toBe(200);
+    expect(response.body.message).toEqual('Working arrangement successfully cancelled.');
+  
+    // Verify that the correct document was updated with the correct status
+    expect(db.collection().doc).toHaveBeenCalledWith('mock-doc-id');
+    expect(mockDocRef.update).toHaveBeenCalledWith({ status: 'cancelled' });
+  });
+  
+
+  //unsuccessful
+  test('return 404 for non-existent personal working arrangement', async ()=>{
+    const mockGet = db.collection().get      
+    mockGet.mockResolvedValueOnce({
+      empty: true
+    })
+
+    const response=await request(app)
+    .put('/working-arrangements')
+    .send({
+      Staff_ID: "130002",
+      startDate: {
+        _seconds: 1728316800,
+        _nanoseconds: 393000000
+      }
+    })
+    expect(response.status).toBe(404)
+    expect(response.body.message).toBe("No matching working arrangement found")
+
+  })
+
+  test('get arrangements for an employee with firestore error', async () => {
+    //get firestore to throw error
+    const mockGet = db.collection().get
+    mockGet.mockRejectedValueOnce(new Error('Firestore error'))
+
+    const response = await request(app)
+      .put('/working-arrangements/')
+      .send()
+
+    expect(response.status).toBe(500) // Expect 500 Internal Server Error
+    expect(response.body).toEqual({ message: "Something happened when creating your working arrangements", error: `Internal server error ` })
+
+  })
+})
+
+describe('PUT /working-arrangements/manage', ()=>{
+  test('successfully update pending working arrangement ', async ()=>{
+    // Mock Firestore get method to return a snapshot with a matching document
+    const mockGet = db.collection().get;
+    const mockDocRef = { 
+      update: jest.fn().mockResolvedValue() // Mock the update method to resolve successfully
+    };
+  
+    mockGet.mockResolvedValueOnce({
+      empty: false, // Indicating that matching documents were found
+      docs: [
+        { id: 'mock-doc-id', data: () => ({ /* mock data */ }) }
+      ]
+    });
+  
+    // Mock Firestore doc reference
+    db.collection().doc = jest.fn().mockReturnValue(mockDocRef);
+  
+    // Simulate a PUT request with valid data
+    const response = await request(app)
+      .put('/working-arrangements/manage')
+      .send({
+        Staff_ID: "130002",
+        startDate: '2024-10-13T00:00:00.000Z' // Simulating a valid startDate
+      });
+  
+    // Assertions
+    expect(response.status).toBe(200);
+    expect(response.body.message).toEqual('Working arrangement successfully updated.');
+  
+    // Verify that the correct document was updated with the correct status
+    expect(db.collection().doc).toHaveBeenCalledWith('mock-doc-id');
+  })
+
+  test('return 404 for non-existent personal working arrangement', async ()=>{
+    const mockGet = db.collection().get      
+    mockGet.mockResolvedValueOnce({
+      empty: true
+    })
+
+    const response=await request(app)
+    .put('/working-arrangements/manage')
+    .send({
+      Staff_ID: "130002",
+      startDate: {
+        _seconds: 1728316800,
+        _nanoseconds: 393000000
+      }
+    })
+    expect(response.status).toBe(404)
+    expect(response.body.message).toBe("No matching working arrangement found")
+
+  })
+
+  test('update arrangements for an employee with firestore error', async () => {
+    //get firestore to throw error
+    const mockGet = db.collection().get
+    mockGet.mockRejectedValueOnce(new Error('Firestore error'))
+
+    const response = await request(app)
+      .put('/working-arrangements/manage')
+      .send()
+
+    expect(response.status).toBe(500) // Expect 500 Internal Server Error
+    expect(response.body).toEqual({ message: "Something happened when updating the working arrangements", error: `Internal server error` })
+
   })
 })
 
