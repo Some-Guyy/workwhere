@@ -1273,7 +1273,7 @@ describe('POST /request', () => {
 })
 
 describe('GET /working-arrangements/supervise/:managerId', ()=>{
-  test('successfully get employees working arrangements that I am in charge of ', async ()=>{
+  test('get all pending arrangements of manager\'s team in charge of', async ()=>{
   const mockGet = db.collection().get      
       // mock inChargeOf
       mockGet.mockResolvedValueOnce({
@@ -1376,7 +1376,7 @@ describe('GET /working-arrangements/supervise/:managerId', ()=>{
     })
   
   //unsuccessful - something wrong with backend code
-  test('get arrangements for an employee with firestore error', async () => {
+  test('get all pending arrangements of manager\'s team in charge of with firestore error', async () => {
     //get firestore to throw error
     const mockGet = db.collection().get
     mockGet.mockRejectedValueOnce(new Error('Firestore error'))
@@ -1392,7 +1392,7 @@ describe('GET /working-arrangements/supervise/:managerId', ()=>{
 })
 
 describe('PUT /working-arrangements', ()=>{
-  test('successfully cancel own working arrangement', async () => {
+  test('cancel existing pending working arrangement', async () => {
     // Mock Firestore get method to return a snapshot with a matching document
     const mockGet = db.collection().get;
     const mockDocRef = { 
@@ -1414,7 +1414,10 @@ describe('PUT /working-arrangements', ()=>{
       .put('/working-arrangements')
       .send({
         Staff_ID: "130002",
-        startDate: '2024-10-13T00:00:00.000Z' // Simulating a valid startDate
+        startDate: {
+          _seconds: 1728316800,
+          _nanoseconds: 393000000
+        }
       });
   
     // Assertions
@@ -1428,7 +1431,7 @@ describe('PUT /working-arrangements', ()=>{
   
 
   //unsuccessful
-  test('return 404 for non-existent personal working arrangement', async ()=>{
+  test('cancel a non-existent pending working arrangement', async ()=>{
     const mockGet = db.collection().get      
     mockGet.mockResolvedValueOnce({
       empty: true
@@ -1448,7 +1451,7 @@ describe('PUT /working-arrangements', ()=>{
 
   })
 
-  test('get arrangements for an employee with firestore error', async () => {
+  test('cancel pending working arrangement with firestore error', async () => {
     //get firestore to throw error
     const mockGet = db.collection().get
     mockGet.mockRejectedValueOnce(new Error('Firestore error'))
@@ -1464,7 +1467,7 @@ describe('PUT /working-arrangements', ()=>{
 })
 
 describe('PUT /working-arrangements/manage', ()=>{
-  test('successfully update pending working arrangement ', async ()=>{
+  test('update existing pending arrangement', async ()=>{
     // Mock Firestore get method to return a snapshot with a matching document
     const mockGet = db.collection().get;
     const mockDocRef = { 
@@ -1485,8 +1488,16 @@ describe('PUT /working-arrangements/manage', ()=>{
     const response = await request(app)
       .put('/working-arrangements/manage')
       .send({
-        Staff_ID: "130002",
-        startDate: '2024-10-13T00:00:00.000Z' // Simulating a valid startDate
+        Approved_ID: "130002",
+        Approved_FName: "Jack", 
+        Approved_LName: "Sim",
+        Staff_ID: "160008",
+        startDate: {
+          _seconds: 1728316800,
+          _nanoseconds: 393000000
+        },
+        status: "approved",
+        reason: null
       });
   
     // Assertions
@@ -1497,7 +1508,7 @@ describe('PUT /working-arrangements/manage', ()=>{
     expect(db.collection().doc).toHaveBeenCalledWith('mock-doc-id');
   })
 
-  test('return 404 for non-existent personal working arrangement', async ()=>{
+  test('update non-existent pending arrangement', async ()=>{
     const mockGet = db.collection().get      
     mockGet.mockResolvedValueOnce({
       empty: true
@@ -1506,18 +1517,23 @@ describe('PUT /working-arrangements/manage', ()=>{
     const response=await request(app)
     .put('/working-arrangements/manage')
     .send({
-      Staff_ID: "130002",
+      Approved_ID: "130002",
+      Approved_FName: "Jack", 
+      Approved_LName: "Sim",
+      Staff_ID: "160008",
       startDate: {
         _seconds: 1728316800,
         _nanoseconds: 393000000
-      }
+      },
+      status: "approved",
+      reason: null
     })
     expect(response.status).toBe(404)
     expect(response.body.message).toBe("No matching working arrangement found")
 
   })
 
-  test('update arrangements for an employee with firestore error', async () => {
+  test('update pending arrangement with firestore error', async () => {
     //get firestore to throw error
     const mockGet = db.collection().get
     mockGet.mockRejectedValueOnce(new Error('Firestore error'))
