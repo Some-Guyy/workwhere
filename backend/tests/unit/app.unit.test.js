@@ -17,7 +17,7 @@ jest.mock('firebase-admin', () => {
         limit: jest.fn().mockReturnThis(),
         get: jest.fn(),
         doc: jest.fn().mockReturnValue({
-          update:jest.fn()
+          update: jest.fn()
         })
       }),
       batch: jest.fn().mockReturnValue({
@@ -216,7 +216,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
     expect(db.collection().where).toHaveBeenCalledWith("status", "!=", "rejected")
   })
 
-  test('fetch arrangements in batches for manager\'s supervised employees pending', async() => {
+  test('fetch arrangements in batches for manager\'s supervised employees pending', async () => {
     const mockGet = db.collection().get
     mockGet.mockResolvedValueOnce({
       empty: false,
@@ -432,7 +432,7 @@ describe('POST /login', () => {
       })
 
     expect(response.status).toBe(500) // Expect 500 Internal Server Error
-    expect(response.body).toEqual({message: "Something went wrong trying to login", error: `Internal server error` })
+    expect(response.body).toEqual({ message: "Something went wrong trying to login", error: `Internal server error` })
   })
 })
 
@@ -1272,109 +1272,109 @@ describe('POST /request', () => {
   })
 })
 
-describe('GET /working-arrangements/supervise/:managerId', ()=>{
-  test('get all pending arrangements of manager\'s team in charge of', async ()=>{
-  const mockGet = db.collection().get      
-      // mock inChargeOf
-      mockGet.mockResolvedValueOnce({
-        empty: false,
-        forEach: (callback) => {
-          callback({
-            data: () => ({
-              Reporting_Manager: "130002",
-              Role: "1",
-              Email: "sally.loh@allinone.com.sg",
-              Dept: "HR",
-              Position: "Director",
-              Staff_LName: "Loh",
-              Staff_FName: "Sally",
-              Country: "Singapore",
-              Staff_ID: "160008",
-              Password: "123"
-            })
-          });
-        }
-      });
-
-      //mock workingArrangements
-      mockGet.mockResolvedValueOnce({
-        empty: false,
-        forEach: (callback) => {
-          callback({
-            data: () => ({
-              Approved_FName: "Jack",
-              Approved_LName: "Sim",
-              Approved_ID: "130002",
-              Staff_ID: "130002",
-              Staff_FName: "Jack",
-              Staff_LName: "Sim",
-              startDate: {
-                _seconds: 1728316800,
-                _nanoseconds: 393000000
-              },
-              endDate: {
-                _seconds: 1728316800,
-                _nanoseconds: 393000000
-              },
-              requestCreated: {
-                _seconds: 1727539200,
-                _nanoseconds: 331000000
-              },
-              status: "pending",
-              time: "PM",
-              reason: null,
-              attachment: null
-            })
+describe('GET /working-arrangements/supervise/:managerId', () => {
+  test('get all pending arrangements of manager\'s team in charge of', async () => {
+    const mockGet = db.collection().get
+    // mock inChargeOf
+    mockGet.mockResolvedValueOnce({
+      empty: false,
+      forEach: (callback) => {
+        callback({
+          data: () => ({
+            Reporting_Manager: "130002",
+            Role: "1",
+            Email: "sally.loh@allinone.com.sg",
+            Dept: "HR",
+            Position: "Director",
+            Staff_LName: "Loh",
+            Staff_FName: "Sally",
+            Country: "Singapore",
+            Staff_ID: "160008",
+            Password: "123"
           })
-        },
-      })
-      
-      
-      const response = await request(app)
-        .get('/working-arrangements/supervise/130002')
-        .send()
-      expect(response.body.workingArrangements).toEqual([
-        {
-          Approved_FName: "Jack",
-              Approved_LName: "Sim",
-              Approved_ID: "130002",
-              Staff_ID: "130002",
-              Staff_FName: "Jack",
-              Staff_LName: "Sim",
-              startDate: {
-                _seconds: 1728316800,
-                _nanoseconds: 393000000
-              },
-              endDate: {
-                _seconds: 1728316800,
-                _nanoseconds: 393000000
-              },
-              requestCreated: {
-                _seconds: 1727539200,
-                _nanoseconds: 331000000
-              },
-              status: "pending",
-              time: "PM",
-              reason: null,
-              attachment: null
-        }
-      ])
-      expect(response.body.inChargeOf).toEqual([
-        {
-          "Reporting_Manager": "130002",
-          "Role": "1",
-          "Email": "sally.loh@allinone.com.sg",
-          "Dept": "HR",
-          "Position": "Director",
-          "Staff_LName": "Loh",
-          "Staff_FName": "Sally",
-          "Country": "Singapore",
-          "Staff_ID": "160008",
-          "Password": "123"
+        });
       }
-      ])
+    });
+
+    //mock workingArrangements
+    mockGet.mockResolvedValueOnce({
+      empty: false,
+      forEach: (callback) => {
+        callback({
+          data: () => ({
+            Approved_FName: "Jack",
+            Approved_LName: "Sim",
+            Approved_ID: "130002",
+            Staff_ID: "130002",
+            Staff_FName: "Jack",
+            Staff_LName: "Sim",
+            startDate: {
+              _seconds: 1728316800,
+              _nanoseconds: 393000000
+            },
+            endDate: {
+              _seconds: 1728316800,
+              _nanoseconds: 393000000
+            },
+            requestCreated: {
+              _seconds: 1727539200,
+              _nanoseconds: 331000000
+            },
+            status: "pending",
+            time: "PM",
+            reason: null,
+            attachment: null
+          })
+        })
+      },
     })
-  
+
+
+    const response = await request(app)
+      .get('/working-arrangements/supervise/130002')
+      .send()
+    expect(response.body.workingArrangements).toEqual([
+      {
+        Approved_FName: "Jack",
+        Approved_LName: "Sim",
+        Approved_ID: "130002",
+        Staff_ID: "130002",
+        Staff_FName: "Jack",
+        Staff_LName: "Sim",
+        startDate: {
+          _seconds: 1728316800,
+          _nanoseconds: 393000000
+        },
+        endDate: {
+          _seconds: 1728316800,
+          _nanoseconds: 393000000
+        },
+        requestCreated: {
+          _seconds: 1727539200,
+          _nanoseconds: 331000000
+        },
+        status: "pending",
+        time: "PM",
+        reason: null,
+        attachment: null
+      }
+    ])
+    expect(response.body.inChargeOf).toEqual([
+      {
+        "Reporting_Manager": "130002",
+        "Role": "1",
+        "Email": "sally.loh@allinone.com.sg",
+        "Dept": "HR",
+        "Position": "Director",
+        "Staff_LName": "Loh",
+        "Staff_FName": "Sally",
+        "Country": "Singapore",
+        "Staff_ID": "160008",
+        "Password": "123"
+      }
+    ])
+  })
+
   //unsuccessful - something wrong with backend code
   test('get all pending arrangements of manager\'s team in charge of with firestore error', async () => {
     //get firestore to throw error
@@ -1391,24 +1391,24 @@ describe('GET /working-arrangements/supervise/:managerId', ()=>{
   })
 })
 
-describe('PUT /working-arrangements', ()=>{
+describe('PUT /working-arrangements', () => {
   test('cancel existing pending working arrangement', async () => {
     // Mock Firestore get method to return a snapshot with a matching document
     const mockGet = db.collection().get;
-    const mockDocRef = { 
+    const mockDocRef = {
       update: jest.fn().mockResolvedValue() // Mock the update method to resolve successfully
     };
-  
+
     mockGet.mockResolvedValueOnce({
       empty: false, // Indicating that matching documents were found
       docs: [
         { id: 'mock-doc-id', data: () => ({ /* mock data */ }) }
       ]
     });
-  
+
     // Mock Firestore doc reference
     db.collection().doc = jest.fn().mockReturnValue(mockDocRef);
-  
+
     // Simulate a PUT request with valid data
     const response = await request(app)
       .put('/working-arrangements')
@@ -1419,33 +1419,33 @@ describe('PUT /working-arrangements', ()=>{
           _nanoseconds: 393000000
         }
       });
-  
+
     // Assertions
     expect(response.status).toBe(200);
     expect(response.body.message).toEqual('Working arrangement successfully cancelled.');
-  
+
     // Verify that the correct document was updated with the correct status
     expect(db.collection().doc).toHaveBeenCalledWith('mock-doc-id');
     expect(mockDocRef.update).toHaveBeenCalledWith({ status: 'cancelled' });
   });
-  
+
 
   //unsuccessful
-  test('cancel a non-existent pending working arrangement', async ()=>{
-    const mockGet = db.collection().get      
+  test('cancel a non-existent pending working arrangement', async () => {
+    const mockGet = db.collection().get
     mockGet.mockResolvedValueOnce({
       empty: true
     })
 
-    const response=await request(app)
-    .put('/working-arrangements')
-    .send({
-      Staff_ID: "130002",
-      startDate: {
-        _seconds: 1728316800,
-        _nanoseconds: 393000000
-      }
-    })
+    const response = await request(app)
+      .put('/working-arrangements')
+      .send({
+        Staff_ID: "130002",
+        startDate: {
+          _seconds: 1728316800,
+          _nanoseconds: 393000000
+        }
+      })
     expect(response.status).toBe(404)
     expect(response.body.message).toBe("No matching working arrangement found")
 
@@ -1466,30 +1466,30 @@ describe('PUT /working-arrangements', ()=>{
   })
 })
 
-describe('PUT /working-arrangements/manage', ()=>{
-  test('update existing pending arrangement', async ()=>{
+describe('PUT /working-arrangements/manage', () => {
+  test('update existing pending arrangement', async () => {
     // Mock Firestore get method to return a snapshot with a matching document
     const mockGet = db.collection().get;
-    const mockDocRef = { 
+    const mockDocRef = {
       update: jest.fn().mockResolvedValue() // Mock the update method to resolve successfully
     };
-  
+
     mockGet.mockResolvedValueOnce({
       empty: false, // Indicating that matching documents were found
       docs: [
         { id: 'mock-doc-id', data: () => ({ /* mock data */ }) }
       ]
     });
-  
+
     // Mock Firestore doc reference
     db.collection().doc = jest.fn().mockReturnValue(mockDocRef);
-  
+
     // Simulate a PUT request with valid data
     const response = await request(app)
       .put('/working-arrangements/manage')
       .send({
         Approved_ID: "130002",
-        Approved_FName: "Jack", 
+        Approved_FName: "Jack",
         Approved_LName: "Sim",
         Staff_ID: "160008",
         startDate: {
@@ -1499,35 +1499,35 @@ describe('PUT /working-arrangements/manage', ()=>{
         status: "approved",
         reason: null
       });
-  
+
     // Assertions
     expect(response.status).toBe(200);
     expect(response.body.message).toEqual('Working arrangement successfully updated.');
-  
+
     // Verify that the correct document was updated with the correct status
     expect(db.collection().doc).toHaveBeenCalledWith('mock-doc-id');
   })
 
-  test('update non-existent pending arrangement', async ()=>{
-    const mockGet = db.collection().get      
+  test('update non-existent pending arrangement', async () => {
+    const mockGet = db.collection().get
     mockGet.mockResolvedValueOnce({
       empty: true
     })
 
-    const response=await request(app)
-    .put('/working-arrangements/manage')
-    .send({
-      Approved_ID: "130002",
-      Approved_FName: "Jack", 
-      Approved_LName: "Sim",
-      Staff_ID: "160008",
-      startDate: {
-        _seconds: 1728316800,
-        _nanoseconds: 393000000
-      },
-      status: "approved",
-      reason: null
-    })
+    const response = await request(app)
+      .put('/working-arrangements/manage')
+      .send({
+        Approved_ID: "130002",
+        Approved_FName: "Jack",
+        Approved_LName: "Sim",
+        Staff_ID: "160008",
+        startDate: {
+          _seconds: 1728316800,
+          _nanoseconds: 393000000
+        },
+        status: "approved",
+        reason: null
+      })
     expect(response.status).toBe(404)
     expect(response.body.message).toBe("No matching working arrangement found")
 
