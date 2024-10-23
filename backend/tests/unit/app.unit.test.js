@@ -4,6 +4,8 @@ const admin = require('firebase-admin')
 const db = admin.firestore()
 const firestore = require('firebase-admin/firestore')
 
+const collectionWa = "mock_working_arrangements"
+
 // Fixtures
 jest.mock('firebase-admin', () => {
   return {
@@ -1073,7 +1075,7 @@ describe('POST /request', () => {
       })
 
     const dateValue = new Date(dates[0].date);
-    const newDocRef = db.collection('mock_working_arrangements').doc();
+    const newDocRef = db.collection(collectionWa).doc();
 
     expect(response.status).toBe(201)
     expect(db.batch().set).toHaveBeenCalledWith(newDocRef, {
@@ -1122,7 +1124,7 @@ describe('POST /request', () => {
 
     const dateValue1 = new Date(dates[0].date);
     const dateValue2 = new Date(dates[1].date);
-    const newDocRef = db.collection('mock_working_arrangements').doc();
+    const newDocRef = db.collection(collectionWa).doc();
 
     expect(response.status).toBe(201)
     expect(db.batch().set).toHaveBeenCalledWith(newDocRef, {
@@ -1180,7 +1182,7 @@ describe('POST /request', () => {
       })
 
     const dateValue = new Date(dates[0].date);
-    const newDocRef = db.collection('mock_working_arrangements').doc();
+    const newDocRef = db.collection(collectionWa).doc();
 
     expect(response.status).toBe(201)
     expect(db.batch().set).toHaveBeenCalledWith(newDocRef, {
@@ -1223,7 +1225,7 @@ describe('POST /request', () => {
       })
 
     const dateValue = new Date(dates[0].date);
-    const newDocRef = db.collection('mock_working_arrangements').doc();
+    const newDocRef = db.collection(collectionWa).doc();
 
     expect(response.status).toBe(201)
     expect(db.batch().set).toHaveBeenCalledWith(newDocRef, {
