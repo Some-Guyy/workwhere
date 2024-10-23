@@ -1203,6 +1203,49 @@ describe('POST /request', () => {
     })
   })
 
+  test('create request for MD role with attachment', async () => {
+    const staffId = '130002'
+    const staffFName = 'Jack'
+    const staffLName = 'Sim'
+    const dates = [{
+      date: '2024-10-01',
+      time: 'PM',
+      attachment: "b64string"
+    }]
+
+    const response = await request(app)
+      .post('/request')
+      .send({
+        Staff_ID: staffId,
+        Staff_FName: staffFName,
+        Staff_LName: staffLName,
+        dates: dates
+      })
+
+    const dateValue = new Date(dates[0].date);
+    const newDocRef = db.collection('mock_working_arrangements').doc();
+
+    expect(response.status).toBe(201)
+    expect(db.batch().set).toHaveBeenCalledWith(newDocRef, {
+      Staff_ID: staffId,
+      Staff_FName: staffFName,
+      Staff_LName: staffLName,
+      reason: null,
+      startDate: firestore.Timestamp.fromDate(dateValue),
+      endDate: firestore.Timestamp.fromDate(dateValue),
+      requestCreated: firestore.Timestamp.now(),
+      status: 'approved',
+      Approved_ID: staffId,
+      Approved_FName: staffFName,
+      Approved_LName: staffLName,
+      time: dates[0].time,
+      attachment: dates[0].attachment
+    })
+    expect(response.body).toEqual({
+      message: 'Request created successfully'
+    })
+  })
+
   test('create request for an arrangement with firestore error', async () => {
     const staffId = '190019'
     const staffFName = 'Heng'
