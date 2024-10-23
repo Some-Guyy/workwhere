@@ -1333,6 +1333,8 @@ describe('GET /working-arrangements/supervise/:managerId', () => {
     const response = await request(app)
       .get('/working-arrangements/supervise/130002')
       .send()
+    
+    expect(response.status).toBe(200)
     expect(response.body.workingArrangements).toEqual([
       {
         Approved_FName: "Jack",
