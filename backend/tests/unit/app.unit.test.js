@@ -215,6 +215,70 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
     await fetchWorkingArrangementsInBatches(inChargeOfID, endOfDay, targetDate, "manager")
     expect(db.collection().where).toHaveBeenCalledWith("status", "!=", "rejected")
   })
+
+  test('fetch arrangements in batches for manager\'s supervised employees pending', async() => {
+    const mockGet = db.collection().get
+    mockGet.mockResolvedValueOnce({
+      empty: false,
+      forEach: (callback) => {
+        callback({
+          data: () => ({
+            Staff_ID: '190019',
+            startDate: {
+              _seconds: 1728316800,
+              _nanoseconds: 393000000
+            },
+            endDate: {
+              _seconds: 1728316800,
+              _nanoseconds: 393000000
+            },
+            reason: null,
+            status: 'pending',
+            Staff_LName: 'Sim',
+            Staff_FName: 'Heng',
+            Approved_ID: null,
+            time: 'PM',
+            requestCreated: {
+              _seconds: 1727539200,
+              _nanoseconds: 331000000
+            },
+            Approved_FName: null,
+            Approved_LName: null,
+            attachment: null
+          })
+        })
+        callback({
+          data: () => ({
+            Staff_ID: '150008',
+            startDate: {
+              _seconds: 1728316800,
+              _nanoseconds: 393000000
+            },
+            endDate: {
+              _seconds: 1728316800,
+              _nanoseconds: 393000000
+            },
+            reason: null,
+            status: 'pending',
+            Staff_LName: 'Eric',
+            Staff_FName: 'Loh',
+            Approved_ID: '130002',
+            time: 'PM',
+            requestCreated: {
+              _seconds: 1727539200,
+              _nanoseconds: 331000000
+            },
+            Approved_FName: null,
+            Approved_LName: null,
+            attachment: null
+          })
+        })
+      },
+    })
+
+    await fetchWorkingArrangementsInBatches(inChargeOfID, null, null, "supervise")
+    expect(db.collection().where).toHaveBeenCalledWith("status", "==", "pending")
+  })
 })
 
 //test login
