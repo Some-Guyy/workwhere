@@ -1377,6 +1377,54 @@ describe('GET /working-arrangements/supervise/:managerId', () => {
     ])
   })
 
+  test('get non-existent pending arrangements of manager\'s team in charge of', async () => {
+    const mockGet = db.collection().get
+    // mock inChargeOf
+    mockGet.mockResolvedValueOnce({
+      empty: false,
+      forEach: (callback) => {
+        callback({
+          data: () => ({
+            Reporting_Manager: "130002",
+            Role: "1",
+            Email: "sally.loh@allinone.com.sg",
+            Dept: "HR",
+            Position: "Director",
+            Staff_LName: "Loh",
+            Staff_FName: "Sally",
+            Country: "Singapore",
+            Staff_ID: "160008",
+            Password: "123"
+          })
+        });
+      }
+    });
+
+    //mock workingArrangements
+    mockGet.mockResolvedValueOnce([])
+
+    const response = await request(app)
+      .get('/working-arrangements/supervise/130002')
+      .send()
+    
+    expect(response.status).toBe(200)
+    expect(response.body.workingArrangements).toEqual([])
+    expect(response.body.inChargeOf).toEqual([
+      {
+        "Reporting_Manager": "130002",
+        "Role": "1",
+        "Email": "sally.loh@allinone.com.sg",
+        "Dept": "HR",
+        "Position": "Director",
+        "Staff_LName": "Loh",
+        "Staff_FName": "Sally",
+        "Country": "Singapore",
+        "Staff_ID": "160008",
+        "Password": "123"
+      }
+    ])
+  })
+
   //unsuccessful - something wrong with backend code
   test('get all pending arrangements of manager\'s team in charge of with firestore error', async () => {
     //get firestore to throw error
