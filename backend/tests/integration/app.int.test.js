@@ -1043,7 +1043,7 @@ describe('PUT /working-arrangements/manage', () => {
                 Approved_LName: "Tan",
                 Staff_ID: "140894",
                 startDate: testDate,
-                status: 'pending',
+                status: 'approved',
                 reason: null,
             })
 
@@ -1062,8 +1062,8 @@ describe('PUT /working-arrangements/manage', () => {
                 Approved_LName: "Tan",
                 Staff_ID: "140008",
                 startDate: testDate,
-                status: 'pending',
-                reason: null,
+                status: 'rejected',
+                reason: "Important meeting, everyone is required to be in office",
             })
 
         // Expect 200 and json response body
@@ -1080,9 +1080,9 @@ describe('PUT /working-arrangements/manage', () => {
                 Approved_ID: "140001",
                 Approved_FName: "Derek",
                 Approved_LName: "Tan",
-                Staff_ID: "999999",
+                Staff_ID: "140008",
                 startDate: testDate,
-                status: 'pending',
+                status: 'approved',
                 reason: null,
             })
 
