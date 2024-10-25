@@ -868,53 +868,226 @@ describe('POST /request', () => {
 describe('PUT /working-arrangements', () => {
     test('cancel existing pending working arrangement', async () => {
         // Cancel the only existing pending working arrangement of Employee A, use testDate
-
+        const response = await request(app)
+            .put('/working-arrangements')
+            .send({
+                Staff_ID: "140001",
+                startDate: testDate
+              });
         // Expect 200 and json response body equals
+        expect(response.status).toBe(200);
+        expect(response.body.message).toEqual('Working arrangement successfully cancelled.');
+
     })
 
     test('cancel a non-existent pending working arrangement', async () => {
         // Try to cancel that same pending working arrangement above again
+        const response = await request(app)
+            .put('/working-arrangements')
+            .send({
+                Staff_ID: "140001",
+                startDate: testDate
+                });
 
         // Expect 404 and json response body to equal
+        expect(response.status).toBe(404)
+        expect(response.body).toEqual({ message: 'No matching working arrangement found' })
     })
 
     test('cancel a non-existent employee\'s pending working arrangement', async () => {
         // Cancel using employee id 999999 as that employee does not exist
+        const response = await request(app)
+            .put('/working-arrangements')
+            .send({
+                Staff_ID: "999999",
+                startDate: testDate,
+            })
 
         // Expect 404 and json response body to equal
+        expect(response.status).toBe(404)
+        expect(response.body).toEqual({ message: 'No matching working arrangement found' })
     })
 })
 
 describe('GET /working-arrangements/supervise/:managerId', () => {
     test('get all pending arrangements of manager\'s team in charge of', async () => {
         // Get pending arrangements of Employee A's team in charge of
+        const response = await request(app)
+            .get('/working-arrangements/supervise/140001')
+            .send()
 
         // Expect 200 and json response body to equal (use expect.arrayContaining() on arrays so that the order does not matter)
+        expect(response.status).toBe(200)
+        expect(response.body).toEqual({
+            workingArrangements: expect.arrayContaining([
+                {
+                    Staff_ID: "140894",
+                    Staff_FName: "Rahim",
+                    Staff_LName: "Khalid",
+                    reason: null,
+                    startDate: timestampToSeconds(new Date(testDate)),
+                    endDate: timestampToSeconds(new Date(testDate)),
+                    requestCreated: timestampToSeconds(new Date(testNowDate)),
+                    status: 'pending',
+                    Approved_ID: null,
+                    Approved_FName: null,
+                    Approved_LName: null,
+                    time: "AM",
+                    attachment: null
+                },
+                {
+                    Staff_ID: "140008",
+                    Staff_FName: "Jaclyn",
+                    Staff_LName: "Lee",
+                    reason: null,
+                    startDate: timestampToSeconds(new Date(testDate)),
+                    endDate: timestampToSeconds(new Date(testDate)),
+                    requestCreated: timestampToSeconds(new Date(testNowDate)),
+                    status: 'pending',
+                    Approved_ID: null,
+                    Approved_FName: null,
+                    Approved_LName: null,
+                    time: "AM",
+                    attachment: null
+                },
+            ]),
+            inChargeOf: expect.arrayContaining([
+                {
+                    Staff_ID: "140894",
+                    Staff_FName: "Rahim",
+                    Staff_LName: "Khalid",
+                    Dept: testDept,
+                    Position: "Sales Manager",
+                    Country: "Singapore",
+                    Email: "rahim.khalid@allinone.com.sg",
+                    Reporting_Manager: "140001",
+                    Role: "3",
+                    Password: "123",
+                },
+                {
+                    Staff_ID: "140008",
+                    Staff_FName: "Jaclyn",
+                    Staff_LName: "Lee",
+                    Dept: testDept,
+                    Position: "Sales Manager",
+                    Country: "Singapore",
+                    Email: "jaclyn.lee@allinone.com.sg",
+                    Reporting_Manager: "140001",
+                    Role: "3",
+                    Password: "123",
+                },
+            ]),
+        })
     })
 
     test('get non-existent pending arrangements of manager\'s team in charge of', async () => {
         // Get pending arrangements of Employee C's team in charge of
+        const response = await request(app)
+            .get('/working-arrangements/supervise/130002')
+            .send()
 
         // Expect 200 and json response body to equal (workingArrangements would be an empty array but inChargeOf still includes Employee D) 
+        expect(response.status).toBe(200)
+        expect(response.body).toEqual({
+            workingArrangements: expect.arrayContaining([]),
+            inChargeOf: expect.arrayContaining([
+                {
+                    Staff_ID: "140001",
+                    Staff_FName: "Derek",
+                    Staff_LName: "Tan",
+                    Dept: testDept,
+                    Position: "Director",
+                    Country: "Singapore",
+                    Email: "derek.tan@allinone.com.sg",
+                    Reporting_Manager: "130002",
+                    Role: "1",
+                    Password: "123",
+                },
+                {
+                    Staff_ID: "130002",
+                    Staff_FName: "Jack",
+                    Staff_LName: "Sim",
+                    Dept: "CEO",
+                    Position: "MD",
+                    Country: "Singapore",
+                    Email: "jack.sim@allinone.com.sg",
+                    Reporting_Manager: "130002",
+                    Role: "1",
+                    Password: "123",
+                },
+                {
+                    Staff_ID: "160008",
+                    Staff_FName: "Sally",
+                    Staff_LName: "Loh",
+                    Dept: "HR",
+                    Position: "Director",
+                    Country: "Singapore",
+                    Email: "sally.loh@allinone.com.sg",
+                    Reporting_Manager: "130002",
+                    Role: "1",
+                    Password: "123",
+                },
+            ]),
+        })
     })
 })
 
 describe('PUT /working-arrangements/manage', () => {
     test('approve an existing pending arrangement', async () => {
         // Employee A will approve employee B's pending arrangement
+        const response = await request(app)
+            .put('/working-arrangements/manage')
+            .send({
+                Approved_ID: "140001",
+                Approved_FName: "Derek",
+                Approved_LName: "Tan",
+                Staff_ID: "140894",
+                startDate: testDate,
+                status: 'pending',
+                reason: null,
+            })
 
         // Expect 200 and json response body
+        expect(response.status).toBe(200)
+        expect(response.body).toEqual({ message: 'Working arrangement successfully updated.' })
     })
 
     test('reject an existing pending arrangement', async () => {
         // Employee A will reject employee C's pending arrangement
+        const response = await request(app)
+            .put('/working-arrangements/manage')
+            .send({
+                Approved_ID: "140001",
+                Approved_FName: "Derek",
+                Approved_LName: "Tan",
+                Staff_ID: "140008",
+                startDate: testDate,
+                status: 'pending',
+                reason: null,
+            })
 
         // Expect 200 and json response body
+        expect(response.status).toBe(200)
+        expect(response.body).toEqual({ message: 'Working arrangement successfully updated.' })
+
     })
 
     test('approve a non-existing pending arrangement', async () => {
         // Employee A will approve employee C's same as above pending arrangement (same day)
+        const response = await request(app)
+            .put('/working-arrangements/manage')
+            .send({
+                Approved_ID: "140001",
+                Approved_FName: "Derek",
+                Approved_LName: "Tan",
+                Staff_ID: "999999",
+                startDate: testDate,
+                status: 'pending',
+                reason: null,
+            })
 
         // Expect 404 and json response body
+        expect(response.status).toBe(404)
+        expect(response.body).toEqual({ message: 'No matching working arrangement found' })
     })
 })
