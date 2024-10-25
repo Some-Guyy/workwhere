@@ -3,7 +3,7 @@ const csv = require('csv-parser');
 const fs = require('fs');
 
 // Initialize Firebase Admin SDK
-const serviceAccount = require('./serviceAccountKey.json');
+const serviceAccount = require('./workwhere_firebase_env.json');
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
