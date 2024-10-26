@@ -60,17 +60,13 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
         callback({
           data: () => ({
             reason: null,
-            Staff_LName: 'Sim',
-            Staff_FName: 'Heng',
-            Approved_ID: '150008',
+            staffLastName: 'Sim',
+            staffFirstName: 'Heng',
+            reportingId: '150008',
             time: 'PM',
-            Staff_ID: '190019',
+            staffId: '190019',
             status: 'approved',
-            startDate: {
-              _seconds: 1728316800,
-              _nanoseconds: 393000000
-            },
-            endDate: {
+            date: {
               _seconds: 1728316800,
               _nanoseconds: 393000000
             },
@@ -78,8 +74,8 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
               _seconds: 1727539200,
               _nanoseconds: 331000000
             },
-            Approved_FName: 'Eric',
-            Approved_LName: 'Loh',
+            reportingFirstName: 'Eric',
+            reportingLastName: 'Loh',
             attachment: null
           })
         })
@@ -97,53 +93,45 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            Staff_ID: '190019',
-            startDate: {
-              _seconds: 1728316800,
-              _nanoseconds: 393000000
-            },
-            endDate: {
+            staffId: '190019',
+            date: {
               _seconds: 1728316800,
               _nanoseconds: 393000000
             },
             reason: null,
             status: 'approved',
-            Staff_LName: 'Sim',
-            Staff_FName: 'Heng',
-            Approved_ID: '150008',
+            staffLastName: 'Sim',
+            staffFirstName: 'Heng',
+            reportingId: '150008',
             time: 'PM',
             requestCreated: {
               _seconds: 1727539200,
               _nanoseconds: 331000000
             },
-            Approved_FName: 'Eric',
-            Approved_LName: 'Loh',
+            reportingFirstName: 'Eric',
+            reportingLastName: 'Loh',
             attachment: null
           })
         })
         callback({
           data: () => ({
-            Staff_ID: '190059',
-            startDate: {
-              _seconds: 1728316800,
-              _nanoseconds: 393000000
-            },
-            endDate: {
+            staffId: '190059',
+            date: {
               _seconds: 1728316800,
               _nanoseconds: 393000000
             },
             reason: null,
             status: 'approved',
-            Staff_LName: 'Phuc',
-            Staff_FName: 'Le',
-            Approved_ID: '150008',
+            staffLastName: 'Phuc',
+            staffFirstName: 'Le',
+            reportingId: '150008',
             time: 'PM',
             requestCreated: {
               _seconds: 1727539200,
               _nanoseconds: 331000000
             },
-            Approved_FName: 'Eric',
-            Approved_LName: 'Loh',
+            reportingFirstName: 'Eric',
+            reportingLastName: 'Loh',
             attachment: null
           })
         })
@@ -161,53 +149,45 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            Staff_ID: '190019',
-            startDate: {
-              _seconds: 1728316800,
-              _nanoseconds: 393000000
-            },
-            endDate: {
+            staffId: '190019',
+            date: {
               _seconds: 1728316800,
               _nanoseconds: 393000000
             },
             reason: null,
             status: 'pending',
-            Staff_LName: 'Sim',
-            Staff_FName: 'Heng',
-            Approved_ID: null,
+            staffLastName: 'Sim',
+            staffFirstName: 'Heng',
+            reportingId: null,
             time: 'PM',
             requestCreated: {
               _seconds: 1727539200,
               _nanoseconds: 331000000
             },
-            Approved_FName: null,
-            Approved_LName: null,
+            reportingFirstName: null,
+            reportingLastName: null,
             attachment: null
           })
         })
         callback({
           data: () => ({
-            Staff_ID: '150008',
-            startDate: {
-              _seconds: 1728316800,
-              _nanoseconds: 393000000
-            },
-            endDate: {
+            staffId: '150008',
+            date: {
               _seconds: 1728316800,
               _nanoseconds: 393000000
             },
             reason: null,
             status: 'approved',
-            Staff_LName: 'Eric',
-            Staff_FName: 'Loh',
-            Approved_ID: '130002',
+            staffLastName: 'Eric',
+            staffFirstName: 'Loh',
+            reportingId: '130002',
             time: 'PM',
             requestCreated: {
               _seconds: 1727539200,
               _nanoseconds: 331000000
             },
-            Approved_FName: 'Jack',
-            Approved_LName: 'Sim',
+            reportingFirstName: 'Jack',
+            reportingLastName: 'Sim',
             attachment: null
           })
         })
@@ -225,53 +205,45 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            Staff_ID: '190019',
-            startDate: {
-              _seconds: 1728316800,
-              _nanoseconds: 393000000
-            },
-            endDate: {
+            staffId: '190019',
+            date: {
               _seconds: 1728316800,
               _nanoseconds: 393000000
             },
             reason: null,
             status: 'pending',
-            Staff_LName: 'Sim',
-            Staff_FName: 'Heng',
-            Approved_ID: null,
+            staffLastName: 'Sim',
+            staffFirstName: 'Heng',
+            reportingId: null,
             time: 'PM',
             requestCreated: {
               _seconds: 1727539200,
               _nanoseconds: 331000000
             },
-            Approved_FName: null,
-            Approved_LName: null,
+            reportingFirstName: null,
+            reportingLastName: null,
             attachment: null
           })
         })
         callback({
           data: () => ({
-            Staff_ID: '150008',
-            startDate: {
-              _seconds: 1728316800,
-              _nanoseconds: 393000000
-            },
-            endDate: {
+            staffId: '150008',
+            date: {
               _seconds: 1728316800,
               _nanoseconds: 393000000
             },
             reason: null,
             status: 'pending',
-            Staff_LName: 'Eric',
-            Staff_FName: 'Loh',
-            Approved_ID: '130002',
+            staffLastName: 'Eric',
+            staffFirstName: 'Loh',
+            reportingId: '130002',
             time: 'PM',
             requestCreated: {
               _seconds: 1727539200,
               _nanoseconds: 331000000
             },
-            Approved_FName: null,
-            Approved_LName: null,
+            reportingFirstName: null,
+            reportingLastName: null,
             attachment: null
           })
         })
@@ -293,14 +265,14 @@ describe('POST /login', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            Password: '123',
-            Staff_ID: '151408',
-            Staff_FName: 'Philip',
-            Staff_LName: 'Lee',
-            Dept: 'Engineering',
-            Position: 'Director',
-            Role: '1',
-            Reporting_Manager: '130002',
+            password: '123',
+            staffId: '151408',
+            staffFirstName: 'Philip',
+            staffLastName: 'Lee',
+            dept: 'Engineering',
+            position: 'Director',
+            role: '1',
+            reportingId: '130002',
           }),
         })
       },
@@ -316,13 +288,13 @@ describe('POST /login', () => {
     expect(res.body).toEqual({
       message: 'Login successful',
       user: {
-        Staff_ID: "151408",
-        Staff_FName: "Philip",
-        Staff_LName: "Lee",
-        Dept: "Engineering",
-        Position: "Director",
-        Role: "1",
-        Reporting_Manager: "130002",
+        staffId: "151408",
+        staffFirstName: "Philip",
+        staffLastName: "Lee",
+        dept: "Engineering",
+        position: "Director",
+        role: "1",
+        reportingId: "130002",
       },
     })
   })
@@ -334,14 +306,14 @@ describe('POST /login', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            Password: '123',
-            Staff_ID: '151408',
-            Staff_FName: 'Philip',
-            Staff_LName: 'Lee',
-            Dept: 'Engineering',
-            Position: 'Director',
-            Role: '1',
-            Reporting_Manager: '130002',
+            password: '123',
+            staffId: '151408',
+            staffFirstName: 'Philip',
+            staffLastName: 'Lee',
+            dept: 'Engineering',
+            position: 'Director',
+            role: '1',
+            reportingId: '130002',
           }),
         })
       },
@@ -357,13 +329,13 @@ describe('POST /login', () => {
     expect(res.body).toEqual({
       message: 'Login successful',
       user: {
-        Staff_ID: "151408",
-        Staff_FName: "Philip",
-        Staff_LName: "Lee",
-        Dept: "Engineering",
-        Position: "Director",
-        Role: "1",
-        Reporting_Manager: "130002",
+        staffId: "151408",
+        staffFirstName: "Philip",
+        staffLastName: "Lee",
+        dept: "Engineering",
+        position: "Director",
+        role: "1",
+        reportingId: "130002",
       },
     })
   })
@@ -397,14 +369,14 @@ describe('POST /login', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            Password: '123',
-            Staff_ID: '151408',
-            Staff_FName: 'Philip',
-            Staff_LName: 'Lee',
-            Dept: 'Engineering',
-            Position: 'Director',
-            Role: '1',
-            Reporting_Manager: '130002',
+            password: '123',
+            staffId: '151408',
+            staffFirstName: 'Philip',
+            staffLastName: 'Lee',
+            dept: 'Engineering',
+            position: 'Director',
+            role: '1',
+            reportingId: '130002',
           }),
         })
       },
@@ -449,17 +421,13 @@ describe('GET /working-arrangements/:employeeid', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            Approved_FName: "Eric",
-            Approved_LName: "Loh",
-            Approved_ID: "150008",
-            Staff_ID: "190019",
-            Staff_FName: "Heng",
-            Staff_LName: "Sim",
-            startDate: {
-              _seconds: 1728316800,
-              _nanoseconds: 393000000
-            },
-            endDate: {
+            reportingFirstName: "Eric",
+            reportingLastName: "Loh",
+            reportingId: "150008",
+            staffId: "190019",
+            staffFirstName: "Heng",
+            staffLastName: "Sim",
+            date: {
               _seconds: 1728316800,
               _nanoseconds: 393000000
             },
@@ -482,17 +450,13 @@ describe('GET /working-arrangements/:employeeid', () => {
 
     expect(response.status).toBe(200) // Expect 200 OK
     expect(response.body).toEqual([{
-      Approved_FName: "Eric",
-      Approved_LName: "Loh",
-      Approved_ID: "150008",
-      Staff_ID: "190019",
-      Staff_FName: "Heng",
-      Staff_LName: "Sim",
-      startDate: {
-        _seconds: 1728316800,
-        _nanoseconds: 393000000
-      },
-      endDate: {
+      reportingFirstName: "Eric",
+      reportingLastName: "Loh",
+      reportingId: "150008",
+      staffId: "190019",
+      staffFirstName: "Heng",
+      staffLastName: "Sim",
+      date: {
         _seconds: 1728316800,
         _nanoseconds: 393000000
       },
@@ -549,15 +513,15 @@ describe('GET /working-arrangements/department/:department/:date', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            Staff_ID: '190019',
-            Staff_FName: 'Heng',
-            Staff_LName: 'Sim',
-            Reporting_Manager: '150008',
-            Role: '2',
-            Email: 'heng.sim@allinone.com.sg',
-            Dept: 'Solutioning',
-            Position: 'Developers',
-            Country: 'Singapore',
+            staffId: '190019',
+            staffFirstName: 'Heng',
+            staffLastName: 'Sim',
+            reportingId: '150008',
+            role: '2',
+            email: 'heng.sim@allinone.com.sg',
+            dept: 'Solutioning',
+            position: 'Developers',
+            country: 'Singapore',
             password: '123',
           })
         })
@@ -571,17 +535,13 @@ describe('GET /working-arrangements/department/:department/:date', () => {
         callback({
           data: () => ({
             reason: null,
-            Staff_LName: 'Sim',
-            Staff_FName: 'Heng',
-            Approved_ID: '150008',
+            staffLastName: 'Sim',
+            staffFirstName: 'Heng',
+            reportingId: '150008',
             time: 'PM',
-            Staff_ID: '190019',
+            staffId: '190019',
             status: 'approved',
-            startDate: {
-              _seconds: 1728316800,
-              _nanoseconds: 393000000
-            },
-            endDate: {
+            date: {
               _seconds: 1728316800,
               _nanoseconds: 393000000
             },
@@ -589,8 +549,8 @@ describe('GET /working-arrangements/department/:department/:date', () => {
               _seconds: 1727539200,
               _nanoseconds: 331000000
             },
-            Approved_FName: 'Eric',
-            Approved_LName: 'Loh',
+            reportingFirstName: 'Eric',
+            reportingLastName: 'Loh',
             attachment: null
           })
         })
@@ -604,32 +564,28 @@ describe('GET /working-arrangements/department/:department/:date', () => {
     expect(response.status).toBe(200) // Expect 200 OK
     expect(response.body.sameDepart).toEqual([
       {
-        Staff_ID: '190019',
-        Staff_FName: 'Heng',
-        Staff_LName: 'Sim',
-        Reporting_Manager: '150008',
-        Role: '2',
-        Email: 'heng.sim@allinone.com.sg',
-        Dept: 'Solutioning',
-        Position: 'Developers',
-        Country: 'Singapore',
+        staffId: '190019',
+        staffFirstName: 'Heng',
+        staffLastName: 'Sim',
+        reportingId: '150008',
+        role: '2',
+        email: 'heng.sim@allinone.com.sg',
+        dept: 'Solutioning',
+        position: 'Developers',
+        country: 'Singapore',
         password: '123',
       }
     ])
     expect(response.body.workingArrangements).toEqual([
       {
         reason: null,
-        Staff_LName: 'Sim',
-        Staff_FName: 'Heng',
-        Approved_ID: '150008',
+        staffLastName: 'Sim',
+        staffFirstName: 'Heng',
+        reportingId: '150008',
         time: 'PM',
-        Staff_ID: '190019',
+        staffId: '190019',
         status: 'approved',
-        startDate: {
-          _seconds: 1728316800,
-          _nanoseconds: 393000000
-        },
-        endDate: {
+        date: {
           _seconds: 1728316800,
           _nanoseconds: 393000000
         },
@@ -637,8 +593,8 @@ describe('GET /working-arrangements/department/:department/:date', () => {
           _seconds: 1727539200,
           _nanoseconds: 331000000
         },
-        Approved_FName: 'Eric',
-        Approved_LName: 'Loh',
+        reportingFirstName: 'Eric',
+        reportingLastName: 'Loh',
         attachment: null
       }
     ])
@@ -670,24 +626,24 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            Staff_ID: '190019',
-            Staff_FName: 'Heng',
-            Staff_LName: 'Sim',
-            Reporting_Manager: '150008',
-            Dept: 'Solutioning',
-            Position: 'Developers',
-            Email: 'heng.sim@allinone.com.sg',
+            staffId: '190019',
+            staffFirstName: 'Heng',
+            staffLastName: 'Sim',
+            reportingId: '150008',
+            dept: 'Solutioning',
+            position: 'Developers',
+            email: 'heng.sim@allinone.com.sg',
           })
         })
         callback({
           data: () => ({
-            Staff_ID: '150008',
-            Staff_FName: 'Eric',
-            Staff_LName: 'Loh',
-            Reporting_Manager: '130002',
-            Dept: 'Solutioning',
-            Position: 'Director',
-            Email: 'eric.loh@allinone.com.sg',
+            staffId: '150008',
+            staffFirstName: 'Eric',
+            staffLastName: 'Loh',
+            reportingId: '130002',
+            dept: 'Solutioning',
+            position: 'Director',
+            email: 'eric.loh@allinone.com.sg',
           })
         })
       },
@@ -699,53 +655,45 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            Staff_ID: '190019',
-            startDate: {
-              _seconds: 1728316800,
-              _nanoseconds: 393000000
-            },
-            endDate: {
+            staffId: '190019',
+            date: {
               _seconds: 1728316800,
               _nanoseconds: 393000000
             },
             reason: null,
             status: 'pending',
-            Staff_LName: 'Sim',
-            Staff_FName: 'Heng',
-            Approved_ID: null,
+            staffLastName: 'Sim',
+            staffFirstName: 'Heng',
+            reportingId: null,
             time: 'PM',
             requestCreated: {
               _seconds: 1727539200,
               _nanoseconds: 331000000
             },
-            Approved_FName: null,
-            Approved_LName: null,
+            reportingFirstName: null,
+            reportingLastName: null,
             attachment: null
           })
         })
         callback({
           data: () => ({
-            Staff_ID: '150008',
-            startDate: {
-              _seconds: 1728316800,
-              _nanoseconds: 393000000
-            },
-            endDate: {
+            staffId: '150008',
+            date: {
               _seconds: 1728316800,
               _nanoseconds: 393000000
             },
             reason: null,
             status: 'approved',
-            Staff_LName: 'Eric',
-            Staff_FName: 'Loh',
-            Approved_ID: '130002',
+            staffLastName: 'Eric',
+            staffFirstName: 'Loh',
+            reportingId: '130002',
             time: 'PM',
             requestCreated: {
               _seconds: 1727539200,
               _nanoseconds: 331000000
             },
-            Approved_FName: 'Jack',
-            Approved_LName: 'Sim',
+            reportingFirstName: 'Jack',
+            reportingLastName: 'Sim',
             attachment: null
           })
         })
@@ -759,71 +707,63 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
     expect(response.status).toBe(200) // Expect 200 OK
     expect(response.body.inChargeOf).toEqual([
       {
-        Staff_ID: '190019',
-        Staff_FName: 'Heng',
-        Staff_LName: 'Sim',
-        Reporting_Manager: '150008',
-        Dept: 'Solutioning',
-        Position: 'Developers',
-        Email: 'heng.sim@allinone.com.sg',
+        staffId: '190019',
+        staffFirstName: 'Heng',
+        staffLastName: 'Sim',
+        reportingId: '150008',
+        dept: 'Solutioning',
+        position: 'Developers',
+        email: 'heng.sim@allinone.com.sg',
       },
       {
-        Staff_ID: '150008',
-        Staff_FName: 'Eric',
-        Staff_LName: 'Loh',
-        Reporting_Manager: '130002',
-        Dept: 'Solutioning',
-        Position: 'Director',
-        Email: 'eric.loh@allinone.com.sg',
+        staffId: '150008',
+        staffFirstName: 'Eric',
+        staffLastName: 'Loh',
+        reportingId: '130002',
+        dept: 'Solutioning',
+        position: 'Director',
+        email: 'eric.loh@allinone.com.sg',
       },
     ])
     expect(response.body.workingArrangements).toEqual([
       {
-        Staff_ID: '190019',
-        startDate: {
-          _seconds: 1728316800,
-          _nanoseconds: 393000000
-        },
-        endDate: {
+        staffId: '190019',
+        date: {
           _seconds: 1728316800,
           _nanoseconds: 393000000
         },
         reason: null,
         status: 'pending',
-        Staff_LName: 'Sim',
-        Staff_FName: 'Heng',
-        Approved_ID: null,
+        staffLastName: 'Sim',
+        staffFirstName: 'Heng',
+        reportingId: null,
         time: 'PM',
         requestCreated: {
           _seconds: 1727539200,
           _nanoseconds: 331000000
         },
-        Approved_FName: null,
-        Approved_LName: null,
+        reportingFirstName: null,
+        reportingLastName: null,
         attachment: null
       },
       {
-        Staff_ID: '150008',
-        startDate: {
-          _seconds: 1728316800,
-          _nanoseconds: 393000000
-        },
-        endDate: {
+        staffId: '150008',
+        date: {
           _seconds: 1728316800,
           _nanoseconds: 393000000
         },
         reason: null,
         status: 'approved',
-        Staff_LName: 'Eric',
-        Staff_FName: 'Loh',
-        Approved_ID: '130002',
+        staffLastName: 'Eric',
+        staffFirstName: 'Loh',
+        reportingId: '130002',
         time: 'PM',
         requestCreated: {
           _seconds: 1727539200,
           _nanoseconds: 331000000
         },
-        Approved_FName: 'Jack',
-        Approved_LName: 'Sim',
+        reportingFirstName: 'Jack',
+        reportingLastName: 'Sim',
         attachment: null
       }
     ])
@@ -856,11 +796,11 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
       empty: false,
       docs: [{
         data: () => ({
-          Staff_ID: '190019',
-          Staff_FName: 'Heng',
-          Staff_LName: 'Sim',
-          Position: 'Developers',
-          Dept: 'Solutioning',
+          staffId: '190019',
+          staffFirstName: 'Heng',
+          staffLastName: 'Sim',
+          position: 'Developers',
+          dept: 'Solutioning',
         }),
       }],
     })
@@ -871,20 +811,20 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            Staff_ID: '190019',
-            Staff_FName: 'Heng',
-            Staff_LName: 'Sim',
-            Position: 'Developers',
-            Dept: 'Solutioning',
+            staffId: '190019',
+            staffFirstName: 'Heng',
+            staffLastName: 'Sim',
+            position: 'Developers',
+            dept: 'Solutioning',
           })
         })
         callback({
           data: () => ({
-            Staff_ID: '190059',
-            Staff_FName: 'Phuc',
-            Staff_LName: 'Le',
-            Position: 'Developers',
-            Dept: 'Solutioning',
+            staffId: '190059',
+            staffFirstName: 'Phuc',
+            staffLastName: 'Le',
+            position: 'Developers',
+            dept: 'Solutioning',
           })
         })
       },
@@ -896,53 +836,45 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            Staff_ID: '190019',
-            startDate: {
-              _seconds: 1728316800,
-              _nanoseconds: 393000000
-            },
-            endDate: {
+            staffId: '190019',
+            date: {
               _seconds: 1728316800,
               _nanoseconds: 393000000
             },
             reason: null,
             status: 'approved',
-            Staff_LName: 'Sim',
-            Staff_FName: 'Heng',
-            Approved_ID: '150008',
+            staffLastName: 'Sim',
+            staffFirstName: 'Heng',
+            reportingId: '150008',
             time: 'PM',
             requestCreated: {
               _seconds: 1727539200,
               _nanoseconds: 331000000
             },
-            Approved_FName: 'Eric',
-            Approved_LName: 'Loh',
+            reportingFirstName: 'Eric',
+            reportingLastName: 'Loh',
             attachment: null
           })
         })
         callback({
           data: () => ({
-            Staff_ID: '190059',
-            startDate: {
-              _seconds: 1728316800,
-              _nanoseconds: 393000000
-            },
-            endDate: {
+            staffId: '190059',
+            date: {
               _seconds: 1728316800,
               _nanoseconds: 393000000
             },
             reason: null,
             status: 'approved',
-            Staff_LName: 'Phuc',
-            Staff_FName: 'Le',
-            Approved_ID: '150008',
+            staffLastName: 'Phuc',
+            staffFirstName: 'Le',
+            reportingId: '150008',
             time: 'PM',
             requestCreated: {
               _seconds: 1727539200,
               _nanoseconds: 331000000
             },
-            Approved_FName: 'Eric',
-            Approved_LName: 'Loh',
+            reportingFirstName: 'Eric',
+            reportingLastName: 'Loh',
             attachment: null
           })
         })
@@ -956,67 +888,59 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
     expect(response.status).toBe(200) // Expect 200 OK
     expect(response.body.teamMembers).toEqual([
       {
-        Staff_ID: '190019',
-        Staff_FName: 'Heng',
-        Staff_LName: 'Sim',
-        Position: 'Developers',
-        Dept: 'Solutioning',
+        staffId: '190019',
+        staffFirstName: 'Heng',
+        staffLastName: 'Sim',
+        position: 'Developers',
+        dept: 'Solutioning',
       },
       {
-        Staff_ID: '190059',
-        Staff_FName: 'Phuc',
-        Staff_LName: 'Le',
-        Position: 'Developers',
-        Dept: 'Solutioning',
+        staffId: '190059',
+        staffFirstName: 'Phuc',
+        staffLastName: 'Le',
+        position: 'Developers',
+        dept: 'Solutioning',
       }
     ])
     expect(response.body.workingArrangements).toEqual([
       {
-        Staff_ID: '190019',
-        startDate: {
-          _seconds: 1728316800,
-          _nanoseconds: 393000000
-        },
-        endDate: {
+        staffId: '190019',
+        date: {
           _seconds: 1728316800,
           _nanoseconds: 393000000
         },
         reason: null,
         status: 'approved',
-        Staff_LName: 'Sim',
-        Staff_FName: 'Heng',
-        Approved_ID: '150008',
+        staffLastName: 'Sim',
+        staffFirstName: 'Heng',
+        reportingId: '150008',
         time: 'PM',
         requestCreated: {
           _seconds: 1727539200,
           _nanoseconds: 331000000
         },
-        Approved_FName: 'Eric',
-        Approved_LName: 'Loh',
+        reportingFirstName: 'Eric',
+        reportingLastName: 'Loh',
         attachment: null
       },
       {
-        Staff_ID: '190059',
-        startDate: {
-          _seconds: 1728316800,
-          _nanoseconds: 393000000
-        },
-        endDate: {
+        staffId: '190059',
+        date: {
           _seconds: 1728316800,
           _nanoseconds: 393000000
         },
         reason: null,
         status: 'approved',
-        Staff_LName: 'Phuc',
-        Staff_FName: 'Le',
-        Approved_ID: '150008',
+        staffLastName: 'Phuc',
+        staffFirstName: 'Le',
+        reportingId: '150008',
         time: 'PM',
         requestCreated: {
           _seconds: 1727539200,
           _nanoseconds: 331000000
         },
-        Approved_FName: 'Eric',
-        Approved_LName: 'Loh',
+        reportingFirstName: 'Eric',
+        reportingLastName: 'Loh',
         attachment: null
       }
     ])
@@ -1034,7 +958,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
       .send()
 
     expect(response.status).toBe(404) // Expect 404 Not Found
-    expect(response.body.error).toBe('Employee with Staff_ID 999999 not found.')
+    expect(response.body.error).toBe('Employee with staffId 999999 not found.')
   })
 
   //unsuccessful - backend code 
@@ -1057,8 +981,8 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
 describe('POST /request', () => {
   test('create request for an arrangement', async () => {
     const staffId = '190019'
-    const staffFName = 'Heng'
-    const staffLName = 'Sim'
+    const staffFirstName = 'Heng'
+    const staffLastName = 'Sim'
     const dates = [{
       date: '2024-10-01',
       time: 'PM',
@@ -1068,9 +992,9 @@ describe('POST /request', () => {
     const response = await request(app)
       .post('/request')
       .send({
-        Staff_ID: staffId,
-        Staff_FName: staffFName,
-        Staff_LName: staffLName,
+        staffId: staffId,
+        staffFirstName: staffFirstName,
+        staffLastName: staffLastName,
         dates: dates
       })
 
@@ -1079,17 +1003,16 @@ describe('POST /request', () => {
 
     expect(response.status).toBe(201)
     expect(db.batch().set).toHaveBeenCalledWith(newDocRef, {
-      Staff_ID: staffId,
-      Staff_FName: staffFName,
-      Staff_LName: staffLName,
+      staffId: staffId,
+      staffFirstName: staffFirstName,
+      staffLastName: staffLastName,
       reason: null,
-      startDate: firestore.Timestamp.fromDate(dateValue),
-      endDate: firestore.Timestamp.fromDate(dateValue),
+      date: firestore.Timestamp.fromDate(dateValue),
       requestCreated: firestore.Timestamp.now(),
       status: 'pending',
-      Approved_ID: null,
-      Approved_FName: null,
-      Approved_LName: null,
+      reportingId: null,
+      reportingFirstName: null,
+      reportingLastName: null,
       time: dates[0].time,
       attachment: dates[0].attachment
     })
@@ -1100,8 +1023,8 @@ describe('POST /request', () => {
 
   test('create request for multiple arrangements', async () => {
     const staffId = '190019'
-    const staffFName = 'Heng'
-    const staffLName = 'Sim'
+    const staffFirstName = 'Heng'
+    const staffLastName = 'Sim'
     const dates = [{
       date: '2024-10-01',
       time: 'PM',
@@ -1116,9 +1039,9 @@ describe('POST /request', () => {
     const response = await request(app)
       .post('/request')
       .send({
-        Staff_ID: staffId,
-        Staff_FName: staffFName,
-        Staff_LName: staffLName,
+        staffId: staffId,
+        staffFirstName: staffFirstName,
+        staffLastName: staffLastName,
         dates: dates
       })
 
@@ -1128,32 +1051,30 @@ describe('POST /request', () => {
 
     expect(response.status).toBe(201)
     expect(db.batch().set).toHaveBeenCalledWith(newDocRef, {
-      Staff_ID: staffId,
-      Staff_FName: staffFName,
-      Staff_LName: staffLName,
+      staffId: staffId,
+      staffFirstName: staffFirstName,
+      staffLastName: staffLastName,
       reason: null,
-      startDate: firestore.Timestamp.fromDate(dateValue1),
-      endDate: firestore.Timestamp.fromDate(dateValue1),
+      date: firestore.Timestamp.fromDate(dateValue1),
       requestCreated: firestore.Timestamp.now(),
       status: 'pending',
-      Approved_ID: null,
-      Approved_FName: null,
-      Approved_LName: null,
+      reportingId: null,
+      reportingFirstName: null,
+      reportingLastName: null,
       time: dates[0].time,
       attachment: dates[0].attachment
     })
     expect(db.batch().set).toHaveBeenCalledWith(newDocRef, {
-      Staff_ID: staffId,
-      Staff_FName: staffFName,
-      Staff_LName: staffLName,
+      staffId: staffId,
+      staffFirstName: staffFirstName,
+      staffLastName: staffLastName,
       reason: null,
-      startDate: firestore.Timestamp.fromDate(dateValue2),
-      endDate: firestore.Timestamp.fromDate(dateValue2),
+      date: firestore.Timestamp.fromDate(dateValue2),
       requestCreated: firestore.Timestamp.now(),
       status: 'pending',
-      Approved_ID: null,
-      Approved_FName: null,
-      Approved_LName: null,
+      reportingId: null,
+      reportingFirstName: null,
+      reportingLastName: null,
       time: dates[1].time,
       attachment: dates[1].attachment
     })
@@ -1164,8 +1085,8 @@ describe('POST /request', () => {
 
   test('create request for MD role', async () => {
     const staffId = '130002'
-    const staffFName = 'Jack'
-    const staffLName = 'Sim'
+    const staffFirstName = 'Jack'
+    const staffLastName = 'Sim'
     const dates = [{
       date: '2024-10-01',
       time: 'PM',
@@ -1175,9 +1096,9 @@ describe('POST /request', () => {
     const response = await request(app)
       .post('/request')
       .send({
-        Staff_ID: staffId,
-        Staff_FName: staffFName,
-        Staff_LName: staffLName,
+        staffId: staffId,
+        staffFirstName: staffFirstName,
+        staffLastName: staffLastName,
         dates: dates
       })
 
@@ -1186,17 +1107,16 @@ describe('POST /request', () => {
 
     expect(response.status).toBe(201)
     expect(db.batch().set).toHaveBeenCalledWith(newDocRef, {
-      Staff_ID: staffId,
-      Staff_FName: staffFName,
-      Staff_LName: staffLName,
+      staffId: staffId,
+      staffFirstName: staffFirstName,
+      staffLastName: staffLastName,
       reason: null,
-      startDate: firestore.Timestamp.fromDate(dateValue),
-      endDate: firestore.Timestamp.fromDate(dateValue),
+      date: firestore.Timestamp.fromDate(dateValue),
       requestCreated: firestore.Timestamp.now(),
       status: 'approved',
-      Approved_ID: staffId,
-      Approved_FName: staffFName,
-      Approved_LName: staffLName,
+      reportingId: staffId,
+      reportingFirstName: staffFirstName,
+      reportingLastName: staffLastName,
       time: dates[0].time,
       attachment: dates[0].attachment
     })
@@ -1207,8 +1127,8 @@ describe('POST /request', () => {
 
   test('create request for MD role with attachment', async () => {
     const staffId = '130002'
-    const staffFName = 'Jack'
-    const staffLName = 'Sim'
+    const staffFirstName = 'Jack'
+    const staffLastName = 'Sim'
     const dates = [{
       date: '2024-10-01',
       time: 'PM',
@@ -1218,9 +1138,9 @@ describe('POST /request', () => {
     const response = await request(app)
       .post('/request')
       .send({
-        Staff_ID: staffId,
-        Staff_FName: staffFName,
-        Staff_LName: staffLName,
+        staffId: staffId,
+        staffFirstName: staffFirstName,
+        staffLastName: staffLastName,
         dates: dates
       })
 
@@ -1229,17 +1149,16 @@ describe('POST /request', () => {
 
     expect(response.status).toBe(201)
     expect(db.batch().set).toHaveBeenCalledWith(newDocRef, {
-      Staff_ID: staffId,
-      Staff_FName: staffFName,
-      Staff_LName: staffLName,
+      staffId: staffId,
+      staffFirstName: staffFirstName,
+      staffLastName: staffLastName,
       reason: null,
-      startDate: firestore.Timestamp.fromDate(dateValue),
-      endDate: firestore.Timestamp.fromDate(dateValue),
+      date: firestore.Timestamp.fromDate(dateValue),
       requestCreated: firestore.Timestamp.now(),
       status: 'approved',
-      Approved_ID: staffId,
-      Approved_FName: staffFName,
-      Approved_LName: staffLName,
+      reportingId: staffId,
+      reportingFirstName: staffFirstName,
+      reportingLastName: staffLastName,
       time: dates[0].time,
       attachment: dates[0].attachment
     })
@@ -1250,8 +1169,8 @@ describe('POST /request', () => {
 
   test('create request for an arrangement with firestore error', async () => {
     const staffId = '190019'
-    const staffFName = 'Heng'
-    const staffLName = 'Sim'
+    const staffFirstName = 'Heng'
+    const staffLastName = 'Sim'
     const dates = [{
       date: '2024-10-01',
       time: 'PM',
@@ -1262,9 +1181,9 @@ describe('POST /request', () => {
     const response = await request(app)
       .post('/request')
       .send({
-        Staff_ID: staffId,
-        Staff_FName: staffFName,
-        Staff_LName: staffLName,
+        staffId: staffId,
+        staffFirstName: staffFirstName,
+        staffLastName: staffLastName,
         dates: dates
       })
 
@@ -1283,16 +1202,16 @@ describe('GET /working-arrangements/supervise/:managerId', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            Reporting_Manager: "130002",
-            Role: "1",
-            Email: "sally.loh@allinone.com.sg",
-            Dept: "HR",
-            Position: "Director",
-            Staff_LName: "Loh",
-            Staff_FName: "Sally",
-            Country: "Singapore",
-            Staff_ID: "160008",
-            Password: "123"
+            reportingId: "130002",
+            role: "1",
+            email: "sally.loh@allinone.com.sg",
+            dept: "HR",
+            position: "Director",
+            staffLastName: "Loh",
+            staffFirstName: "Sally",
+            country: "Singapore",
+            staffId: "160008",
+            password: "123"
           })
         });
       }
@@ -1304,17 +1223,13 @@ describe('GET /working-arrangements/supervise/:managerId', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            Approved_FName: "Jack",
-            Approved_LName: "Sim",
-            Approved_ID: "130002",
-            Staff_ID: "130002",
-            Staff_FName: "Jack",
-            Staff_LName: "Sim",
-            startDate: {
-              _seconds: 1728316800,
-              _nanoseconds: 393000000
-            },
-            endDate: {
+            reportingFirstName: "Jack",
+            reportingLastName: "Sim",
+            reportingId: "130002",
+            staffId: "130002",
+            staffFirstName: "Jack",
+            staffLastName: "Sim",
+            date: {
               _seconds: 1728316800,
               _nanoseconds: 393000000
             },
@@ -1339,17 +1254,13 @@ describe('GET /working-arrangements/supervise/:managerId', () => {
     expect(response.status).toBe(200)
     expect(response.body.workingArrangements).toEqual([
       {
-        Approved_FName: "Jack",
-        Approved_LName: "Sim",
-        Approved_ID: "130002",
-        Staff_ID: "130002",
-        Staff_FName: "Jack",
-        Staff_LName: "Sim",
-        startDate: {
-          _seconds: 1728316800,
-          _nanoseconds: 393000000
-        },
-        endDate: {
+        reportingFirstName: "Jack",
+        reportingLastName: "Sim",
+        reportingId: "130002",
+        staffId: "130002",
+        staffFirstName: "Jack",
+        staffLastName: "Sim",
+        date: {
           _seconds: 1728316800,
           _nanoseconds: 393000000
         },
@@ -1365,16 +1276,16 @@ describe('GET /working-arrangements/supervise/:managerId', () => {
     ])
     expect(response.body.inChargeOf).toEqual([
       {
-        "Reporting_Manager": "130002",
-        "Role": "1",
-        "Email": "sally.loh@allinone.com.sg",
-        "Dept": "HR",
-        "Position": "Director",
-        "Staff_LName": "Loh",
-        "Staff_FName": "Sally",
-        "Country": "Singapore",
-        "Staff_ID": "160008",
-        "Password": "123"
+        "reportingId": "130002",
+        "role": "1",
+        "email": "sally.loh@allinone.com.sg",
+        "dept": "HR",
+        "position": "Director",
+        "staffLastName": "Loh",
+        "staffFirstName": "Sally",
+        "country": "Singapore",
+        "staffId": "160008",
+        "password": "123"
       }
     ])
   })
@@ -1387,16 +1298,16 @@ describe('GET /working-arrangements/supervise/:managerId', () => {
       forEach: (callback) => {
         callback({
           data: () => ({
-            Reporting_Manager: "130002",
-            Role: "1",
-            Email: "sally.loh@allinone.com.sg",
-            Dept: "HR",
-            Position: "Director",
-            Staff_LName: "Loh",
-            Staff_FName: "Sally",
-            Country: "Singapore",
-            Staff_ID: "160008",
-            Password: "123"
+            reportingId: "130002",
+            role: "1",
+            email: "sally.loh@allinone.com.sg",
+            dept: "HR",
+            position: "Director",
+            staffLastName: "Loh",
+            staffFirstName: "Sally",
+            country: "Singapore",
+            staffId: "160008",
+            password: "123"
           })
         });
       }
@@ -1413,16 +1324,16 @@ describe('GET /working-arrangements/supervise/:managerId', () => {
     expect(response.body.workingArrangements).toEqual([])
     expect(response.body.inChargeOf).toEqual([
       {
-        "Reporting_Manager": "130002",
-        "Role": "1",
-        "Email": "sally.loh@allinone.com.sg",
-        "Dept": "HR",
-        "Position": "Director",
-        "Staff_LName": "Loh",
-        "Staff_FName": "Sally",
-        "Country": "Singapore",
-        "Staff_ID": "160008",
-        "Password": "123"
+        "reportingId": "130002",
+        "role": "1",
+        "email": "sally.loh@allinone.com.sg",
+        "dept": "HR",
+        "position": "Director",
+        "staffLastName": "Loh",
+        "staffFirstName": "Sally",
+        "country": "Singapore",
+        "staffId": "160008",
+        "password": "123"
       }
     ])
   })
@@ -1465,8 +1376,8 @@ describe('PUT /working-arrangements', () => {
     const response = await request(app)
       .put('/working-arrangements')
       .send({
-        Staff_ID: "130002",
-        startDate: {
+        staffId: "130002",
+        date: {
           _seconds: 1728316800,
           _nanoseconds: 393000000
         }
@@ -1492,8 +1403,8 @@ describe('PUT /working-arrangements', () => {
     const response = await request(app)
       .put('/working-arrangements')
       .send({
-        Staff_ID: "130002",
-        startDate: {
+        staffId: "130002",
+        date: {
           _seconds: 1728316800,
           _nanoseconds: 393000000
         }
@@ -1540,11 +1451,11 @@ describe('PUT /working-arrangements/manage', () => {
     const response = await request(app)
       .put('/working-arrangements/manage')
       .send({
-        Approved_ID: "130002",
-        Approved_FName: "Jack",
-        Approved_LName: "Sim",
-        Staff_ID: "160008",
-        startDate: {
+        reportingId: "130002",
+        reportingFirstName: "Jack",
+        reportingLastName: "Sim",
+        staffId: "160008",
+        date: {
           _seconds: 1728316800,
           _nanoseconds: 393000000
         },
@@ -1569,11 +1480,11 @@ describe('PUT /working-arrangements/manage', () => {
     const response = await request(app)
       .put('/working-arrangements/manage')
       .send({
-        Approved_ID: "130002",
-        Approved_FName: "Jack",
-        Approved_LName: "Sim",
-        Staff_ID: "160008",
-        startDate: {
+        reportingId: "130002",
+        reportingFirstName: "Jack",
+        reportingLastName: "Sim",
+        staffId: "160008",
+        date: {
           _seconds: 1728316800,
           _nanoseconds: 393000000
         },
