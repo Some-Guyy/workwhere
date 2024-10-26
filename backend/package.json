@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "ut": "jest unit --coverage",
     "it": "jest integration",
     "start": "node server.js"
