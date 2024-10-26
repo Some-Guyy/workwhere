@@ -4,7 +4,7 @@ const admin = require('firebase-admin')
 const db = admin.firestore()
 const firestore = require('firebase-admin/firestore')
 
-const collectionWa = "mock_working_arrangements"
+const collectionWa = "mockWorkingArrangements"
 
 // Fixtures
 jest.mock('firebase-admin', () => {

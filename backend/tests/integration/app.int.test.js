@@ -4,8 +4,8 @@ const { app } = require("../../app") // Gets firebase initialization from here
 const db = admin.firestore()
 const firestore = require('firebase-admin/firestore')
 
-const collectionEmployee = "test_employee"
-const collectionWa = "test_working_arrangements"
+const collectionEmployee = "testEmployees"
+const collectionWa = "testWorkingArrangements"
 
 const testDept = "Sales"
 const testDate = "2024-10-01"

@@ -8,11 +8,11 @@ admin.initializeApp({
 })
 const db = admin.firestore()
 
-let collectionEmployee = "mock_employee"
-let collectionWa = "mock_working_arrangements"
+let collectionEmployee = "mockEmployees"
+let collectionWa = "mockWorkingArrangements"
 if (process.env.NODE_ENV === 'test') {
-    collectionEmployee = "test_employee"
-    collectionWa = "test_working_arrangements"
+    collectionEmployee = "testEmployees"
+    collectionWa = "testWorkingArrangements"
 }
 
 const cors = require("cors")
