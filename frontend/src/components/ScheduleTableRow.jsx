@@ -30,19 +30,19 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
       <>
         <tr className="hover">
             <th>{index+1}</th>
-            <td>{convert_to_date(details.startDate._seconds)}</td>
+            <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
             {details.attachment == null ? <td>No attachments</td>:
             <td><ModalAttachment modalId={modalIdImage} file={details.attachment}/></td>
             }
-            <td><ModalCancel date={convert_to_date(details.startDate._seconds)} type={details.time} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} cancelWFH={cancelWFH}/></td>
+            <td><ModalCancel date={convert_to_date(details.date._seconds)} type={details.time} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} cancelWFH={cancelWFH}/></td>
         </tr>
       </>
       : activeSchedule == "Your Schedule" && isPending == true? 
       <>
         <tr className="hover">
             <th>{index+1}</th>
-            <td>{convert_to_date(details.startDate._seconds)}</td>
+            <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
             {details.attachment == null ? <td>No attachments</td>:
             <td><ModalAttachment modalId={modalIdImage} file={details.attachment}/></td>
@@ -53,9 +53,9 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
       <>
         <tr className="hover">
             <th>{index+1}</th>
-            <td>{convert_to_date(details.startDate._seconds)}</td>
+            <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
-            <td>{details.Approved_FName} {details.Approved_LName}</td>
+            <td>{details.reportingFirstName} {details.reportingLastName}</td>
             <td><ModalWithdraw /></td>
         </tr>
       </>
@@ -63,41 +63,41 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
       <>
         <tr className="hover">
             <th>{index+1}</th>
-            <td>{convert_to_date(details.startDate._seconds)}</td>
+            <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
-            <td>{details.Approved_FName} {details.Approved_LName}</td>
+            <td>{details.reportingFirstName} {details.reportingLastName}</td>
         </tr>
       </>
       : activeSchedule == "Your Team Schedule" && isWFODate == true? 
       <>
         <tr className="hover">
             <th>{index+1}</th>
-            <td>{details.Staff_FName} {details.Staff_LName}</td>
+            <td>{details.staffFirstName} {details.staffLastName}</td>
         </tr>
       </>
       : activeSchedule == "Your Team Schedule" ? 
       <>
         <tr className="hover">
             <th>{index+1}</th>
-            <td>{details.Staff_FName} {details.Staff_LName}</td>
-            <td>{convert_to_date(details.startDate._seconds)}</td>
+            <td>{details.staffFirstName} {details.staffLastName}</td>
+            <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
-            <td>{details.Approved_FName} {details.Approved_LName}</td>
+            <td>{details.reportingFirstName} {details.reportingLastName}</td>
         </tr>
       </>
       : activeSchedule == "Your Overall Schedule" && isWFODate == true? 
       <>
         <tr className="hover">
             <th>{index+1}</th>
-            <td>{details.Staff_FName} {details.Staff_LName}</td>
+            <td>{details.staffFirstName} {details.staffLastName}</td>
         </tr>
       </>
       : activeSchedule == "Your Overall Schedule" && isPending == true? 
       <>
         <tr className="hover">
             <th>{index+1}</th>
-            <td>{details.Staff_FName} {details.Staff_LName}</td>
-            <td>{convert_to_date(details.startDate._seconds)}</td>
+            <td>{details.staffFirstName} {details.staffLastName}</td>
+            <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
         </tr>
       </>
@@ -105,35 +105,35 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
       <>
         <tr className="hover">
             <th>{index+1}</th>
-            <td>{details.Staff_FName} {details.Staff_LName}</td>
-            <td>{convert_to_date(details.startDate._seconds)}</td>
+            <td>{details.staffFirstName} {details.staffLastName}</td>
+            <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
-            <td>{details.Approved_FName} {details.Approved_LName}</td>
+            <td>{details.reportingFirstName} {details.reportingLastName}</td>
         </tr>
       </>
       : activeSchedule == "Your team in charge of" && isWFODate == true? 
       <>
         <tr className="hover">
             <th>{index+1}</th>
-            <td>{details.Staff_FName} {details.Staff_LName}</td>
+            <td>{details.staffFirstName} {details.staffLastName}</td>
         </tr>
       </>
       : activeSchedule == "Your team in charge of" && isPending == true? 
       <>
         <tr className="hover">
             <th>{index+1}</th>
-            <td>{details.Staff_FName} {details.Staff_LName}</td>
-            <td>{convert_to_date(details.startDate._seconds)}</td>
+            <td>{details.staffFirstName} {details.staffLastName}</td>
+            <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
             {details.attachment == null ? <td>No attachments</td>:
             <td><ModalAttachment modalId={modalIdImage} file={details.attachment}/></td>
               }
             <td><ModalApproveReject 
               modalId={modalId}
-              date={convert_to_date(details.startDate._seconds)} 
+              date={convert_to_date(details.date._seconds)} 
               type={details.time} 
-              StaffID={details.Staff_ID}
-              staffName={`${details.Staff_FName} ${details.Staff_LName}`} 
+              StaffID={details.staffId}
+              staffName={`${details.staffFirstName} ${details.staffLastName}`} 
               successfulApprovalRejection={successfulApprovalRejection}
               setSuccessfulApprovalRejection={setSuccessfulApprovalRejection}
               approveRejectWFH={approveRejectWFH} 
@@ -144,10 +144,10 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
       <>
         <tr className="hover">
             <th>{index+1}</th>
-            <td>{details.Staff_FName} {details.Staff_LName}</td>
-            <td>{convert_to_date(details.startDate._seconds)}</td>
+            <td>{details.staffFirstName} {details.staffLastName}</td>
+            <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
-            <td>{details.Approved_FName} {details.Approved_LName}</td>
+            <td>{details.reportingFirstName} {details.reportingLastName}</td>
         </tr>
       </>
       : "A"

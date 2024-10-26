@@ -39,18 +39,18 @@ const Stats = ({loading, data}) => {
             for (const d of data) {
                 if(d.status === "approved"){
                     if(tempWfhDay == null){
-                        tempWfhDay = convert_to_date(d.startDate._seconds);
+                        tempWfhDay = convert_to_date(d.date._seconds);
                         setGotWfh(true);
-                    } else if(tempWfhDay < convert_to_date(d.startDate._seconds)){
-                        tempWfhDay = convert_to_date(d.startDate._seconds);
+                    } else if(tempWfhDay < convert_to_date(d.date._seconds)){
+                        tempWfhDay = convert_to_date(d.date._seconds);
                     }
                     wfhDays++;
                 } else if (d.status === "leave"){
                     if(tempLeaveDay == null){
-                        tempLeaveDay = convert_to_date(d.startDate._seconds);
+                        tempLeaveDay = convert_to_date(d.date._seconds);
                         setGotLeave(true);
-                    } else if(tempLeaveDay < convert_to_date(d.startDate._seconds)){
-                        tempLeaveDay = convert_to_date(d.startDate._seconds);
+                    } else if(tempLeaveDay < convert_to_date(d.date._seconds)){
+                        tempLeaveDay = convert_to_date(d.date._seconds);
                     }
                     leaves++;
                 } else if (d.status === "pending"){

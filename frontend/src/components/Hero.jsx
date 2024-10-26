@@ -9,7 +9,7 @@ const Hero = ({loading, data}) => {
     useEffect(()=>{
         const data = JSON.parse(localStorage.getItem('state'));
         console.log(data)
-        setEmployeeName(data.Staff_FName);
+        setEmployeeName(data.staffFirstName);
     },[])
 
 

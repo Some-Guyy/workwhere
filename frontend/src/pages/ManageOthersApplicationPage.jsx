@@ -30,7 +30,7 @@ const ManageOthersApplicationPage = () => {
       const storedRole = JSON.parse(localStoreaged).Role;
       if (storedRole) {
         setUserRole(storedRole);
-        setLoginEmployeeId(JSON.parse(localStoreaged).Staff_ID);
+        setLoginEmployeeId(JSON.parse(localStoreaged).staffId);
       }
     }, []);
     
@@ -69,13 +69,13 @@ const ManageOthersApplicationPage = () => {
 
     // temp data
     const deta = [{
-        startDate: {
+        date: {
           _seconds: 1727326858
         },
         status: "approved",
         time: "AM",
-        Approved_FName: "Ryan",
-        Approved_LName: "Ng"
+        reportingFirstName: "Ryan",
+        reportingLastName: "Ng"
     }] 
 
     // function to fetch team in charge of schedule

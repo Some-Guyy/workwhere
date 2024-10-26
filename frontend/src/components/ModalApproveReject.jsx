@@ -31,13 +31,13 @@ const ModalApproveReject = ({modalId, date, type, staffName, StaffID, successful
       }
         
         const formData = {
-            Approved_ID: userDetails.Staff_ID,
-            Approved_FName: userDetails.Staff_FName,
-            Approved_LName: userDetails.Staff_LName,
-            Staff_ID: StaffID,
+            reportingId: userDetails.staffId,
+            reportingFirstName: userDetails.staffFirstName,
+            reportingLastName: userDetails.staffLastName,
+            staffId: StaffID,
             status: acceptOrReject,
             reason: acceptOrReject === "approved" ? "" : reason,
-            startDate: `${date.split("/")[2]}-${date.split("/")[1]}-${date.split("/")[0]}`
+            date: `${date.split("/")[2]}-${date.split("/")[1]}-${date.split("/")[0]}`
         }
             
         approveRejectWFH(formData);

@@ -61,7 +61,7 @@ const CalendarApplication = ({data, addWFH, successfulApplication, setSuccessful
         
         if(data != null){
         for (const d of data) {
-            let seconds = d.startDate._seconds;
+            let seconds = d.date._seconds;
             let newDate = convert_to_date_for_calander(seconds);
             
             if (d.status === "approved") {

@@ -38,7 +38,7 @@ const HomePage = ({}) => {
       if (storedRole) {
         setTeamOrOverall(storedRole);
         setUserRole(storedRole);
-        setLoginEmployeeId(JSON.parse(localStoreaged).Staff_ID);
+        setLoginEmployeeId(JSON.parse(localStoreaged).staffId);
         // console.log(localStoreaged);
       }
       else{
@@ -117,21 +117,21 @@ const HomePage = ({}) => {
 
     // temp data for testing
     const deta = [{
-      startDate: {
+      date: {
         _seconds: 1727326858
       },
       status: "approved",
       time: "AM",
-      Approved_FName: "Ryan",
-      Approved_LName: "Ng"
+      reportingFirstName: "Ryan",
+      reportingLastName: "Ng"
     }, {
-      startDate: {
+      date: {
         _seconds: 1727326858
       },
       status: "pending",
       time: "AM",
-      Approved_FName: "Ryan",
-      Approved_LName: "Ng"
+      reportingFirstName: "Ryan",
+      reportingLastName: "Ng"
     }] 
 
     // function to fetch personal schedule
