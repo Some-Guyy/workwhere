@@ -1,20 +1,20 @@
-Staff_ID,Staff_FName,Staff_LName,Dept,Position,Country,Email,Reporting_Manager,Role,Password
-130002,Jack,Sim,CEO,MD,Singapore,jack.sim@allinone.com.sg,130002,1,123
-140001,Derek,Tan,Sales,Director,Singapore,derek.tan@allinone.com.sg,130002,1,123
-150008,Eric,Loh,Solutioning,Director,Singapore,eric.loh@allinone.com.sg,130002,1,123
-151408,Philip,Lee,Engineering,Director,Singapore,philip.lee@allinone.com.sg,130002,1,123
-140894,Rahim,Khalid,Sales,Sales Manager,Singapore,rahim.khalid@allinone.com.sg,140001,3,123
-140002,Susan,Goh,Sales,Account Manager,Singapore,susan.goh@allinone.com.sg,140894,2,123
-160008,Sally,Loh,HR,Director,Singapore,sally.loh@allinone.com.sg,130002,1,123
-170166,David,Yap,Finance,Director,Singapore,david.yap@allinone.com.sg,130002,1,123
-180001,Ernst,Sim,Consultancy,Director,Singapore,ernst.sim@allinone.com.sg,130002,1,123
-210001,Peter,Yap,IT,Director,Singapore,peter.aypallinone.com.sg,130002,1,123
-190019,Heng,Sim,Solutioning,Developers,Singapore,heng.sim@allinone.com.sg,150008,2,123
-190059,Phuc,Le,Solutioning,Support Team,Singapore,phuc.le@allinone.com.sg,150008,2,123
-160075,James,Tan,HR,HR Team,Singapore,james.tan@allinone.com.sg,160008,1,123
-160306,An,Van,HR,LD Team,Singapore,an.van@allinone.com.sg,160008,2,123
-160318,Nurong,Chua,HR,Admin Team,Singapore,nurong.chua@allinone.com.sg,160008,2,123
-171009,Seng,Kesavan,Finance,Finance Manager,Singapore,seng.kesavan@allinone.com.sg,170166,3,123
-170208,Mani,Tan,Finance,Finance Executive,Singapore,mani.tan@allinone.com.sg,171009,2,123
-180012,Ji,Khung,Consultancy,Counsultant,Singapore,ji.khung@allinone.com.sg,180001,2,123
-210018,Manni,Devi,IT,IT Team,Singapore,manni.devi@allinone.com.sg,210001,2,123
+staffID,staffFirstName,staffLastName,dept,position,country,email,reportingId,role,password,handoverFrom
+130002,Jack,Sim,CEO,MD,Singapore,jack.sim@allinone.com.sg,130002,1,123,
+140001,Derek,Tan,Sales,Director,Singapore,derek.tan@allinone.com.sg,130002,1,123,
+150008,Eric,Loh,Solutioning,Director,Singapore,eric.loh@allinone.com.sg,130002,1,123,
+151408,Philip,Lee,Engineering,Director,Singapore,philip.lee@allinone.com.sg,130002,1,123,
+140894,Rahim,Khalid,Sales,Sales Manager,Singapore,rahim.khalid@allinone.com.sg,140001,3,123,
+140002,Susan,Goh,Sales,Account Manager,Singapore,susan.goh@allinone.com.sg,140894,2,123,
+160008,Sally,Loh,HR,Director,Singapore,sally.loh@allinone.com.sg,130002,1,123,
+170166,David,Yap,Finance,Director,Singapore,david.yap@allinone.com.sg,130002,1,123,
+180001,Ernst,Sim,Consultancy,Director,Singapore,ernst.sim@allinone.com.sg,130002,1,123,
+210001,Peter,Yap,IT,Director,Singapore,peter.aypallinone.com.sg,130002,1,123,
+190019,Heng,Sim,Solutioning,Developers,Singapore,heng.sim@allinone.com.sg,150008,2,123,
+190059,Phuc,Le,Solutioning,Support Team,Singapore,phuc.le@allinone.com.sg,150008,2,123,
+160075,James,Tan,HR,HR Team,Singapore,james.tan@allinone.com.sg,160008,1,123,
+160306,An,Van,HR,LD Team,Singapore,an.van@allinone.com.sg,160008,2,123,
+160318,Nurong,Chua,HR,Admin Team,Singapore,nurong.chua@allinone.com.sg,160008,2,123,
+171009,Seng,Kesavan,Finance,Finance Manager,Singapore,seng.kesavan@allinone.com.sg,170166,3,123,
+170208,Mani,Tan,Finance,Finance Executive,Singapore,mani.tan@allinone.com.sg,171009,2,123,
+180012,Ji,Khung,Consultancy,Counsultant,Singapore,ji.khung@allinone.com.sg,180001,2,123,
+210018,Manni,Devi,IT,IT Team,Singapore,manni.devi@allinone.com.sg,210001,2,123,
