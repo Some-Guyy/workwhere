@@ -20,7 +20,7 @@ const AccordionTeamInChargeOf = ({loading, data, pendingData, successfulApproval
                 // console.log(d);
                 if(d.status == "approved"){
                     wfhData.push(d);
-                    nameOfWFH.push(d.Staff_ID);
+                    nameOfWFH.push(d.staffId);
                 }else{
                     continue;
                 }
@@ -30,7 +30,7 @@ const AccordionTeamInChargeOf = ({loading, data, pendingData, successfulApproval
             headCount = data.inChargeOf.length
             for (const d of data.inChargeOf) {
                 // console.log(d);
-                if(!nameOfWFH.includes(d.Staff_ID)){
+                if(!nameOfWFH.includes(d.staffId)){
                     nameOfOtherStaffs.push(d);
                 }else{
                     continue;

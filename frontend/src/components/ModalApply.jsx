@@ -88,9 +88,9 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
         event.preventDefault();
         // Process formData here (send it to an API, or display it, etc.)
         const formData = {
-            Staff_ID: userDetails.Staff_ID,
-            Staff_FName: userDetails.Staff_FName, 
-            Staff_LName: userDetails.Staff_LName, 
+            staffId: userDetails.staffId,
+            staffFirstName: userDetails.staffFirstName, 
+            staffLastName: userDetails.staffLastName, 
             dates
         }
         console.log(formData);    

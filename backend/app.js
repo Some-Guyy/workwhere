@@ -8,11 +8,11 @@ admin.initializeApp({
 })
 const db = admin.firestore()
 
-let collectionEmployee = "mock_employee"
-let collectionWa = "mock_working_arrangements"
+let collectionEmployee = "mockEmployees"
+let collectionWa = "mockWorkingArrangements"
 if (process.env.NODE_ENV === 'test') {
-    collectionEmployee = "test_employee"
-    collectionWa = "test_working_arrangements"
+    collectionEmployee = "testEmployees"
+    collectionWa = "testWorkingArrangements"
 }
 
 const cors = require("cors")
@@ -26,8 +26,8 @@ app.use(express.json())
 
 /*
  note to self:
-    id in employee is Staff_ID
-    id in work_arrangement is staff_ID (fix if possible)
+    id in employee is staffId
+    id in work_arrangement is staffId (fix if possible)
 */
 
 //batch fetching
@@ -41,9 +41,9 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, called
         for (let i = 0; i < ids.length; i += batchSize) {
             const batch = ids.slice(i, i + batchSize)
             const snapshot = await db.collection(collectionWa)
-              .where('Staff_ID', 'in', batch)
-              .where("startDate", "<=", startDate)
-              .where("endDate", ">=", endDate)
+              .where('staffId', 'in', batch)
+              .where("date", "<=", startDate)
+              .where("date", ">=", endDate)
               .where("status", "==", "approved")
               .get()
       
@@ -57,9 +57,9 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, called
         for (let i = 0; i < ids.length; i += batchSize) {
             const batch = ids.slice(i, i + batchSize)
             const snapshot = await db.collection(collectionWa)
-              .where('Staff_ID', 'in', batch)
-              .where("startDate", "<=", startDate)
-              .where("endDate", ">=", endDate)
+              .where('staffId', 'in', batch)
+              .where("date", "<=", startDate)
+              .where("date", ">=", endDate)
               .where("status", "!=", "rejected")
               .get()
       
@@ -73,7 +73,7 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, called
         for (let i = 0; i < ids.length; i += batchSize) {
             const batch = ids.slice(i, i + batchSize)
             const snapshot = await db.collection(collectionWa)
-              .where('Staff_ID', 'in', batch)
+              .where('staffId', 'in', batch)
               .where("status", "==", "pending")
               .get()
       
@@ -91,7 +91,7 @@ app.get("/working-arrangements/:employeeid", async (req, res) => {
     try {
         const { employeeid } = req.params
         const snapshot = await db.collection(collectionWa)
-        .where('Staff_ID', '==', employeeid)
+        .where('staffId', '==', employeeid)
         .get()
 
         if (snapshot.empty) {
@@ -123,14 +123,14 @@ app.get("/working-arrangements/department/:department/:date", async (req, res) =
 
         // find department teammates
         const snapshot = await db.collection(collectionEmployee)
-        .where("Dept", "==", department)
+        .where("dept", "==", department)
         .get()
 
         // create list based on these teammates
         const sameDepartmentID = []
         const sameDepart = []
         snapshot.forEach((doc) => {
-            sameDepartmentID.push(doc.data().Staff_ID)
+            sameDepartmentID.push(doc.data().staffId)
             sameDepart.push(doc.data())
         })
 
@@ -157,14 +157,14 @@ app.get("/working-arrangements/manager/:managerId/:date", async (req, res) => {
 
         // find employees you're in charge of
         const snapshot = await db.collection(collectionEmployee)
-        .where("Reporting_Manager", "==", managerId)
+        .where("reportingId", "==", managerId)
         .get()
 
         // create list based on these employees
         const inChargeOf = []
         const inChargeOfID = []
         snapshot.forEach((doc) => {
-            inChargeOfID.push(doc.data().Staff_ID)
+            inChargeOfID.push(doc.data().staffId)
             inChargeOf.push(doc.data())
         })
 
@@ -189,29 +189,29 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
         endOfDay.setHours(23, 59, 59, 999)
 
         const employeeSnapshot = await db.collection(collectionEmployee)
-        .where('Staff_ID', '==', employeeId)
+        .where('staffId', '==', employeeId)
         .limit(1)
         .get()
 
         // if employee cannot be found
         if (employeeSnapshot.empty) {
-            return res.status(404).json({ error: `Employee with Staff_ID ${employeeId} not found.` })
+            return res.status(404).json({ error: `Employee with staffId ${employeeId} not found.` })
         }
 
         // reporting manager info
         const employeeData = employeeSnapshot.docs[0].data()
-        const position = employeeData.Position
+        const position = employeeData.position
 
         // then call db again to find those same reporting managers
         const teamSnapshot = await db.collection(collectionEmployee)
-        .where('Position', '==', position)
+        .where('position', '==', position)
         .get()
 
         // get list of team members id
         const teamMemberIds = []
         const teamMembers = []
         teamSnapshot.forEach((doc) => {
-            teamMemberIds.push(doc.data().Staff_ID)
+            teamMemberIds.push(doc.data().staffId)
             teamMembers.push(doc.data())
         })
 
@@ -235,7 +235,7 @@ app.post('/login', async (req, res) => {
     try {
         // find user from user db
         const snapshot = await db.collection(collectionEmployee)
-            .where('Email', '==', emailAddress.toLowerCase())
+            .where('email', '==', emailAddress.toLowerCase())
             .limit(1)
             .get()
 
@@ -250,7 +250,7 @@ app.post('/login', async (req, res) => {
         });
 
         //check if password matches
-        if (staffDetails.Password !== password) {
+        if (staffDetails.password !== password) {
             return res.status(401).json({ message: 'Invalid email address or password' })
         }
 
@@ -258,13 +258,13 @@ app.post('/login', async (req, res) => {
         res.json({
             message: 'Login successful',
             user: {
-                Staff_ID: staffDetails.Staff_ID,
-                Staff_FName: staffDetails.Staff_FName,
-                Staff_LName: staffDetails.Staff_LName,
-                Dept: staffDetails.Dept,
-                Position: staffDetails.Position,
-                Role: staffDetails.Role,
-                Reporting_Manager: staffDetails.Reporting_Manager
+                staffId: staffDetails.staffId,
+                staffFirstName: staffDetails.staffFirstName,
+                staffLastName: staffDetails.staffLastName,
+                dept: staffDetails.dept,
+                position: staffDetails.position,
+                role: staffDetails.role,
+                reportingId: staffDetails.reportingId
             },
         });
 
@@ -276,29 +276,28 @@ app.post('/login', async (req, res) => {
 //create new working arrangement 
 app.post('/request', async (req, res) => {
     try {
-        const { Staff_ID, Staff_FName, Staff_LName, dates } = req.body;
+        const { staffId, staffFirstName, staffLastName, dates } = req.body;
         // create a working arrangement for each date
         const batch = db.batch()
 
         // for automatic approval (the big boss jack sigma)
-        if (Staff_ID === "130002") {
+        if (staffId === "130002") {
             dates.forEach(dateObject => {
                 const { date, time, attachment} = dateObject
             
                 const dateValue = new Date(date); 
                 const newDocRef = db.collection(collectionWa).doc()
                 batch.set(newDocRef, {
-                    Staff_ID: Staff_ID,
-                    Staff_FName: Staff_FName,
-                    Staff_LName: Staff_LName,
+                    staffId: staffId,
+                    staffFirstName: staffFirstName,
+                    staffLastName: staffLastName,
                     reason: null,  
-                    startDate: firestore.Timestamp.fromDate(dateValue),
-                    endDate: firestore.Timestamp.fromDate(dateValue),
+                    date: firestore.Timestamp.fromDate(dateValue),
                     requestCreated: firestore.Timestamp.now(),
                     status: 'approved',
-                    Approved_ID: Staff_ID, 
-                    Approved_FName: Staff_FName, 
-                    Approved_LName: Staff_LName,
+                    reportingId: staffId, 
+                    reportingFirstName: staffFirstName, 
+                    reportingLastName: staffLastName,
                     time: time,
                     attachment: attachment == null ? null : attachment
                 })
@@ -311,17 +310,16 @@ app.post('/request', async (req, res) => {
                 const dateValue = new Date(date) 
                 const newDocRef = db.collection(collectionWa).doc()
                 batch.set(newDocRef, {
-                    Staff_ID: Staff_ID,
-                    Staff_FName: Staff_FName,
-                    Staff_LName: Staff_LName,
+                    staffId: staffId,
+                    staffFirstName: staffFirstName,
+                    staffLastName: staffLastName,
                     reason: null,  
-                    startDate: firestore.Timestamp.fromDate(dateValue),
-                    endDate: firestore.Timestamp.fromDate(dateValue),
+                    date: firestore.Timestamp.fromDate(dateValue),
                     requestCreated: firestore.Timestamp.now(),
                     status: 'pending',
-                    Approved_ID: null, 
-                    Approved_FName: null, 
-                    Approved_LName: null,
+                    reportingId: null, 
+                    reportingFirstName: null, 
+                    reportingLastName: null,
                     time: time,
                     attachment: attachment == null ? null : attachment
                 })
@@ -343,18 +341,18 @@ app.post('/request', async (req, res) => {
 app.put("/working-arrangements", async (req, res) => {
 
     try {
-        const { Staff_ID, startDate} = req.body
+        const { staffId, date} = req.body
 
-        const targetDate = new Date(startDate)
-        const endOfDay = new Date(startDate)
+        const targetDate = new Date(date)
+        const endOfDay = new Date(date)
     
         targetDate.setHours(0, 0, 0, 0)
         endOfDay.setHours(23, 59, 59, 999)
 
         const snapshot = await db.collection(collectionWa)
-        .where('Staff_ID', '==', Staff_ID)
-        .where("startDate", "<=", endOfDay)
-        .where("endDate", ">=", targetDate)
+        .where('staffId', '==', staffId)
+        .where("date", "<=", endOfDay)
+        .where("date", ">=", targetDate)
         .where("status", "==", "pending")
         .get()
 
@@ -379,14 +377,14 @@ app.get("/working-arrangements/supervise/:managerId", async (req, res) => {
 
         // find employees you're in charge of
         const snapshot = await db.collection(collectionEmployee)
-        .where("Reporting_Manager", "==", managerId)
+        .where("reportingId", "==", managerId)
         .get()
 
         // create list based on these employees
         const inChargeOf = []
         const inChargeOfID = []
         snapshot.forEach((doc) => {
-            inChargeOfID.push(doc.data().Staff_ID)
+            inChargeOfID.push(doc.data().staffId)
             inChargeOf.push(doc.data())
         })
 
@@ -404,19 +402,19 @@ app.get("/working-arrangements/supervise/:managerId", async (req, res) => {
 app.put("/working-arrangements/manage", async (req, res) => {
 
     try {
-        const { Approved_ID, Approved_FName, Approved_LName, Staff_ID, startDate, status, reason} = req.body
+        const { reportingId, reportingFirstName, reportingLastName, staffId, date, status, reason} = req.body
     
-        const targetDate = new Date(startDate)
-        const endOfDay = new Date(startDate)
+        const targetDate = new Date(date)
+        const endOfDay = new Date(date)
     
         targetDate.setHours(0, 0, 0, 0)
         endOfDay.setHours(23, 59, 59, 999)
     
         //return that specific working arrangement and ensure its pending
         const snapshot = await db.collection(collectionWa)
-        .where("Staff_ID", "==", Staff_ID)
-        .where("startDate", "<=", endOfDay)
-        .where("endDate", ">=", targetDate)
+        .where("staffId", "==", staffId)
+        .where("date", "<=", endOfDay)
+        .where("date", ">=", targetDate)
         .where("status", "==", "pending")
         .get()
     
@@ -428,9 +426,9 @@ app.put("/working-arrangements/manage", async (req, res) => {
         const docRef = db.collection(collectionWa).doc(doc.id)
     
         await docRef.update({
-            Approved_ID,
-            Approved_FName,
-            Approved_LName,
+            reportingId,
+            reportingFirstName,
+            reportingLastName,
             reason,
             status })
     

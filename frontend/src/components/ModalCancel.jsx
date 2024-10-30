@@ -36,8 +36,8 @@ const ModalCancel = ({date, type, successfulCancellation, setSuccessfulCancellat
         event.preventDefault();
         // Process formData here (send it to an API, or display it, etc.)
         const formData = {
-            Staff_ID: userDetails.Staff_ID,
-            startDate: `${date.split("/")[2]}-${date.split("/")[1]}-${date.split("/")[0]}`
+            staffId: userDetails.staffId,
+            date: `${date.split("/")[2]}-${date.split("/")[1]}-${date.split("/")[0]}`
         }
             
         cancelWFH(formData);

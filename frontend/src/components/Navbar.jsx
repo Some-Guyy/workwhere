@@ -14,8 +14,8 @@ const Navbar = () => {
   useEffect(()=>{
       const data = JSON.parse(localStorage.getItem('state'));
       // console.log(data)
-      setEmployeeName(data.Staff_FName);
-      setEmployeeRole(data.Role)
+      setEmployeeName(data.staffFirstName);
+      setEmployeeRole(data.role)
       setEmployeePosition(data.Position)
   },[])
 

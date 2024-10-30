@@ -29,7 +29,7 @@ const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnAppl
                 // console.log(d);
                 if(d.status == "approved"){
                     wfhData.push(d);
-                    nameOfWFH.push(d.Staff_ID);
+                    nameOfWFH.push(d.staffId);
                 }else if (d.status == "pending"){
                     pendingData.push(d);
                 }else{
@@ -41,7 +41,7 @@ const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnAppl
             // headCount = data.teamMembers.length
             for (const d of data.teamMembers) {
                 // console.log(d);
-                if(!nameOfWFH.includes(d.Staff_ID)){
+                if(!nameOfWFH.includes(d.staffId)){
                     nameOfOtherStaffs.push(d);
                 }else{
                     continue;
@@ -53,7 +53,7 @@ const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnAppl
                 // console.log(d);
                 if(d.status == "approved"){
                     wfhData.push(d);
-                    nameOfWFH.push(d.Staff_ID);
+                    nameOfWFH.push(d.staffId);
                 }else if (d.status == "pending"){
                     pendingData.push(d);
                 }else{
@@ -65,7 +65,7 @@ const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnAppl
             headCount = data.sameDepart.length
             for (const d of data.sameDepart) {
                 // console.log(d);
-                if(!nameOfWFH.includes(d.Staff_ID)){
+                if(!nameOfWFH.includes(d.staffId)){
                     nameOfOtherStaffs.push(d);
                 }else{
                     continue;
