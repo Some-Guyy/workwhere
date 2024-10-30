@@ -1,0 +1,5 @@
+staffId,staffFirstName,staffLastName,reason,date,requestCreated,status,reportingId,reportingFirstName,reportingLastName,time,attachment
+130002,Jack,Sim,,22/11/2024,1/11/2024,approved,130002,Jack,Sim,full day,
+140001,Derek,Tan,,22/11/2024,1/11/2024,rejected,130002,Jack,Sim,full day,
+180001,Ernst,Sim,,22/11/2024,1/11/2024,pending,130002,Jack,Sim,AM,
+190019,Heng,Sim,,22/11/2024,1/11/2024,approved,150008,Eric,Loh,PM,
