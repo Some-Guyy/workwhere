@@ -282,7 +282,6 @@ app.put("/withdraw", async (req, res) => {
         await docRef.update({ status: "pendingWithdrawal" })
 
         //after updating doc, now we send a notification to reporting manager to update him
-
         const notificationDoc = {
             staffId: reportingId,
             arrangementDate: new Date(date),
@@ -432,6 +431,57 @@ app.put("/working-arrangements/manage", async (req, res) => {
             reportingLastName,
             reason,
             status })
+    
+        return res.status(200).json({ message: "Working arrangement successfully updated." })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ message: "Something happened when updating the working arrangements", error: `Internal server error`})
+    }
+
+})
+
+//manager to withdraw approved working arrangements
+app.put("/working-arrangements/withdraw", async (req, res) => {
+
+    try {
+        const { reportingId, reportingFirstName, reportingLastName, staffId, date} = req.body
+    
+        const targetDate = new Date(date)
+        const endOfDay = new Date(date)
+    
+        targetDate.setHours(0, 0, 0, 0)
+        endOfDay.setHours(23, 59, 59, 999)
+    
+        //return that specific working arrangement and ensure its approved
+        const snapshot = await db.collection(collectionWa)
+        .where("staffId", "==", staffId)
+        .where("date", "<=", endOfDay)
+        .where("date", ">=", targetDate)
+        .where("status", "==", "approved")
+        .get()
+    
+        if (snapshot.empty) {
+            return res.status(404).json({ message: "No matching working arrangement found" })
+        }
+    
+        const doc = snapshot.docs[0]
+        const docRef = db.collection(collectionWa).doc(doc.id)
+    
+        await docRef.update({ status: "withdrawn" })
+
+        //after updating doc, now we send a notification to subordinate to update them
+        const notificationDoc = {
+            staffId: staffId,
+            arrangementDate: new Date(date),
+            arrangementStatus: "withdrawn",
+            status: "unseen",
+            reason: doc.data().reason,
+            actorId: reportingId,
+            actorFirstName: reportingFirstName,
+            actorLastName: reportingLastName
+        }
+
+        await db.collection("notifications").add(notificationDoc)
     
         return res.status(200).json({ message: "Working arrangement successfully updated." })
     } catch (err) {

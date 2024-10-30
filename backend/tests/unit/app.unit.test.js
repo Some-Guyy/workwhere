@@ -1424,7 +1424,7 @@ describe('PUT /cancel', () => {
       .send()
 
     expect(response.status).toBe(500) // Expect 500 Internal Server Error
-    expect(response.body).toEqual({ message: "Something happened when creating your working arrangements", error: `Internal server error ` })
+    expect(response.body).toEqual({ message: "Something happened when cancelling your working arrangements", error: `Internal server error ` })
 
   })
 })
