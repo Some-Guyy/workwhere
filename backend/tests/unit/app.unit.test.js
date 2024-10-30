@@ -1354,7 +1354,7 @@ describe('GET /working-arrangements/supervise/:managerId', () => {
   })
 })
 
-describe('PUT /working-arrangements', () => {
+describe('PUT /cancel', () => {
   test('cancel existing pending working arrangement', async () => {
     // Mock Firestore get method to return a snapshot with a matching document
     const mockGet = db.collection().get;
@@ -1374,7 +1374,7 @@ describe('PUT /working-arrangements', () => {
 
     // Simulate a PUT request with valid data
     const response = await request(app)
-      .put('/working-arrangements')
+      .put('/cancel')
       .send({
         staffId: "130002",
         date: {
@@ -1401,7 +1401,7 @@ describe('PUT /working-arrangements', () => {
     })
 
     const response = await request(app)
-      .put('/working-arrangements')
+      .put('/cancel')
       .send({
         staffId: "130002",
         date: {
@@ -1420,7 +1420,7 @@ describe('PUT /working-arrangements', () => {
     mockGet.mockRejectedValueOnce(new Error('Firestore error'))
 
     const response = await request(app)
-      .put('/working-arrangements/')
+      .put('/cancel/')
       .send()
 
     expect(response.status).toBe(500) // Expect 500 Internal Server Error

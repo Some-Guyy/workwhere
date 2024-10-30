@@ -849,7 +849,7 @@ describe('PUT /working-arrangements', () => {
     test('cancel existing pending working arrangement', async () => {
         // Cancel the only existing pending working arrangement of Employee A, use testDate
         const response = await request(app)
-            .put('/working-arrangements')
+            .put('/cancel')
             .send({
                 staffId: "140001",
                 date: testDate
@@ -863,7 +863,7 @@ describe('PUT /working-arrangements', () => {
     test('cancel a non-existent pending working arrangement', async () => {
         // Try to cancel that same pending working arrangement above again
         const response = await request(app)
-            .put('/working-arrangements')
+            .put('/cancel')
             .send({
                 staffId: "140001",
                 date: testDate
@@ -877,7 +877,7 @@ describe('PUT /working-arrangements', () => {
     test('cancel a non-existent employee\'s pending working arrangement', async () => {
         // Cancel using employee id 999999 as that employee does not exist
         const response = await request(app)
-            .put('/working-arrangements')
+            .put('/cancel')
             .send({
                 staffId: "999999",
                 date: testDate,
