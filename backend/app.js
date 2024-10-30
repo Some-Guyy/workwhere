@@ -249,7 +249,55 @@ app.put("/cancel", async (req, res) => {
         await docRef.update({ status: "cancelled" })
         return res.status(200).json({ message: "Working arrangement successfully cancelled." })
     } catch (err) {
-        return res.status(500).json({ message: "Something happened when creating your working arrangements", error: `Internal server error `})
+        return res.status(500).json({ message: "Something happened when cancelling your working arrangements", error: `Internal server error `})
+    }
+})
+
+//withdraw own working arrangement
+app.put("/withdraw", async (req, res) => {
+
+    try {
+        const { staffId, staffFirstName, staffLastName, reportingId, date} = req.body
+
+        const targetDate = new Date(date)
+        const endOfDay = new Date(date)
+    
+        targetDate.setHours(0, 0, 0, 0)
+        endOfDay.setHours(23, 59, 59, 999)
+
+        const snapshot = await db.collection(collectionWa)
+        .where('staffId', '==', staffId)
+        .where("date", "<=", endOfDay)
+        .where("date", ">=", targetDate)
+        .where("status", "==", "approved")
+        .get()
+
+        if (snapshot.empty) {
+            return res.status(404).json({ message: "No matching working arrangement found" })
+        }
+    
+        const doc = snapshot.docs[0]
+        const docRef = db.collection(collectionWa).doc(doc.id)
+    
+        await docRef.update({ status: "pendingWithdrawal" })
+
+        //after updating doc, now we send a notification to reporting manager to update him
+
+        const notificationDoc = {
+            staffId: reportingId,
+            arrangementDate: new Date(date),
+            arrangementStatus: "pendingWithdrawal",
+            status: "unseen",
+            reason: doc.data().reason,
+            actorId: staffId,
+            actorFirstName: staffFirstName,
+            actorLastName: staffLastName
+        }
+
+        await db.collection("notifications").add(notificationDoc)
+        return res.status(200).json({ message: "Working arrangement is now pending for withdrawal." })
+    } catch (err) {
+        return res.status(500).json({ message: "Something happened when withdrawing your working arrangements", error: `Internal server error `})
     }
 })
 
