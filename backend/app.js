@@ -24,12 +24,7 @@ app.use(express.json({ limit: '10mb' })); // Body parser after CORS
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(express.json())
 
-/*
- note to self:
-    id in employee is staffId
-    id in work_arrangement is staffId (fix if possible)
-*/
-
+// ------------------------ HELPER FUNCTIONS ------------------------------
 //batch fetching
 const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, calledFrom) => {
     const workingArrangements = []
@@ -86,6 +81,7 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, called
     return workingArrangements
 }
 
+// ------------------------ ENDPOINTS FOR PERSONAL ------------------------
 //get specific employee for working arrangements (personal work schedule)
 app.get("/working-arrangements/:employeeid", async (req, res) => {
     try {
@@ -110,75 +106,7 @@ app.get("/working-arrangements/:employeeid", async (req, res) => {
     }
 })
 
-//get all employee working arrangements based on department and specified date //approved only
-app.get("/working-arrangements/department/:department/:date", async (req, res) => {
-    try {
-        const { department, date } = req.params
-
-        const targetDate = new Date(date)
-        const endOfDay = new Date(targetDate)
-
-        targetDate.setHours(0, 0, 0, 0)
-        endOfDay.setHours(23, 59, 59, 999)
-
-        // find department teammates
-        const snapshot = await db.collection(collectionEmployee)
-        .where("dept", "==", department)
-        .get()
-
-        // create list based on these teammates
-        const sameDepartmentID = []
-        const sameDepart = []
-        snapshot.forEach((doc) => {
-            sameDepartmentID.push(doc.data().staffId)
-            sameDepart.push(doc.data())
-        })
-
-        // fetch working arrangements based on these department mates
-        const workingArrangements = await fetchWorkingArrangementsInBatches(sameDepartmentID, endOfDay, targetDate, "department")
-
-        res.json({workingArrangements, sameDepart})
-
-    } catch (err) {
-        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error`})
-    }
-})
-
-//get team in charge working arrangements based on specified date //approved and pending
-app.get("/working-arrangements/manager/:managerId/:date", async (req, res) => {
-    try {
-        const { managerId, date } = req.params
-
-        const targetDate = new Date(date)
-        const endOfDay = new Date(targetDate)
-
-        targetDate.setHours(0, 0, 0, 0)
-        endOfDay.setHours(23, 59, 59, 999)
-
-        // find employees you're in charge of
-        const snapshot = await db.collection(collectionEmployee)
-        .where("reportingId", "==", managerId)
-        .get()
-
-        // create list based on these employees
-        const inChargeOf = []
-        const inChargeOfID = []
-        snapshot.forEach((doc) => {
-            inChargeOfID.push(doc.data().staffId)
-            inChargeOf.push(doc.data())
-        })
-
-        // fetch working arrangements based on these department mates
-        const workingArrangements = await fetchWorkingArrangementsInBatches(inChargeOfID, endOfDay, targetDate, "manager")
-
-        res.json({workingArrangements, inChargeOf})
-
-    } catch (err) {
-        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error`})
-    }
-})
-
-//get all team members working arrangement based on specified date //approved
+//get all team members working arrangement based on specified date || returns approved working arrangements
 app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
     try {
         const { employeeId, date } = req.params
@@ -225,51 +153,6 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
     } catch (err) {
         
         res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error`})
-    }
-})
-
-// login
-app.post('/login', async (req, res) => {
-    const { emailAddress, password } = req.body
-
-    try {
-        // find user from user db
-        const snapshot = await db.collection(collectionEmployee)
-            .where('email', '==', emailAddress.toLowerCase())
-            .limit(1)
-            .get()
-
-        // if email address is wrong, return error message
-        if (snapshot.empty) {
-            return res.status(401).json({ message: 'Invalid email address or password' })
-        }
-
-        let staffDetails = null
-        snapshot.forEach(doc => {
-            staffDetails = doc.data()
-        });
-
-        //check if password matches
-        if (staffDetails.password !== password) {
-            return res.status(401).json({ message: 'Invalid email address or password' })
-        }
-
-        // return the data back
-        res.json({
-            message: 'Login successful',
-            user: {
-                staffId: staffDetails.staffId,
-                staffFirstName: staffDetails.staffFirstName,
-                staffLastName: staffDetails.staffLastName,
-                dept: staffDetails.dept,
-                position: staffDetails.position,
-                role: staffDetails.role,
-                reportingId: staffDetails.reportingId
-            },
-        });
-
-    } catch (err) {
-        res.status(500).json({ message: "Something went wrong trying to login", error: `Internal server error` });
     }
 })
 
@@ -338,7 +221,7 @@ app.post('/request', async (req, res) => {
 })
 
 //cancel own working arrangement
-app.put("/working-arrangements", async (req, res) => {
+app.put("/cancel", async (req, res) => {
 
     try {
         const { staffId, date} = req.body
@@ -366,11 +249,128 @@ app.put("/working-arrangements", async (req, res) => {
         await docRef.update({ status: "cancelled" })
         return res.status(200).json({ message: "Working arrangement successfully cancelled." })
     } catch (err) {
-        return res.status(500).json({ message: "Something happened when creating your working arrangements", error: `Internal server error `})
+        return res.status(500).json({ message: "Something happened when cancelling your working arrangements", error: `Internal server error `})
     }
 })
 
-//get team in charge working arrangements //pending
+//withdraw own working arrangement
+app.put("/withdraw", async (req, res) => {
+
+    try {
+        const { staffId, staffFirstName, staffLastName, reportingId, date} = req.body
+
+        const targetDate = new Date(date)
+        const endOfDay = new Date(date)
+    
+        targetDate.setHours(0, 0, 0, 0)
+        endOfDay.setHours(23, 59, 59, 999)
+
+        const snapshot = await db.collection(collectionWa)
+        .where('staffId', '==', staffId)
+        .where("date", "<=", endOfDay)
+        .where("date", ">=", targetDate)
+        .where("status", "==", "approved")
+        .get()
+
+        if (snapshot.empty) {
+            return res.status(404).json({ message: "No matching working arrangement found" })
+        }
+    
+        const doc = snapshot.docs[0]
+        const docRef = db.collection(collectionWa).doc(doc.id)
+    
+        await docRef.update({ status: "pendingWithdrawal" })
+
+        //after updating doc, now we send a notification to reporting manager to update him
+        const notificationDoc = {
+            staffId: reportingId,
+            arrangementDate: new Date(date),
+            arrangementStatus: "pendingWithdrawal",
+            status: "unseen",
+            reason: doc.data().reason,
+            actorId: staffId,
+            actorFirstName: staffFirstName,
+            actorLastName: staffLastName
+        }
+
+        await db.collection("notifications").add(notificationDoc)
+        return res.status(200).json({ message: "Working arrangement is now pending for withdrawal." })
+    } catch (err) {
+        return res.status(500).json({ message: "Something happened when withdrawing your working arrangements", error: `Internal server error `})
+    }
+})
+
+// ------------------------ ENDPOINTS FOR HR & DIRECTOR -------------------
+//get all employee working arrangements based on department and specified date || returns approved working arrangements
+app.get("/working-arrangements/department/:department/:date", async (req, res) => {
+    try {
+        const { department, date } = req.params
+
+        const targetDate = new Date(date)
+        const endOfDay = new Date(targetDate)
+
+        targetDate.setHours(0, 0, 0, 0)
+        endOfDay.setHours(23, 59, 59, 999)
+
+        // find department teammates
+        const snapshot = await db.collection(collectionEmployee)
+        .where("dept", "==", department)
+        .get()
+
+        // create list based on these teammates
+        const sameDepartmentID = []
+        const sameDepart = []
+        snapshot.forEach((doc) => {
+            sameDepartmentID.push(doc.data().staffId)
+            sameDepart.push(doc.data())
+        })
+
+        // fetch working arrangements based on these department mates
+        const workingArrangements = await fetchWorkingArrangementsInBatches(sameDepartmentID, endOfDay, targetDate, "department")
+
+        res.json({workingArrangements, sameDepart})
+
+    } catch (err) {
+        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error`})
+    }
+})
+
+// ------------------------ ENDPOINTS FOR MANAGER ------------------------
+//get team in charge working arrangements based on specified date || returns approved & pending working arrangements
+app.get("/working-arrangements/manager/:managerId/:date", async (req, res) => {
+    try {
+        const { managerId, date } = req.params
+
+        const targetDate = new Date(date)
+        const endOfDay = new Date(targetDate)
+
+        targetDate.setHours(0, 0, 0, 0)
+        endOfDay.setHours(23, 59, 59, 999)
+
+        // find employees you're in charge of
+        const snapshot = await db.collection(collectionEmployee)
+        .where("reportingId", "==", managerId)
+        .get()
+
+        // create list based on these employees
+        const inChargeOf = []
+        const inChargeOfID = []
+        snapshot.forEach((doc) => {
+            inChargeOfID.push(doc.data().staffId)
+            inChargeOf.push(doc.data())
+        })
+
+        // fetch working arrangements based on these department mates
+        const workingArrangements = await fetchWorkingArrangementsInBatches(inChargeOfID, endOfDay, targetDate, "manager")
+
+        res.json({workingArrangements, inChargeOf})
+
+    } catch (err) {
+        res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error`})
+    }
+})
+
+//get team in charge working arrangements || returns pending working arrangements
 app.get("/working-arrangements/supervise/:managerId", async (req, res) => {
     try {
         const { managerId } = req.params
@@ -440,7 +440,104 @@ app.put("/working-arrangements/manage", async (req, res) => {
 
 })
 
+//manager to withdraw approved working arrangements
+app.put("/working-arrangements/withdraw", async (req, res) => {
 
+    try {
+        const { reportingId, reportingFirstName, reportingLastName, staffId, date} = req.body
+    
+        const targetDate = new Date(date)
+        const endOfDay = new Date(date)
+    
+        targetDate.setHours(0, 0, 0, 0)
+        endOfDay.setHours(23, 59, 59, 999)
+    
+        //return that specific working arrangement and ensure its approved
+        const snapshot = await db.collection(collectionWa)
+        .where("staffId", "==", staffId)
+        .where("date", "<=", endOfDay)
+        .where("date", ">=", targetDate)
+        .where("status", "==", "approved")
+        .get()
+    
+        if (snapshot.empty) {
+            return res.status(404).json({ message: "No matching working arrangement found" })
+        }
+    
+        const doc = snapshot.docs[0]
+        const docRef = db.collection(collectionWa).doc(doc.id)
+    
+        await docRef.update({ status: "withdrawn" })
+
+        //after updating doc, now we send a notification to subordinate to update them
+        const notificationDoc = {
+            staffId: staffId,
+            arrangementDate: new Date(date),
+            arrangementStatus: "withdrawn",
+            status: "unseen",
+            reason: doc.data().reason,
+            actorId: reportingId,
+            actorFirstName: reportingFirstName,
+            actorLastName: reportingLastName
+        }
+
+        await db.collection("notifications").add(notificationDoc)
+    
+        return res.status(200).json({ message: "Working arrangement successfully updated." })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ message: "Something happened when updating the working arrangements", error: `Internal server error`})
+    }
+
+})
+
+// ------------------------ ENDPOINTS FOR ALL ----------------------------
+// login
+app.post('/login', async (req, res) => {
+    const { emailAddress, password } = req.body
+
+    try {
+        // find user from user db
+        const snapshot = await db.collection(collectionEmployee)
+            .where('email', '==', emailAddress.toLowerCase())
+            .limit(1)
+            .get()
+
+        // if email address is wrong, return error message
+        if (snapshot.empty) {
+            return res.status(401).json({ message: 'Invalid email address or password' })
+        }
+
+        let staffDetails = null
+        snapshot.forEach(doc => {
+            staffDetails = doc.data()
+        });
+
+        //check if password matches
+        if (staffDetails.password !== password) {
+            return res.status(401).json({ message: 'Invalid email address or password' })
+        }
+
+        // return the data back
+        res.json({
+            message: 'Login successful',
+            user: {
+                staffId: staffDetails.staffId,
+                staffFirstName: staffDetails.staffFirstName,
+                staffLastName: staffDetails.staffLastName,
+                dept: staffDetails.dept,
+                position: staffDetails.position,
+                role: staffDetails.role,
+                reportingId: staffDetails.reportingId
+            },
+        });
+
+    } catch (err) {
+        res.status(500).json({ message: "Something went wrong trying to login", error: `Internal server error` });
+    }
+})
+
+// ------------------------ ROGUE CALLS ----------------------------------
 // catch rogue calls
 app.all("*", (req, res) => {
     console.log("Unhandled route:", req.path)
