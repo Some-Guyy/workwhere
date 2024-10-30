@@ -15,7 +15,7 @@ const Navbar = () => {
       const data = JSON.parse(localStorage.getItem('state'));
       // console.log(data)
       setEmployeeName(data.staffFirstName);
-      setEmployeeRole(data.Role)
+      setEmployeeRole(data.role)
       setEmployeePosition(data.Position)
   },[])
 

@@ -34,7 +34,7 @@ const HomePage = ({}) => {
     // Fetch the role from localStorage when the component mounts
     useEffect(() => {
       const localStoreaged = localStorage.getItem('state');
-      const storedRole = JSON.parse(localStoreaged).Role;
+      const storedRole = JSON.parse(localStoreaged).role;
       if (storedRole) {
         setTeamOrOverall(storedRole);
         setUserRole(storedRole);
