@@ -1420,7 +1420,7 @@ describe('PUT /cancel', () => {
     mockGet.mockRejectedValueOnce(new Error('Firestore error'))
 
     const response = await request(app)
-      .put('/cancel/')
+      .put('/cancel')
       .send()
 
     expect(response.status).toBe(500) // Expect 500 Internal Server Error

@@ -845,7 +845,7 @@ describe('POST /request', () => {
     })
 })
 
-describe('PUT /working-arrangements', () => {
+describe('PUT /cancel', () => {
     test('cancel existing pending working arrangement', async () => {
         // Cancel the only existing pending working arrangement of Employee A, use testDate
         const response = await request(app)
