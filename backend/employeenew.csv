@@ -1,4 +1,4 @@
-staffID,staffFirstName,staffLastName,dept,position,country,email,reportingId,role,password,handoverFrom
+staffId,staffFirstName,staffLastName,dept,position,country,email,reportingId,role,password,handoverFrom
 130002,Jack,Sim,CEO,MD,Singapore,jack.sim@allinone.com.sg,130002,1,123,
 140001,Derek,Tan,Sales,Director,Singapore,derek.tan@allinone.com.sg,130002,1,123,
 150008,Eric,Loh,Solutioning,Director,Singapore,eric.loh@allinone.com.sg,130002,1,123,
