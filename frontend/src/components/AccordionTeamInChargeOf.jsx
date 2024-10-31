@@ -1,7 +1,7 @@
 import AccordionRow from "./AccordionRow";
 
 
-const AccordionTeamInChargeOf = ({loading, data, pendingData, successfulApprovalRejection, setSuccessfulApprovalRejection, approveRejectWFH}) => {
+const AccordionTeamInChargeOf = ({loading, data, pendingData, approveRejectWFH, successfulApprovalRejectionWithdrawal, setSuccessfulApprovalRejectionWithdrawal, approveRejectWithdrawal, withdrawSubordinate}) => {
     const wfhData = [];
     const pendingDataForAccordion = [];
     const leaveData = [];
@@ -41,21 +41,21 @@ const AccordionTeamInChargeOf = ({loading, data, pendingData, successfulApproval
         if (pendingData != null){
             for (const d of pendingData.workingArrangements) {
                 // console.log(d);
-                if (d.status == "pending"){
+                if (d.status == "pending" || d.status === "pendingWithdrawal"){
                     pendingDataForAccordion.push(d);
                 }
             }
+            // console.log(pendingDataForAccordion)
+
         }        
     }; 
     
     filterData();
   return (
     <div className="">
-        <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData} headCount={headCount} activeSchedule={activeSchedule} isWFODate={false}/>
+        <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData} headCount={headCount} activeSchedule={activeSchedule} isWFODate={false} withdrawSubordinate={withdrawSubordinate}/>
         <AccordionRow rowName={"Work From Office Dates"} loading={loading} data={nameOfOtherStaffs} headCount={headCount} activeSchedule={activeSchedule} isWFODate={true}/>
-        <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingDataForAccordion} activeSchedule={activeSchedule} headCount={headCount} isWFODate={false} isPending={isPending} successfulApprovalRejection={successfulApprovalRejection}
-            setSuccessfulApprovalRejection={setSuccessfulApprovalRejection}
-            approveRejectWFH={approveRejectWFH}/>
+        <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingDataForAccordion} activeSchedule={activeSchedule} headCount={headCount} isWFODate={false} isPending={isPending} approveRejectWFH={approveRejectWFH} successfulApprovalRejectionWithdrawal={successfulApprovalRejectionWithdrawal} setSuccessfulApprovalRejectionWithdrawal={setSuccessfulApprovalRejectionWithdrawal} approveRejectWithdrawal={approveRejectWithdrawal}/>
     </div>
   )
 }

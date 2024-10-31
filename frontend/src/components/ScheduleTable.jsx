@@ -2,7 +2,7 @@ import ScheduleTableRow from "./ScheduleTableRow"
 import ScheduleTableHeader from "./ScheduleTableHeader"
 import {useState,useEffect} from "react"
 
-const ScheduleTable = ({data, headCount, activeSchedule, isWFODate, isPending, isManageOwnApplication, successfulCancellation, setSuccessfulCancellation, isForCancel, cancelWFH, successfulApprovalRejection, setSuccessfulApprovalRejection, approveRejectWFH}) => {
+const ScheduleTable = ({data, headCount, activeSchedule, isWFODate, isPending, isManageOwnApplication, successfulCancellation, setSuccessfulCancellation, isForCancel, cancelWFH, approveRejectWFH, withdrawalWFH, successfulApprovalRejectionWithdrawal,  setSuccessfulApprovalRejectionWithdrawal, approveRejectWithdrawal, withdrawSubordinate}) => {
     const [First, setFirst] = useState(0); 
     const [Second, setSecond] = useState(10); 
     const dataLength = data.length
@@ -52,7 +52,7 @@ const ScheduleTable = ({data, headCount, activeSchedule, isWFODate, isPending, i
                     </thead>
                     <tbody>
                         {data.slice(First,Second).map((d, index) => (
-                            <ScheduleTableRow key={index} modalKey={index} details={d} index={index+First} activeSchedule={activeSchedule} isWFODate={isWFODate} isPending={isPending} isManageOwnApplication={isManageOwnApplication} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} isForCancel={isForCancel} cancelWFH={cancelWFH} successfulApprovalRejection={successfulApprovalRejection} setSuccessfulApprovalRejection={setSuccessfulApprovalRejection} approveRejectWFH={approveRejectWFH}/>
+                            <ScheduleTableRow key={index} modalKey={index} details={d} index={index+First} activeSchedule={activeSchedule} isWFODate={isWFODate} isPending={isPending} isManageOwnApplication={isManageOwnApplication} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} isForCancel={isForCancel} cancelWFH={cancelWFH} approveRejectWFH={approveRejectWFH} withdrawalWFH={withdrawalWFH} successfulApprovalRejectionWithdrawal={successfulApprovalRejectionWithdrawal} setSuccessfulApprovalRejectionWithdrawal={setSuccessfulApprovalRejectionWithdrawal} approveRejectWithdrawal={approveRejectWithdrawal} withdrawSubordinate={withdrawSubordinate}/>
                         ))}
                     </tbody>
                 </table>

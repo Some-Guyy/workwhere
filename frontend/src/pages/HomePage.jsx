@@ -30,6 +30,9 @@ const HomePage = ({}) => {
     const location = useLocation();
     const [successfulApplication, setSuccessfulApplication]  = useState(location.state?.successfulApplication || {});
     const [successfulCancellation, setSuccessfulCancellation]  = useState(location.state?.successfulCancellation || {});
+    const [successfulWithdrawal, setSuccessfulWithdrawal] = useState(location.state?.successfulWithdrawal || {});
+    const [successfulWithdrawalSubordinate, setSuccessfulWithdrawalSubordinate] = useState(location.state?.successfulWithdrawalSubordinate || {});
+
 
     // Fetch the role from localStorage when the component mounts
     useEffect(() => {
@@ -297,6 +300,22 @@ const HomePage = ({}) => {
                     <div className="absolute top-4 right-7">
                         {/* Right side: Close icon */}
                         <IoMdClose size={30} onClick={() => setSuccessfulCancellation(null)}/>
+                    </div>
+                </div>
+            </div>
+        )}
+
+        {/* alert for successful withdrawal */}
+        {successfulWithdrawalSubordinate == true && (
+            <div role="alert" className="alert alert-success fixed top-0 left-0 w-full z-50">
+                <div className="flex items-center">
+                    <div className="flex items-center">
+                        <GrStatusGood size={25}/>
+                        <span className="mx-2">Successfully Approved/Reject withdrawal request</span>
+                    </div>
+                    <div className="absolute top-4 right-7">
+                        {/* Right side: Close icon */}
+                        <IoMdClose size={30} onClick={() => setSuccessfulWithdrawalSubordinate(null)}/>
                     </div>
                 </div>
             </div>

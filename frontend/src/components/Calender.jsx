@@ -52,7 +52,7 @@ const Calender = ({data}) => {
                     tempWfhDays.push(newDate);
                 } else if (d.status === "leave") {
                     tempLeaveDays.push(newDate);
-                } else if (d.status === "pending") {
+                } else if (d.status === "pending" || d.status === "pendingWithdrawal") {
                     tempPendingDays.push(newDate);
                 }
           }

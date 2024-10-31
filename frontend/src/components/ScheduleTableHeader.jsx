@@ -7,6 +7,7 @@ const ScheduleTableHeader = ({activeSchedule, isWFODate, isManageOwnApplication,
                     <th>S/N</th>
                     <th>Date</th>
                     <th>Type</th>
+                    <th>Request Type</th>
                     <th>Attachment</th>
                 </tr>
                 </>
@@ -53,6 +54,7 @@ const ScheduleTableHeader = ({activeSchedule, isWFODate, isManageOwnApplication,
                     <th>Staff Name</th>
                     <th>Date</th>
                     <th>Type</th>
+                    <th>Request Type</th>
                 </tr>
                 </>
                 : activeSchedule == "Your Overall Schedule" && isWFODate == true? 
@@ -86,6 +88,7 @@ const ScheduleTableHeader = ({activeSchedule, isWFODate, isManageOwnApplication,
                     <th>Staff Name</th>
                     <th>Date</th>
                     <th>Type</th>
+                    <th>Request Type</th>
                     <th>Attachment</th>
                 </tr>
                 </>

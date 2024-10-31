@@ -1,23 +1,22 @@
 import AccordionRow from "./AccordionRow";
 
-const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnApplication, successfulCancellation, setSuccessfulCancellation, isForCancel, cancelWFH}) => {
+const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnApplication, successfulCancellation, setSuccessfulCancellation, isForCancel, cancelWFH, successfulWithdrawal, setSuccessfulWithdrawal, withdrawalWFH}) => {
     const wfhData = [];
     const pendingData = [];
     const leaveData = []; 
     var headCount = 0
     const nameOfOtherStaffs = [];
-    
+    // console.log(setSuccessfulWithdrawal)
 
     async function filterData() {
         let nameOfWFH = [];
 
-        // console.log(data)
         if(activeSchedule=="Your Schedule" && data != null){
             for (const d of data) {
                 // console.log(d);
                 if(d.status == "approved"){
                     wfhData.push(d);
-                }else if (d.status == "pending"){
+                }else if (d.status == "pending" || d.status == "pendingWithdrawal"){
                     pendingData.push(d);
                 }else{
                     leaveData.push(d);
@@ -30,7 +29,7 @@ const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnAppl
                 if(d.status == "approved"){
                     wfhData.push(d);
                     nameOfWFH.push(d.staffId);
-                }else if (d.status == "pending"){
+                }else if (d.status == "pending" || d.status == "pendingWithdrawal"){
                     pendingData.push(d);
                 }else{
                     leaveData.push(d);
@@ -54,7 +53,7 @@ const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnAppl
                 if(d.status == "approved"){
                     wfhData.push(d);
                     nameOfWFH.push(d.staffId);
-                }else if (d.status == "pending"){
+                }else if (d.status == "pending" || d.status == "pendingWithdrawal"){
                     pendingData.push(d);
                 }else{
                     leaveData.push(d);
@@ -81,15 +80,15 @@ const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnAppl
         <div className="">
             {yourSchedule? 
             <>
-                <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={false} isManageOwnApplication={isManageOwnApplication} cancelWFH={cancelWFH}/>
+                <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={false} isManageOwnApplication={isManageOwnApplication} cancelWFH={cancelWFH} withdrawalWFH={withdrawalWFH}/>
                 {/* <AccordionRow rowName={"Leave Dates"} loading={loading} data={leaveData} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={false} isManageOwnApplication={isManageOwnApplication} cancelWFH={cancelWFH}/> */}
-                <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingData} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={false} isManageOwnApplication={isManageOwnApplication} isPending={true} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} isForCancel={isForCancel} cancelWFH={cancelWFH}/>
+                <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingData} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={false} isManageOwnApplication={isManageOwnApplication} isPending={true} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} isForCancel={isForCancel} cancelWFH={cancelWFH} withdrawalWFH={withdrawalWFH} />
             </>
              : 
             <>
-                <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={false} cancelWFH={cancelWFH}/>
-                <AccordionRow rowName={"Work From Office Dates"} loading={loading} data={nameOfOtherStaffs} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={true} cancelWFH={cancelWFH}/>
-                <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingData} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={false} isManageOwnApplication={isManageOwnApplication} isPending={true} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} isForCancel={isForCancel} cancelWFH={cancelWFH}/>
+                <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={false} cancelWFH={cancelWFH} withdrawalWFH={withdrawalWFH}/>
+                <AccordionRow rowName={"Work From Office Dates"} loading={loading} data={nameOfOtherStaffs} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={true} cancelWFH={cancelWFH} withdrawalWFH={withdrawalWFH}/>
+                <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingData} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={false} isManageOwnApplication={isManageOwnApplication} isPending={true} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} isForCancel={isForCancel} cancelWFH={cancelWFH} withdrawalWFH={withdrawalWFH} />
 
                 {/* <AccordionRow rowName={"Leave Dates"} loading={loading} data={leaveData}/> */}
             </>}

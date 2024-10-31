@@ -12,8 +12,11 @@ const ManageOthersApplicationPage = () => {
     const [loading, setLoading] = useState(true);
     const [showedData, setShowedData] = useState(null); // this is for wfh dates and wfh office to be filtered in child component
     const [showedDataPendingOnly, setShowedDataPendingOnly] = useState(null); // this is for pending req only, dif from line above
-    const [successfulApprovalRejection, setSuccessfulApprovalRejection] = useState(null); // this is to show whether approval/rejection successful or not
+    const [successfulApprovalRejection, setSuccessfulApprovalRejection] = useState(null); // this is to show whether approval/rejection successful or not for wfh
     const [showSuccessModal, setShowSuccessModal] = useState(null);
+
+    const [successfulApprovalRejectionWithdrawal, setSuccessfulApprovalRejectionWithdrawal] = useState(null); // this is to show whether approval/rejection successful or not for withdrawal
+    const [showSuccessModalWithdrawal, setShowSuccessModalWithdrawal] = useState(null);
 
     const [loginEmployeeId, setLoginEmployeeId] = useState(null); // to be changed based on logins initial fetch for users employee id
 
@@ -184,6 +187,62 @@ const ManageOthersApplicationPage = () => {
       }
     };
 
+    // function to approve/reject withdrawal
+    const approveRejectWithdrawal = async (arrangement) => {
+      try {
+        const res = await fetch('http://localhost:3000/working-arrangements/manage', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(arrangement),
+        });
+    
+        // Check if the response is OK
+        if (!res.ok) {
+          throw new Error(`Failed to approve/reject withdrawal arrangement: ${res.status} ${res.statusText}`);
+        }else{
+          // Successful response
+          console.log("Withdrawal approve/reject withdrawal successfully!");
+          setSuccessfulApprovalRejection(true);  // Update the state to indicate success
+          return await res.json();          // Ensure we return a parsed response
+        }
+    
+      } catch (error) {
+        // Error handling, set the failure state
+        console.error("Error approve/reject withdrawal request:", error.message);
+        setSuccessfulApprovalRejection(false);  // Ensure state is set to false on failure
+      }
+    };
+
+    // function to withdraw subordinates wfh
+    const withdrawSubordinate = async (arrangement) => {
+      try {
+        const res = await fetch('http://localhost:3000/working-arrangements/withdraw', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(arrangement),
+        });
+    
+        // Check if the response is OK
+        if (!res.ok) {
+          throw new Error(`Failed to withdraw: ${res.status} ${res.statusText}`);
+        }else{
+          // Successful response
+          console.log("WFH arrangement withdrawed successfully!");
+          setSuccessfulApprovalRejection(true);  // Update the state to indicate success
+          return await res.json();          // Ensure we return a parsed response
+        }
+    
+      } catch (error) {
+        // Error handling, set the failure state
+        console.error("Error withdrawed WFH arrangement:", error.message);
+        setSuccessfulApprovalRejection(false);  // Ensure state is set to false on failure
+      }
+    };
+
     return (
         <div className="mt-40">
             <DateFilterTeamInChargeOf 
@@ -196,13 +255,15 @@ const ManageOthersApplicationPage = () => {
             loading={loading}
             data={showedData}
             pendingData={showedDataPendingOnly}
-            successfulApprovalRejection={successfulApprovalRejection}
-            setSuccessfulApprovalRejection={setSuccessfulApprovalRejection}
             approveRejectWFH={approveRejectWFH}
+            successfulApprovalRejectionWithdrawal={successfulApprovalRejectionWithdrawal}
+            setSuccessfulApprovalRejectionWithdrawal={setSuccessfulApprovalRejectionWithdrawal}
+            approveRejectWithdrawal={approveRejectWithdrawal}
+            withdrawSubordinate={withdrawSubordinate}
             />
 
 
-            {/* alert for successful cancel */}
+            {/* alert for successful approval/reject */}
             {showSuccessModal == true && (
                 <div role="alert" className="alert alert-success fixed top-0 left-0 w-full z-50">
                     <div className="flex items-center">
@@ -213,6 +274,22 @@ const ManageOthersApplicationPage = () => {
                         <div className="absolute top-4 right-7">
                             {/* Right side: Close icon */}
                             <IoMdClose size={30} onClick={() => setShowSuccessModal(null)}/>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* alert for successful withdraw approve/reject */}
+            {showSuccessModalWithdrawal == true && (
+                <div role="alert" className="alert alert-success fixed top-0 left-0 w-full z-50">
+                    <div className="flex items-center">
+                        <div className="flex items-center">
+                            <GrStatusGood size={25}/>
+                            <span className="mx-2">Successfully Approved/Reject withdrawal request</span>
+                        </div>
+                        <div className="absolute top-4 right-7">
+                            {/* Right side: Close icon */}
+                            <IoMdClose size={30} onClick={() => setShowSuccessModalWithdrawal(null)}/>
                         </div>
                     </div>
                 </div>
