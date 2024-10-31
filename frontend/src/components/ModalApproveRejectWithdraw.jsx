@@ -19,6 +19,16 @@ const ModalApproveRejectWithdraw = ({modalId, date, type, staffName, StaffID, su
       setUserDetails(userDetailsFromStorage);
     }, []);
 
+    // Refresh Page when successfulApprovalRejectionWithdrawal becomes true
+    useEffect(() => {
+      if (successfulApprovalRejectionWithdrawal === true) {
+          // Wait a moment and then navigate to a different page
+          setTimeout(() => {
+              window.location.reload();
+          }, 2000); // 2-second delay
+
+      }
+  }, [successfulApprovalRejectionWithdrawal, navigate]);
 
     // Handle form submission(approve/reject the WFH request)
     const handleApprovalRejection = (event) => {

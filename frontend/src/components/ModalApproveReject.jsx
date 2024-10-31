@@ -21,14 +21,11 @@ const ModalApproveReject = ({modalId, date, type, staffName, StaffID, approveRej
       setUserDetails(userDetailsFromStorage);
     }, []);
 
-    // Navigate to the Home Page when successfulApprovalRejection becomes true
+    // Refresh Page when successfulApprovalRejection becomes true
     useEffect(() => {
       if (successfulApprovalRejection === true) {
           // Wait a moment and then navigate to a different page
           setTimeout(() => {
-              // navigate('/other', {
-              //     state: { successfulApprovalRejection: true }, // Send successfulApprovalRejection state
-              // });
               window.location.reload();
           }, 2000); // 2-second delay
 
