@@ -69,7 +69,7 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, called
             const batch = ids.slice(i, i + batchSize)
             const snapshot = await db.collection(collectionWa)
               .where('staffId', 'in', batch)
-              .where("status", "in", ["pending", "pendingWithdrawal"])
+              .where("status", "in", ["pending", "pendingWithdraw"])
               .get()
       
             snapshot.forEach((doc) => {
@@ -289,7 +289,7 @@ app.put("/cancel", async (req, res) => {
 app.put("/withdraw", async (req, res) => {
 
     try {
-        const { staffId, staffFirstName, staffLastName, reportingId, date} = req.body
+        const { staffId, staffFirstName, staffLastName, reportingId, date, reason} = req.body
 
         const targetDate = new Date(date)
         const endOfDay = new Date(date)
@@ -320,9 +320,9 @@ app.put("/withdraw", async (req, res) => {
             await docRef.update({ status: "withdrawn" })
         } else {
             //for commoners
-            notificationStatus = "pendingWithdrawal"
+            notificationStatus = "pendingWithdraw"
             message = "Working arrangement is now pending for withdrawal"
-            await docRef.update({ status: "pendingWithdrawal" })
+            await docRef.update({ status: "pendingWithdraw" })
         }
     
         //after updating doc, now we send a notification to reporting manager to update him
@@ -331,7 +331,7 @@ app.put("/withdraw", async (req, res) => {
             arrangementDate: new Date(date),
             arrangementStatus: notificationStatus,
             status: "unseen",
-            reason: doc.data().reason,
+            reason: reason,
             actorId: staffId,
             actorFirstName: staffFirstName,
             actorLastName: staffLastName
@@ -414,7 +414,7 @@ app.get("/working-arrangements/manager/:managerId/:date", async (req, res) => {
     }
 })
 
-//get team in charge working arrangements || returns pending & pendingWithdrawal working arrangements
+//get team in charge working arrangements || returns pending & pendingWithdraw working arrangements
 app.get("/working-arrangements/supervise/:managerId", async (req, res) => {
     try {
         const { managerId } = req.params
@@ -461,8 +461,8 @@ app.put("/working-arrangements/manage", async (req, res) => {
                 findStatus = "pending"
                 break
 
-            case("manageWithdrawal"):
-                findStatus = "pendingWithdrawal"
+            case("manageWithdraw"):
+                findStatus = "pendingWithdraw"
         }
     
         //return that specific working arrangement and ensure its pending
@@ -484,7 +484,7 @@ app.put("/working-arrangements/manage", async (req, res) => {
         let finalStatus = status
         let notificationStatus = status
 
-        if (purpose == "manageWithdrawal") {
+        if (purpose == "manageWithdraw") {
 
             // manager approves means we will withdraw WA
             if (status == "approved") {
