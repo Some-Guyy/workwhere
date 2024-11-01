@@ -289,7 +289,7 @@ app.put("/cancel", async (req, res) => {
 app.put("/withdraw", async (req, res) => {
 
     try {
-        const { staffId, staffFirstName, staffLastName, reportingId, date} = req.body
+        const { staffId, staffFirstName, staffLastName, reportingId, date, reason} = req.body
 
         const targetDate = new Date(date)
         const endOfDay = new Date(date)
@@ -331,7 +331,7 @@ app.put("/withdraw", async (req, res) => {
             arrangementDate: new Date(date),
             arrangementStatus: notificationStatus,
             status: "unseen",
-            reason: doc.data().reason,
+            reason: reason,
             actorId: staffId,
             actorFirstName: staffFirstName,
             actorLastName: staffLastName
@@ -461,7 +461,7 @@ app.put("/working-arrangements/manage", async (req, res) => {
                 findStatus = "pending"
                 break
 
-            case("manageWithdrawal"):
+            case("manageWithdraw"):
                 findStatus = "pendingWithdraw"
         }
     
@@ -484,7 +484,7 @@ app.put("/working-arrangements/manage", async (req, res) => {
         let finalStatus = status
         let notificationStatus = status
 
-        if (purpose == "manageWithdrawal") {
+        if (purpose == "manageWithdraw") {
 
             // manager approves means we will withdraw WA
             if (status == "approved") {
