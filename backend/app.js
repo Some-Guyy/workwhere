@@ -317,12 +317,12 @@ app.put("/withdraw", async (req, res) => {
         // auto withdrawal for jack sigma
         if (staffId == "130002") {
             notificationStatus = "withdrawn"
-            await docRef.update({ status: "withdrawn" })
+            await docRef.update({ reason: reason, status: "withdrawn" })
         } else {
             //for commoners
             notificationStatus = "pendingWithdraw"
             message = "Working arrangement is now pending for withdrawal"
-            await docRef.update({ status: "pendingWithdraw" })
+            await docRef.update({ reason: reason, status: "pendingWithdraw" })
         }
     
         //after updating doc, now we send a notification to reporting manager to update him
@@ -513,7 +513,7 @@ app.put("/working-arrangements/manage", async (req, res) => {
             arrangementDate: new Date(date),
             arrangementStatus: notificationStatus,
             status: "unseen",
-            reason: doc.data().reason,
+            reason,
             actorId: reportingId,
             actorFirstName: reportingFirstName,
             actorLastName: reportingLastName
@@ -535,7 +535,7 @@ app.put("/working-arrangements/manage", async (req, res) => {
 app.put("/working-arrangements/withdraw", async (req, res) => {
 
     try {
-        const { reportingId, reportingFirstName, reportingLastName, staffId, date} = req.body
+        const { reportingId, reportingFirstName, reportingLastName, staffId, date, reason} = req.body
     
         const targetDate = new Date(date)
         const endOfDay = new Date(date)
@@ -558,7 +558,7 @@ app.put("/working-arrangements/withdraw", async (req, res) => {
         const doc = snapshot.docs[0]
         const docRef = db.collection(collectionWa).doc(doc.id)
     
-        await docRef.update({ status: "withdrawn" })
+        await docRef.update({ reason: reason, status: "withdrawn" })
 
         //after updating doc, now we send a notification to subordinate to update them
         const notificationDoc = {
