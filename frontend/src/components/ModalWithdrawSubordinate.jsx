@@ -43,7 +43,8 @@ const ModalWithdrawSubordinate = ({details, date, type, withdrawSubordinate}) =>
             reportingFirstName: details.reportingFirstName,
             reportingLastName: details.reportingLastName,
             reportingId: details.reportingId,
-            date: `${date.split("/")[2]}-${date.split("/")[1]}-${date.split("/")[0]}`
+            date: `${date.split("/")[2]}-${date.split("/")[1]}-${date.split("/")[0]}`,
+            reason: reason
         }
             
         withdrawSubordinate(formData);

@@ -16,7 +16,7 @@ const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnAppl
                 // console.log(d);
                 if(d.status == "approved"){
                     wfhData.push(d);
-                }else if (d.status == "pending" || d.status == "pendingWithdrawal"){
+                }else if (d.status == "pending" || d.status == "pendingWithdraw"){
                     pendingData.push(d);
                 }else{
                     leaveData.push(d);
@@ -29,7 +29,7 @@ const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnAppl
                 if(d.status == "approved"){
                     wfhData.push(d);
                     nameOfWFH.push(d.staffId);
-                }else if (d.status == "pending" || d.status == "pendingWithdrawal"){
+                }else if (d.status == "pending" || d.status == "pendingWithdraw"){
                     pendingData.push(d);
                 }else{
                     leaveData.push(d);
@@ -53,7 +53,7 @@ const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnAppl
                 if(d.status == "approved"){
                     wfhData.push(d);
                     nameOfWFH.push(d.staffId);
-                }else if (d.status == "pending" || d.status == "pendingWithdrawal"){
+                }else if (d.status == "pending" || d.status == "pendingWithdraw"){
                     pendingData.push(d);
                 }else{
                     leaveData.push(d);

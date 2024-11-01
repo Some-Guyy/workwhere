@@ -117,12 +117,6 @@ const LoginPage = () => {
                                 focus:outline-none focus:ring focus:ring-opacity-40"
                             />
                         </div>
-                        <a
-                            href="#"
-                            className="text-xs text-slate-900 hover:underline"
-                        >
-                            Forget Password?
-                        </a>
                         <div className="mt-6">
                             <button className="w-full px-4 py-2 tracking-wide text-black transition-colors duration-200 transform bg-slate-400 rounded-md hover:bg-slate-600 focus:outline-none focus:bg-slate-600">
                                 Login

@@ -41,7 +41,7 @@ const AccordionTeamInChargeOf = ({loading, data, pendingData, approveRejectWFH, 
         if (pendingData != null){
             for (const d of pendingData.workingArrangements) {
                 // console.log(d);
-                if (d.status == "pending" || d.status === "pendingWithdrawal"){
+                if (d.status == "pending" || d.status === "pendingWithdraw"){
                     pendingDataForAccordion.push(d);
                 }
             }

@@ -34,7 +34,7 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
             <th>{index+1}</th>
             <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
-            {details.status == "pendingWithdrawal" ? <td>Pending Withdrawal</td>:
+            {details.status == "pendingWithdraw" ? <td>Pending Withdrawal</td>:
             <td>Pending WFH Request</td>
             }
             {details.attachment == null ? <td>No attachments</td>:
@@ -49,7 +49,7 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
             <th>{index+1}</th>
             <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
-            {details.status == "pendingWithdrawal" ? <td>Pending Withdrawal</td>:
+            {details.status == "pendingWithdraw" ? <td>Pending Withdrawal</td>:
             <td>Pending WFH Request</td>
             }
             {details.attachment == null ? <td>No attachments</td>:
@@ -107,7 +107,7 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
             <td>{details.staffFirstName} {details.staffLastName}</td>
             <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
-            {details.status == "pendingWithdrawal" ? <td>Pending Withdrawal</td>:
+            {details.status == "pendingWithdraw" ? <td>Pending Withdrawal</td>:
             <td>Pending WFH Request</td>
             }
         </tr>
@@ -136,13 +136,13 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
             <td>{details.staffFirstName} {details.staffLastName}</td>
             <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
-            {details.status == "pendingWithdrawal" ? <td>Pending Withdrawal</td>:
+            {details.status == "pendingWithdraw" ? <td>Pending Withdrawal</td>:
             <td>Pending WFH Request</td>
             }
             {details.attachment == null ? <td>No attachments</td>:
             <td><ModalAttachment modalId={modalIdImage} file={details.attachment}/></td>
               }
-            {details.status == "pendingWithdrawal" ? 
+            {details.status == "pendingWithdraw" ? 
             <td><ModalApproveRejectWithdraw 
             modalId={modalId}
             date={convert_to_date(details.date._seconds)} 

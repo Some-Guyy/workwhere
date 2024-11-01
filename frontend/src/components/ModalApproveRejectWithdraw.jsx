@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import { PiWarningDiamondFill } from "react-icons/pi";
-import { GrStatusGood } from "react-icons/gr";
 
 const ModalApproveRejectWithdraw = ({modalId, date, type, staffName, StaffID, successfulApprovalRejectionWithdrawal, setSuccessfulApprovalRejectionWithdrawal, approveRejectWithdrawal}) => {
 
@@ -48,7 +47,7 @@ const ModalApproveRejectWithdraw = ({modalId, date, type, staffName, StaffID, su
             status: acceptOrReject,
             reason: acceptOrReject === "approved" ? "" : reason,
             date: `${date.split("/")[2]}-${date.split("/")[1]}-${date.split("/")[0]}`,
-            purpose: "manageWithdrawal"
+            purpose: "manageWithdraw"
         }
             
         approveRejectWithdrawal(formData);
