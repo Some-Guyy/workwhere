@@ -1,21 +1,25 @@
 import { MdMapsHomeWork } from "react-icons/md";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useState,useEffect, useRef } from "react";
+import { FaCheck } from "react-icons/fa";
+
 
 const Navbar = () => {
   const [EmployeeRole,setEmployeeRole] = useState(null)
   const [EmployeePosition,setEmployeePosition] = useState(null)
   const [EmployeeName, setEmployeeName] = useState(null);
   const [EmployeeId, setEmployeeId] = useState(null)
-  const [notificationData, setNotificationData] = useState(null)
+  const [notificationData, setNotificationData] = useState([])
   const navigate = useNavigate();
   const location = useLocation();
   const drawerCheckboxRef = useRef(null);
-  let unseenNotifications = [];
+  const [unseenNotifications,setUnSeenNotifications] = useState([])
+  const [isOpen, setIsOpen] = useState(false); // State to manage dropdown visibility
+  const toggleDropdown = () => setIsOpen(prev => !prev); // Function to toggle dropdown
   
   // extract users role to conditionally render links
   useEffect(()=>{
-      // fetchNotificationData()
+      fetchNotificationData()
       const data = JSON.parse(localStorage.getItem('state'));
       // console.log(data)
       setEmployeeName(data.staffFirstName);
@@ -26,46 +30,58 @@ const Navbar = () => {
 
   useEffect(()=>{
     if(notificationData!= null){
-      unseenNotifications = notificationData.filter(notifiction => notifiction.status == unseen)
+      let unseenNotification = notificationData.filter(([id, details]) => details.status == "unseen").map(([id]) => id)
+      setUnSeenNotifications(unseenNotification)
     }
 },[notificationData])
 
+  const convert_to_date = (seconds) => {
+    const milliseconds = seconds * 1000;
 
+    // Create a new Date object with the milliseconds
+    const date = new Date(milliseconds);
+
+    // Extract the day, month, and year
+    const day = date.getDate();
+    const month = date.getMonth() + 1; // getMonth() is zero-based
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  };
 
   const fetchNotificationData = async () =>{
-    const apiUrl = ``;
+    const apiUrl = `http://localhost:3000/get-notifications/${EmployeeId}`;
     try{
       const res = await fetch(apiUrl);
       const data = await res.json();
-      setNotificationData(data)
+      setNotificationData(data.notifications.reverse())
     }
     catch(error){
       console.log("Error fetching notification data")
     }
 
   }
-
   const updateNotifictionStatus = async (notificationId) => {
-    unseenNotifications = unseenNotifications.filter(notifiction => notifiction.Id != notificationId)
-    const apiUrl = ``
+    let unseenNotification = unseenNotifications.filter(notifiction => notifiction != notificationId)
+    setUnSeenNotifications(unseenNotification)
+    const apiUrl = `http://localhost:3000/seen-notification`
     try{
       const res = await fetch(apiUrl, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body:"",
+        body:JSON.stringify({ "docId": notificationId }),
       });
     }
     catch(error){
+      console.log(error)
       console.log("Error updating notification data")
     }
 
 
 
   }
-
-
   // Close the drawer when navigating to another page
   useEffect(() => {
     if (drawerCheckboxRef.current) {
@@ -112,7 +128,7 @@ const Navbar = () => {
                 {/* Navbar menu content here */}
                 <li>
                 <div className="dropdown dropdown-bottom dropdown-end mr-4">
-                  <button className="btn btn-ghost btn-circle animate-pulse">
+                  <button className="btn btn-ghost btn-circle animate-pulse" tabIndex={0} onClick={toggleDropdown}>
                     <div className="indicator">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -126,62 +142,27 @@ const Navbar = () => {
                           strokeWidth="2"
                           d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                       </svg>
-                      <span className="badge badge-xs badge-error indicator-item"></span>
+                      {unseenNotifications.length == 0?<span></span>:
+                      <span className="badge badge-xs badge-error indicator-item">{unseenNotifications.length}</span>}
                     </div>
                   </button>
-                  <ul className="dropdown-content menu p-2 text-sm shadow bg-gray-600 rounded-box w-80 z-10 max-h-60 overflow-y-auto flex flex-col flex-nowrap">
-                    {notificationData != null ? 
-                      notificationData.map((l,k)=>{
-                        return <li key={l.Id}className="relative p-4 whitespace-normal hover:bg-gray-500" onMouseLeave={updateNotifictionStatus}>
-                          {l in unseenNotifications ? <span className="absolute right-0 badge badge-xs badge-error indicator-item mt-2 mr-2"></span>:null}
+                  {(isOpen &&
+                  <ul className="dropdown-content menu p-2 text-sm shadow bg-gray-600 rounded-box w-80 z-10 max-h-60 overflow-y-auto flex flex-col flex-nowrap" tabIndex={0}>
+                    {notificationData.length != 0 ? 
+                      notificationData.map(([id, details])=>{
+                        return <><li key={id}className={`flex items-center justify-between p-4 whitespace-normal ${unseenNotifications.includes(id) ? 'bg-gray-500' : ''}`}>
+                          <div>
+                          Your working arrangement on {convert_to_date(details.arrangementDate._seconds)} has been {details.arrangementStatus} by {details.actorFirstName} {details.actorLastName} {details.reason == null?"":"Reason :" + details.reason}
+                          {unseenNotifications.includes(id) ? <a onClick={()=>updateNotifictionStatus(id)}><FaCheck/></a>:null}
+                          </div>
                         </li>
+                        <div className="divider mt-0 mb-0"></div>
+                        </>
                       })
                     
                   :<li className="relative p-4 whitespace-normal">no notification</li>}
-                    <li className="relative p-4 whitespace-normal hover:bg-gray-500" onMouseLeave={updateNotifictionStatus}>
-                    <span className="absolute right-0 badge badge-xs badge-error indicator-item mt-2 mr-2"></span>
-                    your WFH arrangement on 24/10/2001 has been rejected reason:no
-                    </li>
-                    <div className="divider mt-0 mb-0"></div>
-                    <li className=" p-4 whitespace-normal">
-                      your WFH arrangement on 24/10/2001 has been rejected reason:no
-                    </li>
-                    <div className="divider mt-0 mb-0"></div>
-                    <li className=" p-4 whitespace-normal">
-                      your WFH arrangement on 24/10/2001 has been rejected reason:no
-                    </li>
-                    <div className="divider mt-0 mb-0"></div>
-                    <li className=" p-2 whitespace-normal">
-                      your WFH arrangement on 24/10/2001 has been rejected reason:no
-                    </li>
-                    <div className="divider mt-0 mb-0"></div>
-                    <li className=" p-2 whitespace-normal">
-                      your WFH arrangement on 24/10/2001 has been rejected reason:no
-                    </li>
-                    <div className="divider mt-0 mb-0"></div>
-                    <li className=" p-2 whitespace-normal">
-                      your WFH arrangement on 24/10/2001 has been rejected reason:no
-                    </li>
-                    <div className="divider mt-0 mb-0"></div>
-                    <li className=" p-2 whitespace-normal">
-                      your WFH arrangement on 24/10/2001 has been rejected reason:no
-                    </li>
-                    <div className="divider mt-0 mb-0"></div>
-                    <li className=" p-2 whitespace-normal">
-                      your WFH arrangement on 24/10/2001 has been rejected reason:no
-                    </li>
-                    <div className="divider mt-0 mb-0"></div>
-                    <li className=" p-2 whitespace-normal">
-                      your WFH arrangement on 24/10/2001 has been rejected reason:no
-                    </li>
-                    <div className="divider mt-0 mb-0"></div>
-                    <li className=" p-2 whitespace-normal">
-                      your WFH arrangement on 24/10/2001 has been rejected reason:no
-                    </li>
-                    <div className="divider mt-0 mb-0"></div>
-
-
                   </ul>
+                  )}
                 </div>
                 </li>
               </ul>
