@@ -83,11 +83,11 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, called
 
 // ------------------------ ENDPOINTS FOR PERSONAL ------------------------
 //get specific employee for working arrangements (personal work schedule)
-app.get("/working-arrangements/:employeeid", async (req, res) => {
+app.get("/working-arrangements/:employeeId", async (req, res) => {
     try {
-        const { employeeid } = req.params
+        const { employeeId } = req.params
         const snapshot = await db.collection(collectionWa)
-        .where('staffId', '==', employeeid)
+        .where('staffId', '==', employeeId)
         .get()
 
         if (snapshot.empty) {
@@ -341,6 +341,47 @@ app.put("/withdraw", async (req, res) => {
         return res.status(200).json({ message: message})
     } catch (err) {
         return res.status(500).json({ message: "Something happened when withdrawing your working arrangements", error: `Internal server error `})
+    }
+})
+
+// see all notifications
+app.get("/get-notifications/:employeeId", async (req, res) => {
+    try {
+        const {employeeId} = req.params
+        const snapshot = await db.collection("notifications")
+        .where('staffId', "==", employeeId)
+        .get()
+
+        // frontend needs the id and doc data
+        const notifications = []
+        snapshot.forEach((doc) => {
+            const docDetails = []
+            docDetails.push(doc.id)
+            docDetails.push(doc.data())
+
+            notifications.push(docDetails)
+        })
+
+        res.status(200).json({notifications})
+        
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ message: "Something happened when getting your notifications", error: `Internal server error `})
+    }
+})
+
+// change notification to seen
+app.put("/seen-notification", async (req, res) => {
+    
+    try {
+        const {docId} = req.body
+        const docRef = db.collection("notifications").doc(docId)
+        await docRef.update({ status: "seen" })
+
+        return res.status(200).json({message : "Successfully updated notification status"})
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({ message: "Something happened when updating your notifications", error: `Internal server error `})
     }
 })
 
