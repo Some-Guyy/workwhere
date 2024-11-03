@@ -2,36 +2,32 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import { PiWarningDiamondFill } from "react-icons/pi";
-import { GrStatusGood } from "react-icons/gr";
 
-const ModalApproveReject = ({modalId, date, type, staffName, StaffID, approveRejectWFH}) => {
+const ModalApproveRejectWithdraw = ({modalId, date, type, staffName, StaffID, successfulApprovalRejectionWithdrawal, setSuccessfulApprovalRejectionWithdrawal, approveRejectWithdrawal}) => {
 
     const [userDetails, setUserDetails] = useState(null); // State to store user details
     const navigate = useNavigate(); // Use navigate hook
     const [reason, setReason] = useState(""); // State to store the reason input
     const [acceptOrReject, setAcceptOrReject] = useState(""); // State to store whether accepted or rejected
     const [errorMessage, setErrorMessage] = useState(null); // Error message for missing reason in rejection
-    const [successfulApprovalRejection, setSuccessfulApprovalRejection] = useState(null);
 
     // Used to fetch user details
     useEffect(() => {
       const localStoreaged = localStorage.getItem('state');
-    //   console.log(localStoreaged)
       const userDetailsFromStorage = JSON.parse(localStoreaged);
       setUserDetails(userDetailsFromStorage);
     }, []);
 
-    // Refresh Page when successfulApprovalRejection becomes true
+    // Refresh Page when successfulApprovalRejectionWithdrawal becomes true
     useEffect(() => {
-      if (successfulApprovalRejection === true) {
+      if (successfulApprovalRejectionWithdrawal === true) {
           // Wait a moment and then navigate to a different page
           setTimeout(() => {
               window.location.reload();
           }, 2000); // 2-second delay
 
       }
-  }, [successfulApprovalRejection, navigate]);
-
+  }, [successfulApprovalRejectionWithdrawal, navigate]);
 
     // Handle form submission(approve/reject the WFH request)
     const handleApprovalRejection = (event) => {
@@ -41,7 +37,7 @@ const ModalApproveReject = ({modalId, date, type, staffName, StaffID, approveRej
         if (acceptOrReject === "rejected" && reason.trim() === "") {
           setErrorMessage("Please provide a reason for rejecting the request.");
           return;
-        }
+      }
         
         const formData = {
             reportingId: userDetails.staffId,
@@ -51,12 +47,12 @@ const ModalApproveReject = ({modalId, date, type, staffName, StaffID, approveRej
             status: acceptOrReject,
             reason: acceptOrReject === "approved" ? "" : reason,
             date: `${date.split("/")[2]}-${date.split("/")[1]}-${date.split("/")[0]}`,
-            purpose: "managePending"
+            purpose: "manageWithdraw"
         }
             
-        approveRejectWFH(formData);
-        // console.log(formData);
-        setSuccessfulApprovalRejection(true);
+        approveRejectWithdrawal(formData);
+        console.log(formData);
+        setSuccessfulApprovalRejectionWithdrawal(true);
         setErrorMessage(null); // Clear any previous errors
         console.log("approved/reject simulation")
 
@@ -68,7 +64,7 @@ const ModalApproveReject = ({modalId, date, type, staffName, StaffID, approveRej
             <button className="btn btn-primary btn-xs rounded-full" onClick={()=>document.getElementById(modalId).showModal()}>Actions</button>
             <dialog id={modalId} className="modal">
             <div className="modal-box">
-                <h3 className="font-bold text-lg">Approve/Reject WFH arrangement?</h3><br/>
+                <h3 className="font-bold text-lg">Approve/Reject WFH arrangement withdrawal?</h3><br/>
                 
                 {/* Details of application to be approved/reject */}
                 <div>
@@ -106,7 +102,7 @@ const ModalApproveReject = ({modalId, date, type, staffName, StaffID, approveRej
             <form method="dialog" className="modal-backdrop">
                 
                 {/* alert for unsuccessful approve/reject */}
-                {successfulApprovalRejection == false && (
+                {successfulApprovalRejectionWithdrawal == false && (
                     <div role="alert" className="alert alert-error fixed top-0 left-0 w-full z-50">
                         <div className="flex items-center">
                             <div className="flex items-center">
@@ -115,7 +111,7 @@ const ModalApproveReject = ({modalId, date, type, staffName, StaffID, approveRej
                             </div>
                             <div className="absolute top-4 right-7">
                                 {/* Right side: Close icon */}
-                                <IoMdClose size={30} onClick={() => setSuccessfulApprovalRejection(null)}/>
+                                <IoMdClose size={30} onClick={() => setSuccessfulApprovalRejectionWithdrawal(null)}/>
                             </div>
                         </div>
                     </div>
@@ -129,4 +125,4 @@ const ModalApproveReject = ({modalId, date, type, staffName, StaffID, approveRej
     )
   }
   
-  export default ModalApproveReject
+  export default ModalApproveRejectWithdraw

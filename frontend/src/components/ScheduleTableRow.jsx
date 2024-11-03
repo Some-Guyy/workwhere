@@ -2,8 +2,10 @@ import ModalWithdraw from "./ModalWithdraw";
 import ModalCancel from "./ModalCancel";
 import ModalApproveReject from "./ModalApproveReject";
 import ModalAttachment from "./ModalAttachment";
+import ModalApproveRejectWithdraw from "./ModalApproveRejectWithdraw";
+import ModalWithdrawSubordinate from "./ModalWithdrawSubordinate";
 
-const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, isPending, isManageOwnApplication, successfulCancellation, setSuccessfulCancellation, isForCancel, cancelWFH, successfulApprovalRejection, setSuccessfulApprovalRejection, approveRejectWFH}) => {
+const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, isPending, isManageOwnApplication, successfulCancellation, setSuccessfulCancellation, isForCancel, cancelWFH, approveRejectWFH, successfulWithdrawal, setSuccessfulWithdrawal, withdrawalWFH, successfulApprovalRejectionWithdrawal, setSuccessfulApprovalRejectionWithdrawal, approveRejectWithdrawal, withdrawSubordinate}) => {
   // convert seconds to date
   const convert_to_date = (seconds) => {
     const milliseconds = seconds * 1000;
@@ -20,140 +22,169 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
   };
 
   // console.log(activeSchedule)
+  // console.log(details)
 
   const modalId = `modal-${index}`; // Unique modal ID for each row
   const modalIdImage = `modalImage-${index}`
 
-  return (
-    <>
-    {activeSchedule == "Your Schedule" && isPending == true && isForCancel == true? 
-      <>
-        <tr className="hover">
+  let tableRow;
+  if (activeSchedule==="Your Schedule" && isPending===true && isForCancel==true){
+    tableRow =(
+      <tr className="hover">
             <th>{index+1}</th>
             <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
+            {details.status == "pendingWithdraw" ? <td>Pending Withdrawal</td>:
+            <td>Pending WFH Request</td>
+            }
             {details.attachment == null ? <td>No attachments</td>:
             <td><ModalAttachment modalId={modalIdImage} file={details.attachment}/></td>
             }
             <td><ModalCancel date={convert_to_date(details.date._seconds)} type={details.time} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} cancelWFH={cancelWFH}/></td>
-        </tr>
-      </>
-      : activeSchedule == "Your Schedule" && isPending == true? 
-      <>
-        <tr className="hover">
+      </tr>
+    );
+  }else if (activeSchedule == "Your Schedule" && isPending == true){
+    tableRow =(
+      <tr className="hover">
             <th>{index+1}</th>
             <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
+            {details.status == "pendingWithdraw" ? <td>Pending Withdrawal</td>:
+            <td>Pending WFH Request</td>
+            }
             {details.attachment == null ? <td>No attachments</td>:
             <td><ModalAttachment modalId={modalIdImage} file={details.attachment}/></td>
             }
-        </tr>
-      </>
-      : activeSchedule == "Your Schedule" && isManageOwnApplication == true? 
-      <>
-        <tr className="hover">
+      </tr>
+    );
+  }else if (activeSchedule == "Your Schedule" && isManageOwnApplication == true){
+    tableRow =(
+      <tr className="hover">
             <th>{index+1}</th>
             <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
             <td>{details.reportingFirstName} {details.reportingLastName}</td>
-            <td><ModalWithdraw /></td>
-        </tr>
-      </>
-      : activeSchedule == "Your Schedule"? 
-      <>
-        <tr className="hover">
+            <td><ModalWithdraw details={details} date={convert_to_date(details.date._seconds)} type={details.time} withdrawalWFH={withdrawalWFH}/></td>
+      </tr>
+    );
+  }else if (activeSchedule == "Your Schedule"){
+    tableRow =(
+      <tr className="hover">
             <th>{index+1}</th>
             <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
             <td>{details.reportingFirstName} {details.reportingLastName}</td>
-        </tr>
-      </>
-      : activeSchedule == "Your Team Schedule" && isWFODate == true? 
-      <>
-        <tr className="hover">
+      </tr>
+    );
+  }else if (activeSchedule == "Your Team Schedule" && isWFODate == true){
+    tableRow =(
+      <tr className="hover">
             <th>{index+1}</th>
             <td>{details.staffFirstName} {details.staffLastName}</td>
-        </tr>
-      </>
-      : activeSchedule == "Your Team Schedule" ? 
-      <>
-        <tr className="hover">
-            <th>{index+1}</th>
-            <td>{details.staffFirstName} {details.staffLastName}</td>
-            <td>{convert_to_date(details.date._seconds)}</td>
-            <td>{details.time}</td>
-            <td>{details.reportingFirstName} {details.reportingLastName}</td>
-        </tr>
-      </>
-      : activeSchedule == "Your Overall Schedule" && isWFODate == true? 
-      <>
-        <tr className="hover">
-            <th>{index+1}</th>
-            <td>{details.staffFirstName} {details.staffLastName}</td>
-        </tr>
-      </>
-      : activeSchedule == "Your Overall Schedule" && isPending == true? 
-      <>
-        <tr className="hover">
-            <th>{index+1}</th>
-            <td>{details.staffFirstName} {details.staffLastName}</td>
-            <td>{convert_to_date(details.date._seconds)}</td>
-            <td>{details.time}</td>
-        </tr>
-      </>
-      : activeSchedule == "Your Overall Schedule" ? 
-      <>
-        <tr className="hover">
+      </tr>
+    );
+  }else if (activeSchedule == "Your Team Schedule"){
+    tableRow =(
+      <tr className="hover">
             <th>{index+1}</th>
             <td>{details.staffFirstName} {details.staffLastName}</td>
             <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
             <td>{details.reportingFirstName} {details.reportingLastName}</td>
-        </tr>
-      </>
-      : activeSchedule == "Your team in charge of" && isWFODate == true? 
-      <>
-        <tr className="hover">
+      </tr>
+    );
+  }else if (activeSchedule == "Your Overall Schedule" && isWFODate == true){
+    tableRow =(
+      <tr className="hover">
             <th>{index+1}</th>
             <td>{details.staffFirstName} {details.staffLastName}</td>
-        </tr>
-      </>
-      : activeSchedule == "Your team in charge of" && isPending == true? 
-      <>
-        <tr className="hover">
+      </tr>
+    );
+  }else if (activeSchedule == "Your Overall Schedule" && isPending == true){
+    tableRow =(
+      <tr className="hover">
             <th>{index+1}</th>
             <td>{details.staffFirstName} {details.staffLastName}</td>
             <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
+            {details.status == "pendingWithdraw" ? <td>Pending Withdrawal</td>:
+            <td>Pending WFH Request</td>
+            }
+        </tr>
+    );
+  }else if (activeSchedule == "Your Overall Schedule"){
+    tableRow =(
+      <tr className="hover">
+            <th>{index+1}</th>
+            <td>{details.staffFirstName} {details.staffLastName}</td>
+            <td>{convert_to_date(details.date._seconds)}</td>
+            <td>{details.time}</td>
+            <td>{details.reportingFirstName} {details.reportingLastName}</td>
+      </tr>
+    );
+  }else if (activeSchedule == "Your team in charge of" && isWFODate == true){
+    tableRow =(
+      <tr className="hover">
+            <th>{index+1}</th>
+            <td>{details.staffFirstName} {details.staffLastName}</td>
+      </tr>
+    );
+  }else if (activeSchedule == "Your team in charge of" && isPending == true){
+    tableRow =(
+      <tr className="hover">
+            <th>{index+1}</th>
+            <td>{details.staffFirstName} {details.staffLastName}</td>
+            <td>{convert_to_date(details.date._seconds)}</td>
+            <td>{details.time}</td>
+            {details.status == "pendingWithdraw" ? <td>Pending Withdrawal</td>:
+            <td>Pending WFH Request</td>
+            }
             {details.attachment == null ? <td>No attachments</td>:
             <td><ModalAttachment modalId={modalIdImage} file={details.attachment}/></td>
               }
+            {details.status == "pendingWithdraw" ? 
+            <td><ModalApproveRejectWithdraw 
+            modalId={modalId}
+            date={convert_to_date(details.date._seconds)} 
+            type={details.time} 
+            StaffID={details.staffId}
+            staffName={`${details.staffFirstName} ${details.staffLastName}`} 
+            successfulApprovalRejectionWithdrawal={successfulApprovalRejectionWithdrawal} setSuccessfulApprovalRejectionWithdrawal={setSuccessfulApprovalRejectionWithdrawal} 
+            approveRejectWithdrawal={approveRejectWithdrawal}
+            /></td>
+            :
             <td><ModalApproveReject 
               modalId={modalId}
               date={convert_to_date(details.date._seconds)} 
               type={details.time} 
               StaffID={details.staffId}
               staffName={`${details.staffFirstName} ${details.staffLastName}`} 
-              successfulApprovalRejection={successfulApprovalRejection}
-              setSuccessfulApprovalRejection={setSuccessfulApprovalRejection}
               approveRejectWFH={approveRejectWFH} 
             /></td>
+          }
         </tr>
-      </>
-      : activeSchedule == "Your team in charge of" ? 
-      <>
-        <tr className="hover">
+    );
+  }else if (activeSchedule == "Your team in charge of"){
+    tableRow =(
+      <tr className="hover">
             <th>{index+1}</th>
             <td>{details.staffFirstName} {details.staffLastName}</td>
             <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
             <td>{details.reportingFirstName} {details.reportingLastName}</td>
+            <td><ModalWithdrawSubordinate 
+              modalId={modalId}
+              details={details}
+              date={convert_to_date(details.date._seconds)} 
+              type={details.time} 
+              withdrawSubordinate={withdrawSubordinate} 
+            /></td>
         </tr>
-      </>
-      : "A"
-    }
-    </>
-    
+    );
+  }
+
+  return (
+    <>{tableRow}</>
   )
 }
 

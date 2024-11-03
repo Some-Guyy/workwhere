@@ -53,7 +53,7 @@ const Stats = ({loading, data}) => {
                         tempLeaveDay = convert_to_date(d.date._seconds);
                     }
                     leaves++;
-                } else if (d.status === "pending"){
+                } else if (d.status === "pending" || d.status === "pendingWithdraw"){
                     pendingReq++;
                 }
             }

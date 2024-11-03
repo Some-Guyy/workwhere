@@ -10,8 +10,8 @@ const MyApplicationsPage = () => {
     const[isForCancel, setIsForCancel] = useState(true);
     const [successfulApplication, setSuccessfulApplication] = useState(null);
     const [successfulCancellation, setSuccessfulCancellation] = useState(null);
+    const [successfulWithdrawal, setSuccessfulWithdrawal] = useState(null);
 
-    
     
     // function to addWFH
     const addWFH = async (newArrangement) => {
@@ -46,7 +46,7 @@ const MyApplicationsPage = () => {
     // function to cancel WFH
     const cancelWFH = async (arrangement) => {
       try {
-        const res = await fetch('http://localhost:3000/working-arrangements', {
+        const res = await fetch('http://localhost:3000/cancel', {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -71,6 +71,34 @@ const MyApplicationsPage = () => {
       }
     };
 
+    // function to withdraw own WFH
+    const withdrawalWFH = async (arrangement) => {
+      try {
+        const res = await fetch('http://localhost:3000/withdraw', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(arrangement),
+        });
+    
+        // Check if the response is OK
+        if (!res.ok) {
+          throw new Error(`Failed to withdraw WFH arrangement: ${res.status} ${res.statusText}`);
+        }else{
+          // Successful response
+          console.log("WFH arrangement sent for withdrawal successfully!");
+          setSuccessfulWithdrawal(true);  // Update the state to indicate success
+          return await res.json();          // Ensure we return a parsed response
+        }
+    
+      } catch (error) {
+        // Error handling, set the failure state
+        console.error("Error sending withdrawal request for WFH arrangement:", error.message);
+        setSuccessfulWithdrawal(false);  // Ensure state is set to false on failure
+      }
+    };
+
 
     // Fetch the role and personal schedule from localStorage when the component mounts
     useEffect(() => {
@@ -85,8 +113,25 @@ const MyApplicationsPage = () => {
     
   return (
     <div className="my-40">
-        <CalendarApplication data={personalData} addWFH={addWFH} successfulApplication={successfulApplication} setSuccessfulApplication={setSuccessfulApplication} />
-        <Accordion loading={loading} data={personalData} yourSchedule={true} activeSchedule={"Your Schedule"} isManageOwnApplication={isManageOwnApplication} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} isForCancel={isForCancel} cancelWFH={cancelWFH}/>
+        <CalendarApplication 
+          data={personalData} 
+          addWFH={addWFH} 
+          successfulApplication={successfulApplication} 
+          setSuccessfulApplication={setSuccessfulApplication} 
+        />
+
+        <Accordion 
+          loading={loading} 
+          data={personalData} 
+          yourSchedule={true} 
+          activeSchedule={"Your Schedule"} 
+          isManageOwnApplication={isManageOwnApplication} 
+          successfulCancellation={successfulCancellation} 
+          setSuccessfulCancellation={setSuccessfulCancellation} 
+          isForCancel={isForCancel} 
+          cancelWFH={cancelWFH}
+          withdrawalWFH={withdrawalWFH}
+        />
     </div>
   )
 }
