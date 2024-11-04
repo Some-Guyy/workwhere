@@ -1024,6 +1024,7 @@ describe('PUT /working-arrangements/manage', () => {
                 date: testDate,
                 status: 'approved',
                 reason: null,
+                purpose: "managePending",
             })
 
         // Expect 200 and json response body
@@ -1043,6 +1044,7 @@ describe('PUT /working-arrangements/manage', () => {
                 date: testDate,
                 status: 'rejected',
                 reason: "Important meeting, everyone is required to be in office",
+                purpose: "managePending",
             })
 
         // Expect 200 and json response body
@@ -1063,6 +1065,7 @@ describe('PUT /working-arrangements/manage', () => {
                 date: testDate,
                 status: 'approved',
                 reason: null,
+                purpose: "managePending",
             })
 
         // Expect 404 and json response body
