@@ -89,6 +89,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
         // Process formData here (send it to an API, or display it, etc.)
         const formData = {
             staffId: userDetails.staffId,
+            reportingId: userDetails.reportingId,
             staffFirstName: userDetails.staffFirstName, 
             staffLastName: userDetails.staffLastName, 
             dates

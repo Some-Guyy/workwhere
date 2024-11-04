@@ -55,7 +55,7 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, called
               .where('staffId', 'in', batch)
               .where("date", "<=", startDate)
               .where("date", ">=", endDate)
-              .where("status", "!=", "rejected")
+              .where("status", "in", ["approved", "pending"])
               .get()
       
             snapshot.forEach((doc) => {
@@ -69,7 +69,7 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, called
             const batch = ids.slice(i, i + batchSize)
             const snapshot = await db.collection(collectionWa)
               .where('staffId', 'in', batch)
-              .where("status", "==", "pending")
+              .where("status", "in", ["pending", "pendingWithdraw"])
               .get()
       
             snapshot.forEach((doc) => {
@@ -159,7 +159,7 @@ app.get("/working-arrangements/team/:employeeId/:date", async (req, res) => {
 //create new working arrangement 
 app.post('/request', async (req, res) => {
     try {
-        const { staffId, staffFirstName, staffLastName, dates } = req.body;
+        const { reportingId, staffId, staffFirstName, staffLastName, dates } = req.body;
         // create a working arrangement for each date
         const batch = db.batch()
 
@@ -206,7 +206,23 @@ app.post('/request', async (req, res) => {
                     time: time,
                     attachment: attachment == null ? null : attachment
                 })
+
+                // also need to create notification for each date
+                const newNotificationRef = db.collection("notifications").doc()
+                batch.set(newNotificationRef, {
+                    staffId: reportingId,
+                    arrangementDate: new Date(date),
+                    arrangementStatus: "pending",
+                    status: "unseen",
+                    reason: null,
+                    actorId: staffId,
+                    actorFirstName: staffFirstName,
+                    actorLastName: staffLastName
+                })
+
             })
+
+            
         }
 
         
@@ -216,6 +232,7 @@ app.post('/request', async (req, res) => {
         res.status(201).json({ message: 'Request created successfully' });
 
     } catch (err) {
+        console.log(err)
         res.status(500).json({ message: "Something happened when creating your request", error: `Internal server error` })
     }
 })
@@ -247,8 +264,23 @@ app.put("/cancel", async (req, res) => {
         const docRef = db.collection(collectionWa).doc(doc.id)
     
         await docRef.update({ status: "cancelled" })
+
+        //once we cancelled the working arrangement, need to delete the notification for pending
+        const notificationSnapshot = await db.collection("notifications")
+        .where('actorId', "==", staffId)
+        .where('arrangementDate', "<=", endOfDay)
+        .where('arrangementDate', ">=", targetDate)
+        .where('arrangementStatus', "==", "pending")
+        .get()
+
+        if (!notificationSnapshot.empty) {
+            const notificationDoc = notificationSnapshot.docs[0]
+            await db.collection("notifications").doc(notificationDoc.id).delete()
+        }
+
         return res.status(200).json({ message: "Working arrangement successfully cancelled." })
     } catch (err) {
+        console.log(err)
         return res.status(500).json({ message: "Something happened when cancelling your working arrangements", error: `Internal server error `})
     }
 })
@@ -257,7 +289,7 @@ app.put("/cancel", async (req, res) => {
 app.put("/withdraw", async (req, res) => {
 
     try {
-        const { staffId, staffFirstName, staffLastName, reportingId, date} = req.body
+        const { staffId, staffFirstName, staffLastName, reportingId, date, reason} = req.body
 
         const targetDate = new Date(date)
         const endOfDay = new Date(date)
@@ -275,26 +307,38 @@ app.put("/withdraw", async (req, res) => {
         if (snapshot.empty) {
             return res.status(404).json({ message: "No matching working arrangement found" })
         }
-    
+
+
         const doc = snapshot.docs[0]
         const docRef = db.collection(collectionWa).doc(doc.id)
-    
-        await docRef.update({ status: "pendingWithdrawal" })
 
+        let notificationStatus = ""
+        let message = "Working arrangement is withdrawn"
+        // auto withdrawal for jack sigma
+        if (staffId == "130002") {
+            notificationStatus = "withdrawn"
+            await docRef.update({ reason: reason, status: "withdrawn" })
+        } else {
+            //for commoners
+            notificationStatus = "pendingWithdraw"
+            message = "Working arrangement is now pending for withdrawal"
+            await docRef.update({ reason: reason, status: "pendingWithdraw" })
+        }
+    
         //after updating doc, now we send a notification to reporting manager to update him
         const notificationDoc = {
             staffId: reportingId,
             arrangementDate: new Date(date),
-            arrangementStatus: "pendingWithdrawal",
+            arrangementStatus: notificationStatus,
             status: "unseen",
-            reason: doc.data().reason,
+            reason: reason,
             actorId: staffId,
             actorFirstName: staffFirstName,
             actorLastName: staffLastName
         }
 
         await db.collection("notifications").add(notificationDoc)
-        return res.status(200).json({ message: "Working arrangement is now pending for withdrawal." })
+        return res.status(200).json({ message: message})
     } catch (err) {
         return res.status(500).json({ message: "Something happened when withdrawing your working arrangements", error: `Internal server error `})
     }
@@ -370,7 +414,7 @@ app.get("/working-arrangements/manager/:managerId/:date", async (req, res) => {
     }
 })
 
-//get team in charge working arrangements || returns pending working arrangements
+//get team in charge working arrangements || returns pending & pendingWithdraw working arrangements
 app.get("/working-arrangements/supervise/:managerId", async (req, res) => {
     try {
         const { managerId } = req.params
@@ -398,24 +442,35 @@ app.get("/working-arrangements/supervise/:managerId", async (req, res) => {
     }
 })
 
-// manager to update pending arrangements to rejected or approved
+// manager to update pending arrangements to rejected, approved, withdrawn
 app.put("/working-arrangements/manage", async (req, res) => {
 
     try {
-        const { reportingId, reportingFirstName, reportingLastName, staffId, date, status, reason} = req.body
-    
+        const { reportingId, reportingFirstName, reportingLastName, staffId, date, status, reason, purpose} = req.body
+        let findStatus = ""
         const targetDate = new Date(date)
         const endOfDay = new Date(date)
     
+
         targetDate.setHours(0, 0, 0, 0)
         endOfDay.setHours(23, 59, 59, 999)
+
+        //switch case here to determine purpose of this endpoint
+        switch (purpose) {
+            case ("managePending"):
+                findStatus = "pending"
+                break
+
+            case("manageWithdraw"):
+                findStatus = "pendingWithdraw"
+        }
     
         //return that specific working arrangement and ensure its pending
         const snapshot = await db.collection(collectionWa)
         .where("staffId", "==", staffId)
         .where("date", "<=", endOfDay)
         .where("date", ">=", targetDate)
-        .where("status", "==", "pending")
+        .where("status", "==", findStatus)
         .get()
     
         if (snapshot.empty) {
@@ -424,13 +479,49 @@ app.put("/working-arrangements/manage", async (req, res) => {
     
         const doc = snapshot.docs[0]
         const docRef = db.collection(collectionWa).doc(doc.id)
-    
+
+        //final status for the working arrangement doc, notification status for the notification doc
+        let finalStatus = status
+        let notificationStatus = status
+
+        if (purpose == "manageWithdraw") {
+
+            // manager approves means we will withdraw WA
+            if (status == "approved") {
+                finalStatus = "withdrawn"
+                notificationStatus = finalStatus
+            }
+
+            // manager rejects means we will delete the bring it back to approved
+            if (status == "rejected") {
+                finalStatus = "approved"
+                notificationStatus = "rejected withdrawal"
+            }
+        }
+
         await docRef.update({
             reportingId,
             reportingFirstName,
             reportingLastName,
             reason,
-            status })
+            status:  finalStatus})
+        
+            
+        //after updating doc, now we send a notification to subordinate to update the fella
+        const notificationDoc = {
+            staffId: staffId,
+            arrangementDate: new Date(date),
+            arrangementStatus: notificationStatus,
+            status: "unseen",
+            reason,
+            actorId: reportingId,
+            actorFirstName: reportingFirstName,
+            actorLastName: reportingLastName
+        }
+
+        await db.collection("notifications").add(notificationDoc)
+    
+
     
         return res.status(200).json({ message: "Working arrangement successfully updated." })
     } catch (err) {
@@ -444,7 +535,7 @@ app.put("/working-arrangements/manage", async (req, res) => {
 app.put("/working-arrangements/withdraw", async (req, res) => {
 
     try {
-        const { reportingId, reportingFirstName, reportingLastName, staffId, date} = req.body
+        const { reportingId, reportingFirstName, reportingLastName, staffId, date, reason} = req.body
     
         const targetDate = new Date(date)
         const endOfDay = new Date(date)
@@ -467,7 +558,7 @@ app.put("/working-arrangements/withdraw", async (req, res) => {
         const doc = snapshot.docs[0]
         const docRef = db.collection(collectionWa).doc(doc.id)
     
-        await docRef.update({ status: "withdrawn" })
+        await docRef.update({ reason: reason, status: "withdrawn" })
 
         //after updating doc, now we send a notification to subordinate to update them
         const notificationDoc = {

@@ -49,10 +49,10 @@ const CalendarApplication = ({data, addWFH, successfulApplication, setSuccessful
         const tempUnselectableDays = [];
         const disabled = new Date(today);
         if(disabled.getDay() == 5){
-          disabled.setDate(today.getDate() + 4)
+          disabled.setDate(today.getDate() + 3)
         }
         else if(disabled.getDay() == 6){
-          disabled.setDate(today.getDate() + 3)
+          disabled.setDate(today.getDate() + 2)
         }
         else{
           disabled.setDate(today.getDate() + 2);
@@ -69,7 +69,7 @@ const CalendarApplication = ({data, addWFH, successfulApplication, setSuccessful
                     tempUnselectableDays.push(newDate);
                 } else if (d.status === "leave") {
                     tempLeaveDays.push(newDate);
-                } else if (d.status === "pending") {
+                } else if (d.status === "pending" || d.status === "pendingWithdraw") {
                     tempPendingDays.push(newDate);
                     tempUnselectableDays.push(newDate);
                 }

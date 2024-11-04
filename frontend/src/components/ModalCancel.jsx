@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import { PiWarningDiamondFill } from "react-icons/pi";
-import { GrStatusGood } from "react-icons/gr";
 
 const ModalCancel = ({date, type, successfulCancellation, setSuccessfulCancellation, cancelWFH}) => {
 
