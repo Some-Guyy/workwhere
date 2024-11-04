@@ -24,6 +24,7 @@ beforeAll(async () => {
     // Insert needed data in db
     /*
         Insert employees A, B, C, D, E, F
+        Roles: MD -> (E), Directors -> (A, F), Managers -> (B, C), Staff -> (D)
         Hierarchy:
             (Sales department)
                 A -> (B, C)
@@ -962,51 +963,28 @@ describe('GET /working-arrangements/supervise/:managerId', () => {
     test('get non-existent pending arrangements of manager\'s team in charge of', async () => {
         // Get pending arrangements of Employee C's team in charge of
         const response = await request(app)
-            .get('/working-arrangements/supervise/130002')
+            .get('/working-arrangements/supervise/140008')
             .send()
 
         // Expect 200 and json response body to equal (workingArrangements would be an empty array but inChargeOf still includes Employee D) 
         expect(response.status).toBe(200)
+        expect(response.body.workingArrangements).toHaveLength(0)
         expect(response.body).toEqual({
-            workingArrangements: expect.arrayContaining([]),
-            inChargeOf: expect.arrayContaining([
+            workingArrangements: [],
+            inChargeOf: [
                 {
-                    staffId: "140001",
-                    staffFirstName: "Derek",
-                    staffLastName: "Tan",
+                    staffId: "140880",
+                    staffFirstName: "Heng",
+                    staffLastName: "Chan",
                     dept: testDept,
-                    position: "Director",
+                    position: "Account Manager",
                     country: "Singapore",
-                    email: "derek.tan@allinone.com.sg",
-                    reportingId: "130002",
-                    role: "1",
+                    email: "heng.chan@allinone.com.sg",
+                    reportingId: "140008",
+                    role: "2",
                     password: "123",
                 },
-                {
-                    staffId: "130002",
-                    staffFirstName: "Jack",
-                    staffLastName: "Sim",
-                    dept: "CEO",
-                    position: "MD",
-                    country: "Singapore",
-                    email: "jack.sim@allinone.com.sg",
-                    reportingId: "130002",
-                    role: "1",
-                    password: "123",
-                },
-                {
-                    staffId: "160008",
-                    staffFirstName: "Sally",
-                    staffLastName: "Loh",
-                    dept: "HR",
-                    position: "Director",
-                    country: "Singapore",
-                    email: "sally.loh@allinone.com.sg",
-                    reportingId: "130002",
-                    role: "1",
-                    password: "123",
-                },
-            ]),
+            ],
         })
     })
 })
@@ -1072,4 +1050,30 @@ describe('PUT /working-arrangements/manage', () => {
         expect(response.status).toBe(404)
         expect(response.body).toEqual({ message: 'No matching working arrangement found' })
     })
+
+    test('approve an existing pendingWithdrawal arrangement', async () => {
+        // Employee 
+    })
 })
+
+describe('PUT /withdraw', () => {
+    test('request withdrawal of own approved arrangement', async () => {
+        // Employee B will request withdrawal of their first approved arrangement
+
+        // Expect 200 and json response body
+    })
+
+    test('request withdrawal of MD\'s approved arrangement', async () => {
+        // Employee E will request withdrawal of their only approved arrangement
+
+        // Expect 200 and json response body
+    })
+
+    test('request withdrawal of non-existent arrangement', async () => {
+        // Employee F will request withdrawal but they do not have any approved arrangement at this point. Can use testDate
+
+        // Expect 404 and json response body
+    })
+})
+
+
