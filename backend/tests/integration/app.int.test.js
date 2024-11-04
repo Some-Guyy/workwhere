@@ -991,7 +991,7 @@ describe('PUT /working-arrangements/manage', () => {
                 staffId: "140002",
                 date: testDate,
                 status: 'approved',
-                reason: "",
+                reason: null,
                 purpose: "manageWithdraw",
             })
 
@@ -1011,7 +1011,7 @@ describe('PUT /working-arrangements/manage', () => {
                 staffId: "140003",
                 date: testDate,
                 status: 'rejected',
-                reason: "",
+                reason: null,
                 purpose: "manageWithdraw",
             })
 
