@@ -10,9 +10,11 @@ const db = admin.firestore()
 
 let collectionEmployee = "mockEmployees"
 let collectionWa = "mockWorkingArrangements"
+let collectionNotification = "notifications"
 if (process.env.NODE_ENV === 'test') {
     collectionEmployee = "testEmployees"
     collectionWa = "testWorkingArrangements"
+    collectionNotification = "testNotifications"
 }
 
 const cors = require("cors")
@@ -208,7 +210,7 @@ app.post('/request', async (req, res) => {
                 })
 
                 // also need to create notification for each date
-                const newNotificationRef = db.collection("notifications").doc()
+                const newNotificationRef = db.collection(collectionNotification).doc()
                 batch.set(newNotificationRef, {
                     staffId: reportingId,
                     arrangementDate: new Date(date),
@@ -267,7 +269,7 @@ app.put("/cancel", async (req, res) => {
         await docRef.update({ status: "cancelled" })
 
         //once we cancelled the working arrangement, need to delete the notification for pending
-        const notificationSnapshot = await db.collection("notifications")
+        const notificationSnapshot = await db.collection(collectionNotification)
         .where('actorId', "==", staffId)
         .where('arrangementDate', "<=", endOfDay)
         .where('arrangementDate', ">=", targetDate)
@@ -276,7 +278,7 @@ app.put("/cancel", async (req, res) => {
 
         if (!notificationSnapshot.empty) {
             const notificationDoc = notificationSnapshot.docs[0]
-            await db.collection("notifications").doc(notificationDoc.id).delete()
+            await db.collection(collectionNotification).doc(notificationDoc.id).delete()
         }
 
         return res.status(200).json({ message: "Working arrangement successfully cancelled." })
@@ -339,7 +341,7 @@ app.put("/withdraw", async (req, res) => {
             notificationCreated: firestore.Timestamp.now()
         }
 
-        await db.collection("notifications").add(notificationDoc)
+        await db.collection(collectionNotification).add(notificationDoc)
         return res.status(200).json({ message: message})
     } catch (err) {
         return res.status(500).json({ message: "Something happened when withdrawing your working arrangements", error: `Internal server error `})
@@ -350,7 +352,7 @@ app.put("/withdraw", async (req, res) => {
 app.get("/get-notifications/:employeeId", async (req, res) => {
     try {
         const {employeeId} = req.params
-        const snapshot = await db.collection("notifications")
+        const snapshot = await db.collection(collectionNotification)
         .where('staffId', "==", employeeId)
         .get()
 
@@ -377,7 +379,7 @@ app.put("/seen-notification", async (req, res) => {
     
     try {
         const {docId} = req.body
-        const docRef = db.collection("notifications").doc(docId)
+        const docRef = db.collection(collectionNotification).doc(docId)
         await docRef.update({ status: "seen" })
 
         return res.status(200).json({message : "Successfully updated notification status"})
@@ -567,7 +569,7 @@ app.put("/working-arrangements/manage", async (req, res) => {
             notificationCreated: firestore.Timestamp.now()
         }
 
-        await db.collection("notifications").add(notificationDoc)
+        await db.collection(collectionNotification).add(notificationDoc)
     
 
     
@@ -621,7 +623,7 @@ app.put("/working-arrangements/withdraw", async (req, res) => {
             notificationCreated: firestore.Timestamp.now()
         }
 
-        await db.collection("notifications").add(notificationDoc)
+        await db.collection(collectionNotification).add(notificationDoc)
     
         return res.status(200).json({ message: "Working arrangement successfully updated." })
     } catch (err) {
