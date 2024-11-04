@@ -6,6 +6,7 @@ const firestore = require('firebase-admin/firestore')
 
 const collectionEmployee = "testEmployees"
 const collectionWa = "testWorkingArrangements"
+const collectionNotification = "testNotifications"
 
 const testDept = "Sales"
 const testDate = "2024-10-01"
@@ -305,6 +306,7 @@ afterAll(async () => {
 
     await deleteCollection(db, collectionEmployee)
     await deleteCollection(db, collectionWa)
+    await deleteCollection(db, collectionNotification)
 })
 
 describe('POST /login', () => {
@@ -783,7 +785,7 @@ describe('PUT /cancel', () => {
             .send({
                 staffId: "140001",
                 date: testDate
-              });
+            });
         // Expect 200 and json response body equals
         expect(response.status).toBe(200);
         expect(response.body.message).toEqual('Working arrangement successfully cancelled.');
@@ -797,7 +799,7 @@ describe('PUT /cancel', () => {
             .send({
                 staffId: "140001",
                 date: testDate
-                });
+            });
 
         // Expect 404 and json response body to equal
         expect(response.status).toBe(404)
@@ -992,7 +994,7 @@ describe('PUT /working-arrangements/manage', () => {
                 reason: "",
                 purpose: "manageWithdraw",
             })
-        
+
         // Expect 200 and json response body
         expect(response.status).toBe(200)
         expect(response.body).toEqual({ message: "Working arrangement successfully updated." })
@@ -1012,7 +1014,7 @@ describe('PUT /working-arrangements/manage', () => {
                 reason: "",
                 purpose: "manageWithdraw",
             })
-        
+
         // Expect 200 and json response body
         expect(response.status).toBe(200)
         expect(response.body).toEqual({ message: "Working arrangement successfully updated." })
@@ -1022,49 +1024,99 @@ describe('PUT /working-arrangements/manage', () => {
 describe('PUT /withdraw', () => {
     test('request withdrawal of own approved arrangement', async () => {
         // Employee B will request withdrawal of their first approved arrangement
-        
+        const response = await request(app)
+            .put('/withdraw')
+            .send({
+                staffId: "140894",
+                staffFirstName: "Rahim",
+                staffLastName: "Khalid",
+                reportingId: "140001",
+                date: testTomorrow,
+                reason: "Lack of manpower",
+            })
 
         // Expect 200 and json response body
-        expect(true).toBe(false)
+        expect(response.status).toBe(200)
+        expect(response.body).toEqual({ message: "Working arrangement is now pending for withdrawal" })
     })
 
     test('request withdrawal of MD\'s approved arrangement', async () => {
         // Employee E will request withdrawal of their only approved arrangement (It was created in the POST /request test and it used testDate, also reportingId will be itself as Employee E is the MD)
+        const response = await request(app)
+            .put('/withdraw')
+            .send({
+                staffId: "130002",
+                staffFirstName: "Jack",
+                staffLastName: "Sim",
+                reportingId: "130002",
+                date: testDate,
+                reason: "Office meeting",
+            })
 
         // Expect 200 and json response body
-        expect(true).toBe(false)
+        expect(response.status).toBe(200)
+        expect(response.body).toEqual({ message: "Working arrangement is withdrawn" })
     })
 
     test('request withdrawal of non-existent arrangement', async () => {
         // Employee F will request withdrawal but they do not have any approved arrangement at this point. Can use testDate
+        const response = await request(app)
+            .put('/withdraw')
+            .send({
+                staffId: "160008",
+                staffFirstName: "Sally",
+                staffLastName: "Loh",
+                reportingId: "130002",
+                date: testDate,
+                reason: "Office meeting",
+            })
 
         // Expect 404 and json response body
-        expect(true).toBe(false)
+        expect(response.status).toBe(404)
+        expect(response.body).toEqual({ message: "No matching working arrangement found" })
     })
 })
 
 describe('GET /get-notifications/:employeeId', () => {
     test('get all notifications for a user', async () => {
         // Get all notifications for Employee G
+        const response = await request(app)
+            .get('/get-notifications/140002')
+            .send()
 
         // Expect 200 and json response body
-        expect(true).toBe(false)
+        expect(response.status).toBe(200)
+        expect(response.body.notifications).toHaveLength(1)
     })
 
     test('get non-existent notifications for a non-existent user', async () => {
         // Get all notifications for staffId 999999
+        const response = await request(app)
+            .get('/get-notifications/999999')
+            .send()
 
         // Expect 200 and json response body with empty array
-        expect(true).toBe(false)
+        expect(response.status).toBe(200)
+        expect(response.body.notifications).toHaveLength(0)
     })
 })
 
 describe('PUT /seen-notification', () => {
     test('change a user\'s notification to seen', async () => {
-        // Get all notifications for Employee G and store the docId
+        // Get all notifications for Employee G and store the docId, this is because docId is different with every test run
+        const response1 = await request(app)
+            .get('/get-notifications/140002')
+            .send()
+
+        const docId = response1.body.notifications[0][0]
+
         // Change the notification to seen for the docId
+        const response2 = await request(app)
+            .put('/seen-notification')
+            .send({ docId })
 
         // Expect 200 and json response body
-        expect(true).toBe(false)
+        expect(response.status).toBe(200)
+        expect(response.body).toEqual({ message: "Successfully updated notification status" })
     })
 })
