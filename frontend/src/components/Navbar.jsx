@@ -61,8 +61,20 @@ const Navbar = () => {
     try{
       const res = await fetch(apiUrl);
       const data = await res.json();
-      console.log(data)
-      setNotificationData(data.notifications.reverse())
+      data.notifications.sort((a, b) => {
+        const aSeconds = a[1].notificationCreated._seconds;
+        const bSeconds = b[1].notificationCreated._seconds;
+        const aNanoseconds = a[1].notificationCreated._nanoseconds;
+        const bNanoseconds = b[1].notificationCreated._nanoseconds;
+    
+        if (aSeconds !== bSeconds) {
+            return aSeconds - bSeconds;
+        } else {
+            return aNanoseconds - bNanoseconds;
+        }
+    });
+    
+    setNotificationData(data.notifications.reverse())
     }
     catch(error){
       console.log("Error fetching notification data")
