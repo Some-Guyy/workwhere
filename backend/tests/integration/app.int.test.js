@@ -830,6 +830,7 @@ describe('POST /request', () => {
         const response = await request(app)
             .post('/request')
             .send({
+                reportingId: "130002",
                 staffId: "160008",
                 staffFirstName: "Sally",
                 staffLastName: "Loh",
