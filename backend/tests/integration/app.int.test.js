@@ -13,6 +13,7 @@ const testTomorrow = "2024-10-02"
 const testYesterday = "2024-09-30"
 const testNowDate = new Date().toJSON().slice(0, 10)
 const testFirestoreDate = firestore.Timestamp.fromDate(new Date(testDate))
+const testFirestoreTomorrow = firestore.Timestamp.fromDate(new Date(testTomorrow))
 const testFirestoreNow = firestore.Timestamp.fromDate(new Date(testNowDate))
 
 const timestampToSeconds = (date) => ({
@@ -158,7 +159,7 @@ beforeAll(async () => {
             staffFirstName: "Derek",
             staffLastName: "Tan",
             reason: null,
-            date: testFirestoreDate,
+            date: testFirestoreTomorrow,
             requestCreated: testFirestoreNow,
             status: 'approved',
             reportingId: "130002",
@@ -186,7 +187,7 @@ beforeAll(async () => {
             staffFirstName: "Rahim",
             staffLastName: "Khalid",
             reason: null,
-            date: testFirestoreDate,
+            date: testFirestoreTomorrow,
             requestCreated: testFirestoreNow,
             status: 'approved',
             reportingId: "140001",
@@ -214,7 +215,7 @@ beforeAll(async () => {
             staffFirstName: "Jaclyn",
             staffLastName: "Lee",
             reason: null,
-            date: testFirestoreDate,
+            date: testFirestoreTomorrow,
             requestCreated: testFirestoreNow,
             status: 'approved',
             reportingId: "140001",
@@ -230,7 +231,7 @@ beforeAll(async () => {
             reason: "Lack of manpower",
             date: testFirestoreDate,
             requestCreated: testFirestoreNow,
-            status: 'pendingWithdrawal',
+            status: 'pendingWithdraw',
             reportingId: "140894",
             reportingFirstName: "Rahim",
             reportingLastName: "Khalid",
@@ -244,7 +245,7 @@ beforeAll(async () => {
             reason: "Lack of manpower",
             date: testFirestoreDate,
             requestCreated: testFirestoreNow,
-            status: 'pendingWithdrawal',
+            status: 'pendingWithdraw',
             reportingId: "140894",
             reportingFirstName: "Rahim",
             reportingLastName: "Khalid",
@@ -375,7 +376,7 @@ describe('GET /working-arrangements/:employeeid', () => {
                 staffFirstName: "Derek",
                 staffLastName: "Tan",
                 reason: null,
-                date: timestampToSeconds(new Date(testDate)),
+                date: timestampToSeconds(new Date(testTomorrow)),
                 requestCreated: timestampToSeconds(new Date(testNowDate)),
                 status: 'approved',
                 reportingId: "130002",
@@ -408,7 +409,7 @@ describe('GET /working-arrangements/department/:department/:date', () => {
             .send()
 
         // Expect arrangements of A, B and C
-        // Expect arrangements to be both approved and pending
+        // Expect arrangements to be pending only
         expect(response.status).toBe(200)
         expect(response.body).toEqual({
             workingArrangements: expect.arrayContaining([
@@ -427,51 +428,9 @@ describe('GET /working-arrangements/department/:department/:date', () => {
                     attachment: null
                 },
                 {
-                    staffId: "140001",
-                    staffFirstName: "Derek",
-                    staffLastName: "Tan",
-                    reason: null,
-                    date: timestampToSeconds(new Date(testDate)),
-                    requestCreated: timestampToSeconds(new Date(testNowDate)),
-                    status: 'approved',
-                    reportingId: "130002",
-                    reportingFirstName: "Jack",
-                    reportingLastName: "Sim",
-                    time: "AM",
-                    attachment: null
-                },
-                {
                     staffId: "140894",
                     staffFirstName: "Rahim",
                     staffLastName: "Khalid",
-                    reason: null,
-                    date: timestampToSeconds(new Date(testDate)),
-                    requestCreated: timestampToSeconds(new Date(testNowDate)),
-                    status: 'pending',
-                    reportingId: null,
-                    reportingFirstName: null,
-                    reportingLastName: null,
-                    time: "AM",
-                    attachment: null
-                },
-                {
-                    staffId: "140894",
-                    staffFirstName: "Rahim",
-                    staffLastName: "Khalid",
-                    reason: null,
-                    date: timestampToSeconds(new Date(testDate)),
-                    requestCreated: timestampToSeconds(new Date(testNowDate)),
-                    status: 'approved',
-                    reportingId: "140001",
-                    reportingFirstName: "Derek",
-                    reportingLastName: "Tan",
-                    time: "AM",
-                    attachment: null
-                },
-                {
-                    staffId: "140008",
-                    staffFirstName: "Jaclyn",
-                    staffLastName: "Lee",
                     reason: null,
                     date: timestampToSeconds(new Date(testDate)),
                     requestCreated: timestampToSeconds(new Date(testNowDate)),
@@ -489,10 +448,10 @@ describe('GET /working-arrangements/department/:department/:date', () => {
                     reason: null,
                     date: timestampToSeconds(new Date(testDate)),
                     requestCreated: timestampToSeconds(new Date(testNowDate)),
-                    status: 'approved',
-                    reportingId: "140001",
-                    reportingFirstName: "Derek",
-                    reportingLastName: "Tan",
+                    status: 'pending',
+                    reportingId: null,
+                    reportingFirstName: null,
+                    reportingLastName: null,
                     time: "AM",
                     attachment: null
                 },
@@ -551,71 +510,14 @@ describe('GET /working-arrangements/department/:department/:date', () => {
     })
 
     test('get arrangements for department on a date with no arrangements', async () => {
-        // Get from department including employees A, B, C but one day after and before the date of arrangements
-        const response1 = await request(app)
-            .get(`/working-arrangements/department/${testDept}/${testTomorrow}`)
-            .send()
-        const response2 = await request(app)
+        // Get from department including employees A, B, C but on a day without arrangements
+        const response = await request(app)
             .get(`/working-arrangements/department/${testDept}/${testYesterday}`)
             .send()
 
         // Expect 200 but empty response array
-        expect(response1.status).toBe(200)
-        expect(response1.body).toEqual({
-            workingArrangements: [],
-            sameDepart: expect.arrayContaining([
-                {
-                    staffId: "140001",
-                    staffFirstName: "Derek",
-                    staffLastName: "Tan",
-                    dept: testDept,
-                    position: "Director",
-                    country: "Singapore",
-                    email: "derek.tan@allinone.com.sg",
-                    reportingId: "130002",
-                    role: "1",
-                    password: "123",
-                },
-                {
-                    staffId: "140894",
-                    staffFirstName: "Rahim",
-                    staffLastName: "Khalid",
-                    dept: testDept,
-                    position: "Sales Manager",
-                    country: "Singapore",
-                    email: "rahim.khalid@allinone.com.sg",
-                    reportingId: "140001",
-                    role: "3",
-                    password: "123",
-                },
-                {
-                    staffId: "140008",
-                    staffFirstName: "Jaclyn",
-                    staffLastName: "Lee",
-                    dept: testDept,
-                    position: "Sales Manager",
-                    country: "Singapore",
-                    email: "jaclyn.lee@allinone.com.sg",
-                    reportingId: "140001",
-                    role: "3",
-                    password: "123",
-                },
-                {
-                    staffId: "140880",
-                    staffFirstName: "Heng",
-                    staffLastName: "Chan",
-                    dept: testDept,
-                    position: "Account Manager",
-                    country: "Singapore",
-                    email: "heng.chan@allinone.com.sg",
-                    reportingId: "140008",
-                    role: "2",
-                    password: "123",
-                },
-            ]),
-        })
-        expect(response2.status).toBe(200)
-        expect(response2.body).toEqual({
+        expect(response.status).toBe(200)
+        expect(response.body).toEqual({
             workingArrangements: [],
             sameDepart: expect.arrayContaining([
                 {
@@ -679,7 +581,7 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
             .send()
 
         // Expect arrangements of both B and C
-        // Expect arrangements to be both approved and pending
+        // Expect arrangements to be pending only
         expect(response.status).toBe(200)
         expect(response.body).toEqual({
             workingArrangements: expect.arrayContaining([
@@ -698,20 +600,6 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
                     attachment: null
                 },
                 {
-                    staffId: "140894",
-                    staffFirstName: "Rahim",
-                    staffLastName: "Khalid",
-                    reason: null,
-                    date: timestampToSeconds(new Date(testDate)),
-                    requestCreated: timestampToSeconds(new Date(testNowDate)),
-                    status: 'approved',
-                    reportingId: "140001",
-                    reportingFirstName: "Derek",
-                    reportingLastName: "Tan",
-                    time: "AM",
-                    attachment: null
-                },
-                {
                     staffId: "140008",
                     staffFirstName: "Jaclyn",
                     staffLastName: "Lee",
@@ -722,20 +610,6 @@ describe('GET /working-arrangements/manager/:managerId/:date', () => {
                     reportingId: null,
                     reportingFirstName: null,
                     reportingLastName: null,
-                    time: "AM",
-                    attachment: null
-                },
-                {
-                    staffId: "140008",
-                    staffFirstName: "Jaclyn",
-                    staffLastName: "Lee",
-                    reason: null,
-                    date: timestampToSeconds(new Date(testDate)),
-                    requestCreated: timestampToSeconds(new Date(testNowDate)),
-                    status: 'approved',
-                    reportingId: "140001",
-                    reportingFirstName: "Derek",
-                    reportingLastName: "Tan",
                     time: "AM",
                     attachment: null
                 },
@@ -801,7 +675,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
     test('get approved arrangements of employee\'s teammates on a date', async () => {
         // Get from B as the employee
         const response = await request(app)
-            .get(`/working-arrangements/team/140894/${testDate}`)
+            .get(`/working-arrangements/team/140894/${testTomorrow}`)
             .send()
 
         // Expect arrangements of both B and C
@@ -814,7 +688,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
                     staffFirstName: "Rahim",
                     staffLastName: "Khalid",
                     reason: null,
-                    date: timestampToSeconds(new Date(testDate)),
+                    date: timestampToSeconds(new Date(testTomorrow)),
                     requestCreated: timestampToSeconds(new Date(testNowDate)),
                     status: 'approved',
                     reportingId: "140001",
@@ -828,7 +702,7 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
                     staffFirstName: "Jaclyn",
                     staffLastName: "Lee",
                     reason: null,
-                    date: timestampToSeconds(new Date(testDate)),
+                    date: timestampToSeconds(new Date(testTomorrow)),
                     requestCreated: timestampToSeconds(new Date(testNowDate)),
                     status: 'approved',
                     reportingId: "140001",
@@ -1106,22 +980,49 @@ describe('PUT /working-arrangements/manage', () => {
 
     test('approve an existing pendingWithdrawal arrangement', async () => {
         // Employee B will approve Employee G's pendingWithdrawal arrangement (using "manageWithdraw" purpose)
+        const response = await request(app)
+            .put('/working-arrangements/manage')
+            .send({
+                reportingId: "140894",
+                reportingFirstName: "Rahim",
+                reportingLastName: "Khalid",
+                staffId: "140002",
+                date: testDate,
+                status: 'approved',
+                reason: "",
+                purpose: "manageWithdraw",
+            })
         
         // Expect 200 and json response body
-        expect(true).toBe(false)
+        expect(response.status).toBe(200)
+        expect(response.body).toEqual({ message: "Working arrangement successfully updated." })
     })
 
     test('reject an existing pendingWithdrawal arrangement', async () => {
         // Employee B will reject Employee H's pendingWithdrawal arrangement (using "manageWithdraw" purpose)
+        const response = await request(app)
+            .put('/working-arrangements/manage')
+            .send({
+                reportingId: "140894",
+                reportingFirstName: "Rahim",
+                reportingLastName: "Khalid",
+                staffId: "140003",
+                date: testDate,
+                status: 'rejected',
+                reason: "",
+                purpose: "manageWithdraw",
+            })
         
         // Expect 200 and json response body
-        expect(true).toBe(false)
+        expect(response.status).toBe(200)
+        expect(response.body).toEqual({ message: "Working arrangement successfully updated." })
     })
 })
 
 describe('PUT /withdraw', () => {
     test('request withdrawal of own approved arrangement', async () => {
         // Employee B will request withdrawal of their first approved arrangement
+        
 
         // Expect 200 and json response body
         expect(true).toBe(false)
@@ -1138,6 +1039,32 @@ describe('PUT /withdraw', () => {
         // Employee F will request withdrawal but they do not have any approved arrangement at this point. Can use testDate
 
         // Expect 404 and json response body
+        expect(true).toBe(false)
+    })
+})
+
+describe('GET /get-notifications/:employeeId', () => {
+    test('get all notifications for a user', async () => {
+        // Get all notifications for Employee G
+
+        // Expect 200 and json response body
+        expect(true).toBe(false)
+    })
+
+    test('get non-existent notifications for a non-existent user', async () => {
+        // Get all notifications for staffId 999999
+
+        // Expect 200 and json response body with empty array
+        expect(true).toBe(false)
+    })
+})
+
+describe('PUT /seen-notification', () => {
+    test('change a user\'s notification to seen', async () => {
+        // Get all notifications for Employee G and store the docId
+        // Change the notification to seen for the docId
+
+        // Expect 200 and json response body
         expect(true).toBe(false)
     })
 })
