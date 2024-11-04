@@ -15,6 +15,7 @@ jest.mock('firebase-admin', () => {
     },
     firestore: jest.fn().mockReturnValue({
       collection: jest.fn().mockReturnValue({
+        add: jest.fn(),
         where: jest.fn().mockReturnThis(),
         limit: jest.fn().mockReturnThis(),
         get: jest.fn(),
@@ -1510,6 +1511,252 @@ describe('PUT /working-arrangements/manage', () => {
 
   })
 })
+
+describe('PUT /working-arrangements/withdraw', () => {
+  test('withdraw approved working arrangement', async () => {
+    // Mock Firestore get method to return a snapshot with a matching document
+    const mockGet = db.collection().get;
+    const mockDocRef = {
+      update: jest.fn().mockResolvedValue() // Mock the update method to resolve successfully
+    };
+
+    mockGet.mockResolvedValueOnce({
+      empty: false, // Indicating that matching documents were found
+      docs: [
+        { id: 'mock-doc-id', data: () => ({ /* mock data */ }) }
+      ]
+    });
+
+    // Mock Firestore doc reference
+    db.collection().doc = jest.fn().mockReturnValue(mockDocRef);
+
+    // Simulate a PUT request with valid data
+    const response = await request(app)
+      .put('/working-arrangements/withdraw')
+      .send({
+        reportingId: "130002",
+        reportingFirstName: "Jack",
+        reportingLastName: "Sim",
+        staffId: "160008",
+        date: {
+          _seconds: 1728316800,
+          _nanoseconds: 393000000
+        },
+      });
+
+    // Assertions
+    expect(response.status).toBe(200);
+    expect(response.body.message).toEqual('Working arrangement successfully updated.');
+
+    // Verify that the correct document was updated with the correct status
+    // expect(db.collection().doc).toHaveBeenCalledWith('mock-doc-id');
+  })
+
+  test('withdraw non-existent approved arrangement', async () => {
+    const mockGet = db.collection().get
+    mockGet.mockResolvedValueOnce({
+      empty: true
+    })
+
+    const response = await request(app)
+      .put('/working-arrangements/withdraw')
+      .send({
+        reportingId: "130002",
+        reportingFirstName: "Jack",
+        reportingLastName: "Sim",
+        staffId: "160008",
+        date: {
+          _seconds: 1728316800,
+          _nanoseconds: 393000000
+        },
+        status: "approved",
+        reason: null
+      })
+    expect(response.status).toBe(404)
+    expect(response.body.message).toBe("No matching working arrangement found")
+
+  })
+
+  test('withdraw pending arrangement with firestore error', async () => {
+    //get firestore to throw error
+    const mockGet = db.collection().get
+    mockGet.mockRejectedValueOnce(new Error('Firestore error'))
+
+    const response = await request(app)
+      .put('/working-arrangements/withdraw')
+      .send()
+
+    expect(response.status).toBe(500) // Expect 500 Internal Server Error
+    expect(response.body).toEqual({ message: "Something happened when updating the working arrangements", error: `Internal server error` })
+
+  })
+})
+
+describe('PUT /cancel', () => {
+  test('cancel own working arrangement', async () => {
+    // Mock Firestore get method to return a snapshot with a matching document
+    const mockGet = db.collection().get;
+    const mockDocRef = {
+      update: jest.fn().mockResolvedValue() // Mock the update method to resolve successfully
+    };
+
+    mockGet.mockResolvedValueOnce({
+      empty: false, // Indicating that matching documents were found
+      docs: [
+        { id: 'mock-doc-id', data: () => ({ /* mock data */ }) }
+      ]
+    });
+
+    // Mock Firestore doc reference
+    db.collection().doc = jest.fn().mockReturnValue(mockDocRef);
+
+    // Simulate a PUT request with valid data
+    const response = await request(app)
+      .put('/cancel')
+      .send({
+        reportingId: "130002",
+        reportingFirstName: "Jack",
+        reportingLastName: "Sim",
+        staffId: "160008",
+        date: {
+          _seconds: 1728316800,
+          _nanoseconds: 393000000
+        },
+        status: "pending",
+        reason: null
+      });
+
+    // Assertions
+    expect(response.status).toBe(200);
+    expect(response.body.message).toEqual('Working arrangement successfully cancelled.');
+
+    // Verify that the correct document was updated with the correct status
+    expect(db.collection().doc).toHaveBeenCalledWith('mock-doc-id');
+  })
+
+  test('cancel non-existent pending arrangement', async () => {
+    const mockGet = db.collection().get
+    mockGet.mockResolvedValueOnce({
+      empty: true
+    })
+
+    const response = await request(app)
+      .put('/cancel')
+      .send({
+        reportingId: "130002",
+        reportingFirstName: "Jack",
+        reportingLastName: "Sim",
+        staffId: "160008",
+        date: {
+          _seconds: 1728316800,
+          _nanoseconds: 393000000
+        },
+        status: "approved",
+        reason: null
+      })
+    expect(response.status).toBe(404)
+    expect(response.body.message).toBe("No matching working arrangement found")
+
+  })
+
+  test('cancel pending arrangement with firestore error', async () => {
+    //get firestore to throw error
+    const mockGet = db.collection().get
+    mockGet.mockRejectedValueOnce(new Error('Firestore error'))
+
+    const response = await request(app)
+      .put('/cancel')
+      .send()
+
+    expect(response.status).toBe(500) // Expect 500 Internal Server Error
+    expect(response.body).toEqual({ message: "Something happened when cancelling your working arrangements", error: `Internal server error ` })
+
+  })
+})
+
+describe('PUT /withdraw', () => {
+  test('withdraw own working arrangement', async () => {
+    // Mock Firestore get method to return a snapshot with a matching document
+    const mockGet = db.collection().get;
+    const mockDocRef = {
+      update: jest.fn().mockResolvedValue() // Mock the update method to resolve successfully
+    };
+    const mockAdd = jest.fn().mockResolvedValue();
+
+    mockGet.mockResolvedValueOnce({
+      empty: false, // Indicating that matching documents were found
+      docs: [
+        { id: 'mock-doc-id', data: () => ({ /* mock data */ }) }
+      ]
+    });
+
+    // Mock Firestore doc reference
+    db.collection().doc = jest.fn().mockReturnValue(mockDocRef);
+
+    // Simulate a PUT request with valid data
+    const response = await request(app)
+      .put('/withdraw')
+      .send({
+        reportingId: "130002",
+        reportingFirstName: "Jack",
+        reportingLastName: "Sim",
+        staffId: "160008",
+        date: {
+          _seconds: 1728316800,
+          _nanoseconds: 393000000
+        },
+        status: "approved",
+        reason: null
+      });
+
+    // Assertions
+    expect(response.status).toBe(200);
+    expect(response.body.message).toEqual('Working arrangement is now pending for withdrawal.');
+
+    // Verify that the correct document was updated with the correct status
+    expect(db.collection().doc).toHaveBeenCalledWith('mock-doc-id');
+  })
+
+  test('withdraw non-existent pending arrangement', async () => {
+    const mockGet = db.collection().get
+    mockGet.mockResolvedValueOnce({
+      empty: true
+    })
+
+    const response = await request(app)
+      .put('/withdraw')
+      .send({
+        reportingId: "130002",
+        reportingFirstName: "Jack",
+        reportingLastName: "Sim",
+        staffId: "160008",
+        date: {
+          _seconds: 1728316800,
+          _nanoseconds: 393000000
+        },
+        status: "approved",
+        reason: null
+      })
+    expect(response.status).toBe(404)
+    expect(response.body.message).toBe("No matching working arrangement found")
+
+  })
+
+  test('cancel pending arrangement with firestore error', async () => {
+    //get firestore to throw error
+    const mockGet = db.collection().get
+    mockGet.mockRejectedValueOnce(new Error('Firestore error'))
+
+    const response = await request(app)
+      .put('/withdraw')
+      .send()
+
+    expect(response.status).toBe(500) // Expect 500 Internal Server Error
+    expect(response.body).toEqual({ message: "Something happened when withdrawing your working arrangements", error: `Internal server error ` })
+
+  })
+})
+
 
 // catch rogue calls
 describe('ALL *', () => {
