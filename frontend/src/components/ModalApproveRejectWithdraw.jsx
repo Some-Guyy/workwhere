@@ -45,7 +45,7 @@ const ModalApproveRejectWithdraw = ({modalId, date, type, staffName, StaffID, su
             reportingLastName: userDetails.staffLastName,
             staffId: StaffID,
             status: acceptOrReject,
-            reason: acceptOrReject === "approved" && reason == "" ? null : reason,
+            reason: acceptOrReject === "approved" ? null : reason,
             date: `${date.split("/")[2]}-${date.split("/")[1]}-${date.split("/")[0]}`,
             purpose: "manageWithdraw"
         }
