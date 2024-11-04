@@ -495,11 +495,6 @@ app.put("/working-arrangements/manage", async (req, res) => {
         let findStatus = ""
         const targetDate = new Date(date)
         const endOfDay = new Date(date)
-        
-        // if frontend returns empty string, we set it as null in the db
-        if (reason == "") {
-            reason = null
-        }
 
         targetDate.setHours(0, 0, 0, 0)
         endOfDay.setHours(23, 59, 59, 999)
