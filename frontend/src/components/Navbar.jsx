@@ -19,7 +19,6 @@ const Navbar = () => {
   
   // extract users role to conditionally render links
   useEffect(()=>{
-      fetchNotificationData()
       const data = JSON.parse(localStorage.getItem('state'));
       // console.log(data)
       setEmployeeName(data.staffFirstName);
@@ -27,6 +26,14 @@ const Navbar = () => {
       setEmployeePosition(data.Position)
       setEmployeeId(data.staffId)
   },[])
+
+  useEffect(()=>{
+    if(EmployeeId!=null){
+      fetchNotificationData()
+    }
+
+  },[EmployeeId])
+
 
   useEffect(()=>{
     if(notificationData!= null){
@@ -54,6 +61,7 @@ const Navbar = () => {
     try{
       const res = await fetch(apiUrl);
       const data = await res.json();
+      console.log(data)
       setNotificationData(data.notifications.reverse())
     }
     catch(error){
@@ -61,6 +69,7 @@ const Navbar = () => {
     }
 
   }
+  // console.log(notificationData)
   const updateNotifictionStatus = async (notificationId) => {
     let unseenNotification = unseenNotifications.filter(notifiction => notifiction != notificationId)
     setUnSeenNotifications(unseenNotification)
@@ -152,7 +161,9 @@ const Navbar = () => {
                       notificationData.map(([id, details])=>{
                         return <><li key={id}className={`flex items-center justify-between p-4 whitespace-normal ${unseenNotifications.includes(id) ? 'bg-gray-500' : ''}`}>
                           <div>
-                          Your working arrangement on {convert_to_date(details.arrangementDate._seconds)} has been {details.arrangementStatus} by {details.actorFirstName} {details.actorLastName} {details.reason == null?"":"Reason :" + details.reason}
+                            {details.arrangementStatus == "approved" || details.arrangementStatus == "rejected" || details.arrangementStatus=="withdrawn" || details.arrangementStatus =="rejected withdrawal"?
+                          `Your WFH arrangement on ${convert_to_date(details.arrangementDate._seconds)} has been ${details.arrangementStatus} by ${details.actorFirstName} ${details.actorLastName} ${details.reason == null?"":`Reason: ${details.reason}`}`
+                          :`You received a ${details.arrangementStatus == "pending"?`WFH`:`withdraw`} request from ${details.actorFirstName} ${details.actorLastName} for ${convert_to_date(details.arrangementDate._seconds)}  ${details.reason == null?"":"Reason : " + details.reason}`}
                           {unseenNotifications.includes(id) ? <a onClick={()=>updateNotifictionStatus(id)}><FaCheck/></a>:null}
                           </div>
                         </li>
