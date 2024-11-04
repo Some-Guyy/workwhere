@@ -617,7 +617,8 @@ app.put("/working-arrangements/withdraw", async (req, res) => {
             reason,
             actorId: reportingId,
             actorFirstName: reportingFirstName,
-            actorLastName: reportingLastName
+            actorLastName: reportingLastName,
+            notificationCreated: firestore.Timestamp.now()
         }
 
         await db.collection("notifications").add(notificationDoc)
