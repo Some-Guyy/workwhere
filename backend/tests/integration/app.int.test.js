@@ -23,11 +23,12 @@ const timestampToSeconds = (date) => ({
 beforeAll(async () => {
     // Insert needed data in db
     /*
-        Insert employees A, B, C, D, E, F
-        Roles: MD -> (E), Directors -> (A, F), Managers -> (B, C), Staff -> (D)
+        Insert employees A, B, C, D, E, F, G, H
+        Roles: MD -> (E), Directors -> (A, F), Managers -> (B, C), Staff -> (D, G, H)
         Hierarchy:
             (Sales department)
                 A -> (B, C)
+                B -> (G, H)
                 C -> D
             
             (Any)
@@ -36,6 +37,7 @@ beforeAll(async () => {
         Insert working arrangements:
             1 approved each for A, B, C (same date)
             1 pending each for A, B, C (same date)
+            1 pendingWithdrawal each for G, H (same date)
     */
 
     const employees = [
@@ -109,6 +111,30 @@ beforeAll(async () => {
             email: "sally.loh@allinone.com.sg",
             reportingId: "130002",
             role: "1",
+            password: "123",
+        },
+        {
+            staffId: "140002",
+            staffFirstName: "Susan",
+            staffLastName: "Goh",
+            dept: testDept,
+            position: "Account Manager",
+            country: "Singapore",
+            email: "susan.goh@allinone.com.sg",
+            reportingId: "140894",
+            role: "2",
+            password: "123",
+        },
+        {
+            staffId: "140003",
+            staffFirstName: "Janice",
+            staffLastName: "Chan",
+            dept: testDept,
+            position: "Account Manager",
+            country: "Singapore",
+            email: "janice.chan@allinone.com.sg",
+            reportingId: "140894",
+            role: "2",
             password: "123",
         },
     ]
@@ -194,6 +220,34 @@ beforeAll(async () => {
             reportingId: "140001",
             reportingFirstName: "Derek",
             reportingLastName: "Tan",
+            time: "AM",
+            attachment: null
+        },
+        {
+            staffId: "140002",
+            staffFirstName: "Susan",
+            staffLastName: "Goh",
+            reason: "Lack of manpower",
+            date: testFirestoreDate,
+            requestCreated: testFirestoreNow,
+            status: 'pendingWithdrawal',
+            reportingId: "140894",
+            reportingFirstName: "Rahim",
+            reportingLastName: "Khalid",
+            time: "AM",
+            attachment: null
+        },
+        {
+            staffId: "140003",
+            staffFirstName: "Janice",
+            staffLastName: "Chan",
+            reason: "Lack of manpower",
+            date: testFirestoreDate,
+            requestCreated: testFirestoreNow,
+            status: 'pendingWithdrawal',
+            reportingId: "140894",
+            reportingFirstName: "Rahim",
+            reportingLastName: "Khalid",
             time: "AM",
             attachment: null
         },
@@ -827,14 +881,14 @@ describe('GET /working-arrangements/team/:employeeId/:date', () => {
 
 describe('POST /request', () => {
     test('create request for an arrangement', async () => {
-        // Create a request for employee F
+        // Create a request for employee E
         const response = await request(app)
             .post('/request')
             .send({
                 reportingId: "130002",
-                staffId: "160008",
-                staffFirstName: "Sally",
-                staffLastName: "Loh",
+                staffId: "130002",
+                staffFirstName: "Jack",
+                staffLastName: "Sim",
                 dates: [{
                     date: testDate,
                     time: 'AM',
@@ -968,7 +1022,6 @@ describe('GET /working-arrangements/supervise/:managerId', () => {
 
         // Expect 200 and json response body to equal (workingArrangements would be an empty array but inChargeOf still includes Employee D) 
         expect(response.status).toBe(200)
-        expect(response.body.workingArrangements).toHaveLength(0)
         expect(response.body).toEqual({
             workingArrangements: [],
             inChargeOf: [
@@ -1052,7 +1105,17 @@ describe('PUT /working-arrangements/manage', () => {
     })
 
     test('approve an existing pendingWithdrawal arrangement', async () => {
-        // Employee 
+        // Employee B will approve Employee G's pendingWithdrawal arrangement (using "manageWithdraw" purpose)
+        
+        // Expect 200 and json response body
+        expect(true).toBe(false)
+    })
+
+    test('reject an existing pendingWithdrawal arrangement', async () => {
+        // Employee B will reject Employee H's pendingWithdrawal arrangement (using "manageWithdraw" purpose)
+        
+        // Expect 200 and json response body
+        expect(true).toBe(false)
     })
 })
 
@@ -1061,19 +1124,20 @@ describe('PUT /withdraw', () => {
         // Employee B will request withdrawal of their first approved arrangement
 
         // Expect 200 and json response body
+        expect(true).toBe(false)
     })
 
     test('request withdrawal of MD\'s approved arrangement', async () => {
-        // Employee E will request withdrawal of their only approved arrangement
+        // Employee E will request withdrawal of their only approved arrangement (It was created in the POST /request test and it used testDate, also reportingId will be itself as Employee E is the MD)
 
         // Expect 200 and json response body
+        expect(true).toBe(false)
     })
 
     test('request withdrawal of non-existent arrangement', async () => {
         // Employee F will request withdrawal but they do not have any approved arrangement at this point. Can use testDate
 
         // Expect 404 and json response body
+        expect(true).toBe(false)
     })
 })
-
-
