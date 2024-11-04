@@ -1116,7 +1116,7 @@ describe('PUT /seen-notification', () => {
             .send({ docId })
 
         // Expect 200 and json response body
-        expect(response.status).toBe(200)
-        expect(response.body).toEqual({ message: "Successfully updated notification status" })
+        expect(response2.status).toBe(200)
+        expect(response2.body).toEqual({ message: "Successfully updated notification status" })
     })
 })
