@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import { PiWarningDiamondFill } from "react-icons/pi";
 
-const ModalApproveRejectWithdraw = ({modalId, date, type, staffName, StaffID, successfulApprovalRejectionWithdrawal, setSuccessfulApprovalRejectionWithdrawal, approveRejectWithdrawal}) => {
+const ModalApproveRejectWithdraw = ({modalId, date, type, staffName, StaffID, successfulApprovalRejectionWithdrawal, setSuccessfulApprovalRejectionWithdrawal, approveRejectWithdrawal, reasonForWithdraw}) => {
 
     const [userDetails, setUserDetails] = useState(null); // State to store user details
     const navigate = useNavigate(); // Use navigate hook
@@ -45,7 +45,7 @@ const ModalApproveRejectWithdraw = ({modalId, date, type, staffName, StaffID, su
             reportingLastName: userDetails.staffLastName,
             staffId: StaffID,
             status: acceptOrReject,
-            reason: acceptOrReject === "approved" ? null : reason,
+            reason: acceptOrReject === "approved" && reason == "" ? null : reason,
             date: `${date.split("/")[2]}-${date.split("/")[1]}-${date.split("/")[0]}`,
             purpose: "manageWithdraw"
         }
@@ -73,6 +73,7 @@ const ModalApproveRejectWithdraw = ({modalId, date, type, staffName, StaffID, su
                             <span className="font-bold text-2xl">Arrangement Date: {date}</span><br />
                             <span className="font-bold text-2xl">Arrangement Type: {type}</span><br />
                             <span className="font-bold text-2xl">Staff name: {staffName}</span><br />
+                            <span className="font-bold text-2xl">Reason for withdrawal: {reasonForWithdraw}</span><br />
                         </div>
 
                         {/* Reasoning data */}

@@ -144,6 +144,7 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
               }
             {details.status == "pendingWithdraw" ? 
             <td><ModalApproveRejectWithdraw 
+            reasonForWithdraw={details.reason}
             modalId={modalId}
             date={convert_to_date(details.date._seconds)} 
             type={details.time} 

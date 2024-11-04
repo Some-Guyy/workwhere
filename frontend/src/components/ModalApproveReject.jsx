@@ -49,7 +49,7 @@ const ModalApproveReject = ({modalId, date, type, staffName, StaffID, approveRej
             reportingLastName: userDetails.staffLastName,
             staffId: StaffID,
             status: acceptOrReject,
-            reason: acceptOrReject === "approved" ? null : reason,
+            reason: acceptOrReject === "approved" && reason == "" ? null : reason,
             date: `${date.split("/")[2]}-${date.split("/")[1]}-${date.split("/")[0]}`,
             purpose: "managePending"
         }
