@@ -217,7 +217,8 @@ app.post('/request', async (req, res) => {
                     reason: null,
                     actorId: staffId,
                     actorFirstName: staffFirstName,
-                    actorLastName: staffLastName
+                    actorLastName: staffLastName,
+                    notificationCreated: firestore.Timestamp.now()
                 })
 
             })
@@ -334,7 +335,8 @@ app.put("/withdraw", async (req, res) => {
             reason: reason,
             actorId: staffId,
             actorFirstName: staffFirstName,
-            actorLastName: staffLastName
+            actorLastName: staffLastName,
+            notificationCreated: firestore.Timestamp.now()
         }
 
         await db.collection("notifications").add(notificationDoc)
@@ -491,7 +493,11 @@ app.put("/working-arrangements/manage", async (req, res) => {
         let findStatus = ""
         const targetDate = new Date(date)
         const endOfDay = new Date(date)
-    
+        
+        // if frontend returns empty string, we set it as null in the db
+        if (reason == "") {
+            reason = null
+        }
 
         targetDate.setHours(0, 0, 0, 0)
         endOfDay.setHours(23, 59, 59, 999)
@@ -557,7 +563,8 @@ app.put("/working-arrangements/manage", async (req, res) => {
             reason,
             actorId: reportingId,
             actorFirstName: reportingFirstName,
-            actorLastName: reportingLastName
+            actorLastName: reportingLastName,
+            notificationCreated: firestore.Timestamp.now()
         }
 
         await db.collection("notifications").add(notificationDoc)
@@ -607,7 +614,7 @@ app.put("/working-arrangements/withdraw", async (req, res) => {
             arrangementDate: new Date(date),
             arrangementStatus: "withdrawn",
             status: "unseen",
-            reason: doc.data().reason,
+            reason,
             actorId: reportingId,
             actorFirstName: reportingFirstName,
             actorLastName: reportingLastName
