@@ -20,7 +20,8 @@ jest.mock('firebase-admin', () => {
         limit: jest.fn().mockReturnThis(),
         get: jest.fn(),
         doc: jest.fn().mockReturnValue({
-          update: jest.fn()
+          update: jest.fn(),
+          delete: jest.fn()
         })
       }),
       batch: jest.fn().mockReturnValue({
@@ -1355,80 +1356,6 @@ describe('GET /working-arrangements/supervise/:managerId', () => {
   })
 })
 
-describe('PUT /cancel', () => {
-  test('cancel existing pending working arrangement', async () => {
-    // Mock Firestore get method to return a snapshot with a matching document
-    const mockGet = db.collection().get;
-    const mockDocRef = {
-      update: jest.fn().mockResolvedValue() // Mock the update method to resolve successfully
-    };
-
-    mockGet.mockResolvedValueOnce({
-      empty: false, // Indicating that matching documents were found
-      docs: [
-        { id: 'mock-doc-id', data: () => ({ /* mock data */ }) }
-      ]
-    });
-
-    // Mock Firestore doc reference
-    db.collection().doc = jest.fn().mockReturnValue(mockDocRef);
-
-    // Simulate a PUT request with valid data
-    const response = await request(app)
-      .put('/cancel')
-      .send({
-        staffId: "130002",
-        date: {
-          _seconds: 1728316800,
-          _nanoseconds: 393000000
-        }
-      });
-
-    // Assertions
-    expect(response.status).toBe(200);
-    expect(response.body.message).toEqual('Working arrangement successfully cancelled.');
-
-    // Verify that the correct document was updated with the correct status
-    expect(db.collection().doc).toHaveBeenCalledWith('mock-doc-id');
-    expect(mockDocRef.update).toHaveBeenCalledWith({ status: 'cancelled' });
-  });
-
-
-  //unsuccessful
-  test('cancel a non-existent pending working arrangement', async () => {
-    const mockGet = db.collection().get
-    mockGet.mockResolvedValueOnce({
-      empty: true
-    })
-
-    const response = await request(app)
-      .put('/cancel')
-      .send({
-        staffId: "130002",
-        date: {
-          _seconds: 1728316800,
-          _nanoseconds: 393000000
-        }
-      })
-    expect(response.status).toBe(404)
-    expect(response.body.message).toBe("No matching working arrangement found")
-
-  })
-
-  test('cancel pending working arrangement with firestore error', async () => {
-    //get firestore to throw error
-    const mockGet = db.collection().get
-    mockGet.mockRejectedValueOnce(new Error('Firestore error'))
-
-    const response = await request(app)
-      .put('/cancel')
-      .send()
-
-    expect(response.status).toBe(500) // Expect 500 Internal Server Error
-    expect(response.body).toEqual({ message: "Something happened when cancelling your working arrangements", error: `Internal server error ` })
-
-  })
-})
 
 describe('PUT /working-arrangements/manage', () => {
   test('update existing pending arrangement', async () => {
@@ -1461,7 +1388,9 @@ describe('PUT /working-arrangements/manage', () => {
           _nanoseconds: 393000000
         },
         status: "approved",
-        reason: null
+        reason: null,
+        purpose: "manageWithdraw"
+
       });
 
     // Assertions
@@ -1470,6 +1399,84 @@ describe('PUT /working-arrangements/manage', () => {
 
     // Verify that the correct document was updated with the correct status
     expect(db.collection().doc).toHaveBeenCalledWith('mock-doc-id');
+  })
+
+  test('update managePending arrangement', async () => {
+    // Mock Firestore get method to return a snapshot with a matching document
+    const mockGet = db.collection().get;
+    const mockDocRef = {
+      update: jest.fn().mockResolvedValue() // Mock the update method to resolve successfully
+    };
+
+    mockGet.mockResolvedValueOnce({
+      empty: false, // Indicating that matching documents were found
+      docs: [
+        { id: 'mock-doc-id', data: () => ({ /* mock data */ }) }
+      ]
+    });
+
+    // Mock Firestore doc reference
+    db.collection().doc = jest.fn().mockReturnValue(mockDocRef);
+
+    // Simulate a PUT request with valid data
+    const response = await request(app)
+      .put('/working-arrangements/manage')
+      .send({
+        reportingId: "130002",
+        reportingFirstName: "Jack",
+        reportingLastName: "Sim",
+        staffId: "160008",
+        date: {
+          _seconds: 1728316800,
+          _nanoseconds: 393000000
+        },
+        status: "approved",
+        reason: null,
+        purpose: "managePending"
+      });
+
+    // Assertions
+    expect(response.status).toBe(200);
+    expect(response.body.message).toEqual('Working arrangement successfully updated.');
+  })
+
+  test('update manageWithdraw arrangement', async () => {
+    // Mock Firestore get method to return a snapshot with a matching document
+    const mockGet = db.collection().get;
+    const mockDocRef = {
+      update: jest.fn().mockResolvedValue() // Mock the update method to resolve successfully
+    };
+
+    mockGet.mockResolvedValueOnce({
+      empty: false, // Indicating that matching documents were found
+      docs: [
+        { id: 'mock-doc-id', data: () => ({ /* mock data */ }) }
+      ]
+    });
+
+    // Mock Firestore doc reference
+    db.collection().doc = jest.fn().mockReturnValue(mockDocRef);
+
+    // Simulate a PUT request with valid data
+    const response = await request(app)
+      .put('/working-arrangements/manage')
+      .send({
+        reportingId: "130002",
+        reportingFirstName: "Jack",
+        reportingLastName: "Sim",
+        staffId: "160008",
+        date: {
+          _seconds: 1728316800,
+          _nanoseconds: 393000000
+        },
+        status: "rejected",
+        reason: null,
+        purpose: "manageWithdraw"
+      });
+
+    // Assertions
+    expect(response.status).toBe(200);
+    expect(response.body.message).toEqual('Working arrangement successfully updated.');
   })
 
   test('update non-existent pending arrangement', async () => {
@@ -1593,17 +1600,25 @@ describe('PUT /working-arrangements/withdraw', () => {
 })
 
 describe('PUT /cancel', () => {
-  test('cancel own working arrangement', async () => {
+  test('cancel existing pending working arrangement', async () => {
     // Mock Firestore get method to return a snapshot with a matching document
     const mockGet = db.collection().get;
     const mockDocRef = {
-      update: jest.fn().mockResolvedValue() // Mock the update method to resolve successfully
+      update: jest.fn().mockResolvedValue(), // Mock the update method to resolve successfully
+      delete: jest.fn().mockResolvedValue() // Mock the delete method to resolve successfully
     };
 
     mockGet.mockResolvedValueOnce({
       empty: false, // Indicating that matching documents were found
       docs: [
         { id: 'mock-doc-id', data: () => ({ /* mock data */ }) }
+      ]
+    });
+
+    mockGet.mockResolvedValueOnce({
+      empty: false, // Indicating that matching documents were found
+      docs: [
+        { id: 'notification', data: () => ({ /* notification  data */ }) }
       ]
     });
 
@@ -1711,7 +1726,48 @@ describe('PUT /withdraw', () => {
 
     // Assertions
     expect(response.status).toBe(200);
-    expect(response.body.message).toEqual('Working arrangement is now pending for withdrawal.');
+    expect(response.body.message).toEqual('Working arrangement is now pending for withdrawal');
+
+    // Verify that the correct document was updated with the correct status
+    expect(db.collection().doc).toHaveBeenCalledWith('mock-doc-id');
+  })
+
+  test('Jack Sim withdraws his own working arrangement', async () => {
+    // Mock Firestore get method to return a snapshot with a matching document
+    const mockGet = db.collection().get;
+    const mockDocRef = {
+      update: jest.fn().mockResolvedValue() // Mock the update method to resolve successfully
+    };
+    const mockAdd = jest.fn().mockResolvedValue();
+
+    mockGet.mockResolvedValueOnce({
+      empty: false, // Indicating that matching documents were found
+      docs: [
+        { id: 'mock-doc-id', data: () => ({ /* mock data */ }) }
+      ]
+    });
+
+    // Mock Firestore doc reference
+    db.collection().doc = jest.fn().mockReturnValue(mockDocRef);
+
+    // Simulate a PUT request with valid data
+    const response = await request(app)
+      .put('/withdraw')
+      .send({
+        reportingId: "130002",
+        staffFirstName: "Jack",
+        staffLastName: "Sim",
+        staffId: "130002",
+        date: {
+          _seconds: 1728316800,
+          _nanoseconds: 393000000
+        },
+        status: "approved",
+        reason: null
+      });
+
+    // Assertions
+    expect(response.status).toBe(200);
 
     // Verify that the correct document was updated with the correct status
     expect(db.collection().doc).toHaveBeenCalledWith('mock-doc-id');
@@ -1757,6 +1813,124 @@ describe('PUT /withdraw', () => {
   })
 })
 
+describe('GET /get-notifications/:employeeId', () => {
+  //successful
+  test('get notifications for an employee', async () => {
+    // Mock Firestore to return working arrangements
+    const mockGet = db.collection().get
+    mockGet.mockResolvedValueOnce({
+      empty: false,
+      forEach: (callback) => {
+        callback({
+          data: () => ({
+            staffId: "190019",
+            arrangementDate: {
+                _seconds: 1727827200,
+                _nanoseconds: 0
+            },
+            arrangementStatus: "pendingWithdraw",
+            status: "unseen",
+            reason: "Lack of manpower",
+            actorId: "140894",
+            actorFirstName: "Rahim",
+            actorLastName: "Khalid",
+            notificationCreated: {
+                _seconds: 1730731240,
+                _nanoseconds: 121000000
+            }
+        })
+        })
+      },
+    })
+
+    const response = await request(app)
+      .get('/get-notifications/190019')
+      .send()
+
+    expect(response.status).toBe(200) // Expect 200 OK
+    expect(response.body.notifications).toEqual([[
+        null,
+      {
+          staffId: "190019",
+          arrangementDate: {
+              _seconds: 1727827200,
+              _nanoseconds: 0
+          },
+          arrangementStatus: "pendingWithdraw",
+          status: "unseen",
+          reason: "Lack of manpower",
+          actorId: "140894",
+          actorFirstName: "Rahim",
+          actorLastName: "Khalid",
+          notificationCreated: {
+              _seconds: 1730731240,
+              _nanoseconds: 121000000
+          }
+    }]])
+  })
+
+  //unsuccessful - something wrong with backend code
+  test('get notifications for an employee with firestore error', async () => {
+    //get firestore to throw error
+    const mockGet = db.collection().get
+    mockGet.mockRejectedValueOnce(new Error('Firestore error'))
+
+    const response = await request(app)
+      .get('/get-notifications/190019')
+      .send()
+
+    expect(response.status).toBe(500) // Expect 500 Internal Server Error
+    expect(response.body).toEqual({ message: "Something happened when getting your notifications", error: `Internal server error ` })
+  })
+})
+
+describe('PUT /seen-notification', () => {
+  test('successfully see notification', async () => {
+    // Mock Firestore get method to return a snapshot with a matching document
+    const mockGet = db.collection().get;
+    const mockDocRef = {
+      update: jest.fn().mockResolvedValue() // Mock the update method to resolve successfully
+    };
+    const mockAdd = jest.fn().mockResolvedValue();
+
+    mockGet.mockResolvedValueOnce({
+      empty: false, // Indicating that matching documents were found
+      docs: [
+        { id: 'mock-doc-id', data: () => ({ /* mock data */ }) }
+      ]
+    });
+
+    // Mock Firestore doc reference
+    db.collection().doc = jest.fn().mockReturnValue(mockDocRef);
+
+    // Simulate a PUT request with valid data
+    const response = await request(app)
+      .put('/seen-notification')
+      .send();
+
+    // Assertions
+    expect(response.status).toBe(200);
+    expect(response.body.message).toEqual('Successfully updated notification status');
+
+  })
+
+  test('fail to see notification', async () => {
+    // Mock Firestore doc reference to throw an error
+    const mockDocRef = {
+      update: jest.fn().mockRejectedValue(new Error('Firestore error'))
+    };
+
+    db.collection().doc = jest.fn().mockReturnValue(mockDocRef);
+
+    const response = await request(app)
+      .put('/seen-notification')
+      .send()
+
+    expect(response.status).toBe(500) // Expect 500 Internal Server Error
+    expect(response.body).toEqual({ message: "Something happened when updating your notifications", error: `Internal server error ` })
+
+  })
+})
 
 // catch rogue calls
 describe('ALL *', () => {
