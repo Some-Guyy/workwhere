@@ -23,7 +23,7 @@ const Navbar = () => {
       // console.log(data)
       setEmployeeName(data.staffFirstName);
       setEmployeeRole(data.role)
-      setEmployeePosition(data.Position)
+      setEmployeePosition(data.position)
       setEmployeeId(data.staffId)
   },[])
 

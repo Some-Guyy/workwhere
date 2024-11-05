@@ -420,6 +420,7 @@ app.get("/working-arrangements/department/:department/:date", async (req, res) =
         res.json({workingArrangements, sameDepart})
 
     } catch (err) {
+        console.log(err)
         res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error`})
     }
 })
