@@ -140,7 +140,7 @@ const HomePage = ({}) => {
     // function to fetch personal schedule
     const fetchPersonalData = async (employeeId=loginEmployeeId) => {
       
-      const apiUrl = `http://${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/working-arrangements/${employeeId}`;      
+      const apiUrl = `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/working-arrangements/${employeeId}`;      
 
       if(!personalData) {
 
@@ -180,7 +180,7 @@ const HomePage = ({}) => {
         // console.log(chosenDate);
       }
 
-      const apiUrl = `http://${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/working-arrangements/team/${employeeId}/${chosenDate}`;
+      const apiUrl = `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/working-arrangements/team/${employeeId}/${chosenDate}`;
 
       console.log(`Fetching for ${employeeId} ${chosenDate}`);
       // console.log(teamData);
@@ -222,7 +222,7 @@ const HomePage = ({}) => {
         chosenDate = `${selectedYear}-${selectedMonth}-${selectedDt}`;
       }
 
-      const apiUrl =  `http://${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/working-arrangements/department/${department}/${chosenDate}`;
+      const apiUrl =  `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/working-arrangements/department/${department}/${chosenDate}`;
 
       console.log(`Fetching for ${department} ${chosenDate}`);
       

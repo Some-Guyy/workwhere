@@ -19,7 +19,7 @@ const LoginPage = () => {
         }},[EmployeeInfo])
 
     const fetchEmployeeinfo = async () => {
-        const apiUrl =  `http://${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/login`
+        const apiUrl =  `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/login`
   
               try{
                 const res = await fetch(apiUrl,{

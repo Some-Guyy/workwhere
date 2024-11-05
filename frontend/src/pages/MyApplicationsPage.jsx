@@ -16,7 +16,7 @@ const MyApplicationsPage = () => {
     // function to addWFH
     const addWFH = async (newArrangement) => {
       try {
-        const res = await fetch(`http://${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/request`, {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/request`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ const MyApplicationsPage = () => {
     // function to cancel WFH
     const cancelWFH = async (arrangement) => {
       try {
-        const res = await fetch(`http://${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/cancel`, {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/cancel`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ const MyApplicationsPage = () => {
     // function to withdraw own WFH
     const withdrawalWFH = async (arrangement) => {
       try {
-        const res = await fetch(`http://${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/withdraw`, {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/withdraw`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

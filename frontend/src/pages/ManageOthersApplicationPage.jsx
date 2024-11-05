@@ -91,7 +91,7 @@ const ManageOthersApplicationPage = () => {
           chosenDate = `${selectedYear}-${selectedMonth}-${selectedDt}`;
           // console.log(chosenDate);
         }
-        const apiUrl = `http://${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/working-arrangements/manager/${employeeId}/${chosenDate}`;      
+        const apiUrl = `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/working-arrangements/manager/${employeeId}/${chosenDate}`;      
   
         if(!teamInChargeOfData) {
   
@@ -130,7 +130,7 @@ const ManageOthersApplicationPage = () => {
         return; // Exit early to avoid refetching
       }
     
-      const apiUrl = `http://${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/working-arrangements/supervise/${employeeId}`;
+      const apiUrl = `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/working-arrangements/supervise/${employeeId}`;
     
       setLoading(true); // Start loading regardless of whether data exists or not
       try {
@@ -162,7 +162,7 @@ const ManageOthersApplicationPage = () => {
     // function to approve/reject wfh
     const approveRejectWFH = async (arrangement) => {
       try {
-        const res = await fetch(`http://${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/working-arrangements/manage`, {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/working-arrangements/manage`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -190,7 +190,7 @@ const ManageOthersApplicationPage = () => {
     // function to approve/reject withdrawal
     const approveRejectWithdrawal = async (arrangement) => {
       try {
-        const res = await fetch(`http://${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/working-arrangements/manage`, {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/working-arrangements/manage`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -218,7 +218,7 @@ const ManageOthersApplicationPage = () => {
     // function to withdraw subordinates wfh
     const withdrawSubordinate = async (arrangement) => {
       try {
-        const res = await fetch(`http://${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/working-arrangements/withdraw`, {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/working-arrangements/withdraw`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
