@@ -307,7 +307,7 @@ afterAll(async () => {
     await deleteCollection(db, collectionEmployee)
     await deleteCollection(db, collectionWa)
     await deleteCollection(db, collectionNotification)
-})
+}, 20000)
 
 describe('POST /login', () => {
     test('login existing user with valid password', async () => {
