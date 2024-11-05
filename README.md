@@ -9,6 +9,12 @@ A Work-from-Home tracking system for the company All-in-One. It comprises of a w
 ### Prerequisites:
 - [Node.js](https://nodejs.org/en/) v20.15.0 (_or above_)
 - A [Firebase](https://firebase.google.com/) project set up with the secrets stored in `backend/workwhere_firebase_env.json`
+- A `.env` file in the `frontend` directory, default values are as shown:
+    ```
+    VITE_BACKEND_HOST=http://localhost
+    VITE_BACKEND_PORT=3000
+    ```
+- Google Chrome browser to access the frontend
 ### Running the app:
 1. Install dependencies in the `backend` directory.
 
