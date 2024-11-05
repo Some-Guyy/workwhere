@@ -118,24 +118,6 @@ const HomePage = ({}) => {
       localStorage.setItem('personalSchedule', JSON.stringify(personalData));
     },[personalData])
 
-    // temp data for testing
-    const deta = [{
-      date: {
-        _seconds: 1727326858
-      },
-      status: "approved",
-      time: "AM",
-      reportingFirstName: "Ryan",
-      reportingLastName: "Ng"
-    }, {
-      date: {
-        _seconds: 1727326858
-      },
-      status: "pending",
-      time: "AM",
-      reportingFirstName: "Ryan",
-      reportingLastName: "Ng"
-    }] 
 
     // function to fetch personal schedule
     const fetchPersonalData = async (employeeId=loginEmployeeId) => {
