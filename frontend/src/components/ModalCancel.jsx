@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import { PiWarningDiamondFill } from "react-icons/pi";
 
-const ModalCancel = ({date, type, successfulCancellation, setSuccessfulCancellation, cancelWFH}) => {
+const ModalCancel = ({modalId, date, type, successfulCancellation, setSuccessfulCancellation, cancelWFH}) => {
 
     const [userDetails, setUserDetails] = useState(null); // State to store user details
 
@@ -50,8 +50,8 @@ const ModalCancel = ({date, type, successfulCancellation, setSuccessfulCancellat
 
     return (
       <>
-            <button className="btn btn-primary btn-xs rounded-full" onClick={()=>document.getElementById('cancel_modal').showModal()}>Actions</button>
-            <dialog id="cancel_modal" className="modal">
+            <button className="btn btn-primary btn-xs rounded-full" onClick={()=>document.getElementById(modalId).showModal()}>Actions</button>
+            <dialog id={modalId} className="modal">
             <div className="modal-box">
                 <h3 className="font-bold text-lg">Do you want to cancel your pending WFH arrangement?</h3><br/>
                 
