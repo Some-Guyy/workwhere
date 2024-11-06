@@ -1021,6 +1021,44 @@ describe('PUT /working-arrangements/manage', () => {
     })
 })
 
+describe('PUT /working-arrangements/withdraw', () => {
+    test('withdraw an existing approved arrangement', async () => {
+        // Employee A will withdraw Employee B's arrangement that was approved by A earlier
+        const response = await request(app)
+            .put('/working-arrangements/withdraw')
+            .send({
+                reportingId: "140001",
+                reportingFirstName: "Derek",
+                reportingLastName: "Tan",
+                staffId: "140894",
+                date: testDate,
+                reason: "Lack of manpower",
+            })
+
+        // Expect 200 and json response body
+        expect(response.status).toBe(200)
+        expect(response.body).toEqual({ message: "Working arrangement successfully updated." })
+    })
+
+    test('withdraw a non-existent approved arrangement', async () => {
+        // Employee A will try to withdraw the same arrangement as above from Employee B that had been withdrawn
+        const response = await request(app)
+        .put('/working-arrangements/withdraw')
+        .send({
+            reportingId: "140001",
+            reportingFirstName: "Derek",
+            reportingLastName: "Tan",
+            staffId: "140894",
+            date: testDate,
+            reason: "Lack of manpower",
+        })
+        
+        // Expect 404 and json response body
+        expect(response.status).toBe(404)
+        expect(response.body).toEqual({ message: "No matching working arrangement found" })
+    })
+})
+
 describe('PUT /withdraw', () => {
     test('request withdrawal of own approved arrangement', async () => {
         // Employee B will request withdrawal of their first approved arrangement
