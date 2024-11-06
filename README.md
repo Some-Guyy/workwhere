@@ -22,7 +22,7 @@ A Work-from-Home tracking system for the company All-in-One. It comprises of a w
 
 1. Run the backend server. It will be on http://localhost:3000 by default.
 
-    `~/workwhere/backend$ npm start`
+    `~/workwhere/backend$ npm run start`
 
 1. Install dependencies in the `frontend` directory.
 
@@ -32,9 +32,9 @@ A Work-from-Home tracking system for the company All-in-One. It comprises of a w
 
     `~/workwhere/frontend$ npm run build`
 
-1. Run the frontend server. It will be on http://localhost:3000 by default. If port is taken it will take the next port, e.g. http://localhost:3001 if backend is running on port 3000.
+1. Run the frontend server. It will be on http://localhost:4173 by default.
 
-    `~/workwhere/frontend$ npm start`
+    `~/workwhere/frontend$ npm run preview`
 
 ## Testing
 We use [Jest](https://jestjs.io/) testing for our unit and integration tests. Note that you need run the commands in the `backend` directory and have the `workwhere_firebase_env.json` file in it to successfully run the tests.
@@ -42,7 +42,7 @@ We use [Jest](https://jestjs.io/) testing for our unit and integration tests. No
 ### Test scripts:
 - All tests with coverage:
 
-    `~/workwhere/backend$ npm test`
+    `~/workwhere/backend$ npm run test`
 
 - Integration tests only:
 
