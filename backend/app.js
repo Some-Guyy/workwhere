@@ -9,7 +9,7 @@ admin.initializeApp({
 const db = admin.firestore()
 
 let collectionEmployee = "employees"
-let collectionWa = "mockWorkingArrangements"
+let collectionWa = "workingArrangements"
 let collectionNotification = "notifications"
 if (process.env.NODE_ENV === 'test') {
     collectionEmployee = "testEmployees"
