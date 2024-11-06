@@ -40,7 +40,7 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
             {details.attachment == null ? <td>No attachments</td>:
             <td><ModalAttachment modalId={modalIdImage} file={details.attachment}/></td>
             }
-            <td><ModalCancel date={convert_to_date(details.date._seconds)} type={details.time} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} cancelWFH={cancelWFH}/></td>
+            <td><ModalCancel modalId={modalId} date={convert_to_date(details.date._seconds)} type={details.time} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} cancelWFH={cancelWFH}/></td>
       </tr>
     );
   }else if (activeSchedule == "Your Schedule" && isPending == true){
