@@ -37,7 +37,7 @@ const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnAppl
             }
 
             // team members name
-            // headCount = data.teamMembers.length
+            headCount = data.teamMembers.length
             for (const d of data.teamMembers) {
                 // console.log(d);
                 if(!nameOfWFH.includes(d.staffId)){

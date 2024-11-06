@@ -8,7 +8,7 @@ admin.initializeApp({
 })
 const db = admin.firestore()
 
-let collectionEmployee = "mockEmployees"
+let collectionEmployee = "employees"
 let collectionWa = "mockWorkingArrangements"
 let collectionNotification = "notifications"
 if (process.env.NODE_ENV === 'test') {
@@ -30,7 +30,7 @@ app.use(express.json())
 //batch fetching
 const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, calledFrom) => {
     const workingArrangements = []
-    const batchSize = 30 // Firestore limit for 'in' operator
+    const batchSize = 15 // Firestore limit for 'in' operator
 
     if (calledFrom === "team") {
 
@@ -420,6 +420,7 @@ app.get("/working-arrangements/department/:department/:date", async (req, res) =
         res.json({workingArrangements, sameDepart})
 
     } catch (err) {
+        console.log(err)
         res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error`})
     }
 })

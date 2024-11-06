@@ -9,7 +9,7 @@ const LoginPage = () => {
     const[EmployeeInfo, setEmployeeInfo] = useState(null);
 
     const navigate = useNavigate()
-
+    // console.log(import.meta.env.VITE_BACKEND_HOST)
 
     useEffect(()=>{
         if(EmployeeInfo != null){
@@ -19,7 +19,7 @@ const LoginPage = () => {
         }},[EmployeeInfo])
 
     const fetchEmployeeinfo = async () => {
-        const apiUrl =  "http://localhost:3000/login"
+        const apiUrl =  `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/login`
   
               try{
                 const res = await fetch(apiUrl,{
