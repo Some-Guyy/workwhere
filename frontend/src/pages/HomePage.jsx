@@ -32,6 +32,9 @@ const HomePage = ({}) => {
     const [successfulCancellation, setSuccessfulCancellation]  = useState(location.state?.successfulCancellation || {});
     const [successfulWithdrawal, setSuccessfulWithdrawal] = useState(location.state?.successfulWithdrawal || {});
     const [successfulWithdrawalSubordinate, setSuccessfulWithdrawalSubordinate] = useState(location.state?.successfulWithdrawalSubordinate || {});
+    const [successfulApprovalRejection, setSuccessfulApprovalRejection] = useState(location.state?.successfulApprovalRejection || {});
+    const [successfulApprovalRejectionWithdrawal, setSuccessfulApprovalRejectionWithdrawal] = useState(location.state?.successfulApprovalRejectionWithdrawal || {}); // this is to show whether approval/rejection successful or not for withdrawal
+
 
 
     // Fetch the role from localStorage when the component mounts
@@ -263,9 +266,61 @@ const HomePage = ({}) => {
                         <GrStatusGood size={25}/>
                         <span className="mx-2">Successfully created arrangement</span>
                     </div>
-                    <div className="absolute top-4 right-7">
+                    <div className="absolute top-4 right-7
+                    ">
                         {/* Right side: Close icon */}
                         <IoMdClose size={30} onClick={() => setSuccessfulApplication(null)}/>
+                    </div>
+                </div>
+            </div>
+        )}
+
+        {/* alert for successful withdrawl */}
+        {successfulWithdrawal == true && (
+            <div role="alert" className="alert alert-success fixed top-0 left-0 w-full z-50">
+                <div className="flex items-center">
+                    <div className="flex items-center">
+                        <GrStatusGood size={25}/>
+                        <span className="mx-2">Successfully withdraw arrangement</span>
+                    </div>
+                    <div className="absolute top-4 right-7
+                    ">
+                        {/* Right side: Close icon */}
+                        <IoMdClose size={30} onClick={() => setSuccessfulWithdrawal(null)}/>
+                    </div>
+                </div>
+            </div>
+        )}
+
+        {/* alert for successful wfh approval and rejection */}
+        {successfulApprovalRejection == true && (
+            <div role="alert" className="alert alert-success fixed top-0 left-0 w-full z-50">
+                <div className="flex items-center">
+                    <div className="flex items-center">
+                        <GrStatusGood size={25}/>
+                        <span className="mx-2">Successfully Approved/Reject arrangement</span>
+                    </div>
+                    <div className="absolute top-4 right-7
+                    ">
+                        {/* Right side: Close icon */}
+                        <IoMdClose size={30} onClick={() => setSuccessfulApprovalRejection(null)}/>
+                    </div>
+                </div>
+            </div>
+        )}
+
+        {/* alert for successful wfh WITHDRAWAL approval and rejection */}
+        {successfulApprovalRejectionWithdrawal == true && (
+            <div role="alert" className="alert alert-success fixed top-0 left-0 w-full z-50">
+                <div className="flex items-center">
+                    <div className="flex items-center">
+                        <GrStatusGood size={25}/>
+                        <span className="mx-2">Successfully Approved/Reject withdrawal request</span>
+                    </div>
+                    <div className="absolute top-4 right-7
+                    ">
+                        {/* Right side: Close icon */}
+                        <IoMdClose size={30} onClick={() => setSuccessfulApprovalRejectionWithdrawal(null)}/>
                     </div>
                 </div>
             </div>
