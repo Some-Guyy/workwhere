@@ -256,7 +256,7 @@ app.put("/cancel", async (req, res) => {
         .where('staffId', '==', staffId)
         .where("date", "<=", endOfDay)
         .where("date", ">=", targetDate)
-        .where("status", "==", "pending")
+        .where("status", "in", ["pending", "pendingWithdraw"])
         .get()
 
         if (snapshot.empty) {
@@ -265,15 +265,22 @@ app.put("/cancel", async (req, res) => {
     
         const doc = snapshot.docs[0]
         const docRef = db.collection(collectionWa).doc(doc.id)
-    
-        await docRef.update({ status: "cancelled" })
+        
+        //checks if status is pendingWithdraw to check it to approved
+        if (doc.data().status == "pendingWithdraw") {
+            await docRef.update({ status: "approved" })
+        } else {
+            // means this is pending and we will change the status to cancelled
+            await docRef.update({ status: "cancelled" })
+        }
+        
 
         //once we cancelled the working arrangement, need to delete the notification for pending
         const notificationSnapshot = await db.collection(collectionNotification)
         .where('actorId', "==", staffId)
         .where('arrangementDate', "<=", endOfDay)
         .where('arrangementDate', ">=", targetDate)
-        .where('arrangementStatus', "==", "pending")
+        .where('arrangementStatus', "in", ["pending", "pendingWithdraw"])
         .get()
 
         if (!notificationSnapshot.empty) {
