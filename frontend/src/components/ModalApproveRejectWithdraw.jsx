@@ -66,7 +66,7 @@ const ModalApproveRejectWithdraw = ({modalId, date, type, staffName, StaffID, su
             <button className="btn btn-primary btn-xs rounded-full" onClick={()=>document.getElementById(modalId).showModal()}>Actions</button>
             <dialog id={modalId} className="modal">
             <div className="modal-box">
-                <h3 className="font-bold text-lg">Approve/Reject WFH arrangement withdrawal?</h3><br/>
+                <h3 className="font-bold text-lg">Approve/Reject withdrawal request?</h3><br/>
                 
                 {/* Details of application to be approved/reject */}
                 <div>
@@ -96,8 +96,8 @@ const ModalApproveRejectWithdraw = ({modalId, date, type, staffName, StaffID, su
                         {/* Error message for missing reason */}
                         {errorMessage && <p className="text-red-600">{errorMessage}</p>}
 
-                        <button type="submit" className="btn btn-block btn-neutral mt-5" onClick={() => setAcceptOrReject("approved")}>Approve request</button>
-                        <button type="submit" className="btn btn-block btn-neutral mt-2" onClick={() => setAcceptOrReject("rejected")}>Reject request</button>
+                        <button type="submit" className="btn btn-block btn-neutral mt-5" onClick={() => setAcceptOrReject("approved")}>Approve withdrawal request</button>
+                        <button type="submit" className="btn btn-block btn-neutral mt-2" onClick={() => setAcceptOrReject("rejected")}>Reject withdrawal request</button>
                     </form>
                 </div>
                 <p className="py-4">Press ESC key or click outside to close</p>

@@ -1,6 +1,6 @@
 import AccordionRow from "./AccordionRow";
 
-const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnApplication, successfulCancellation, setSuccessfulCancellation, isForCancel, cancelWFH, successfulWithdrawal, setSuccessfulWithdrawal, withdrawalWFH}) => {
+const Accordion = ({loading, data, yourSchedule, yourTeamSchedule, activeSchedule, isManageOwnApplication, successfulCancellation, setSuccessfulCancellation, isForCancel, cancelWFH, successfulWithdrawal, setSuccessfulWithdrawal, withdrawalWFH}) => {
     const wfhData = [];
     const pendingData = [];
     const leaveData = []; 
@@ -88,7 +88,8 @@ const Accordion = ({loading, data, yourSchedule, activeSchedule, isManageOwnAppl
             <>
                 <AccordionRow rowName={"Work From Home Dates"} loading={loading} data={wfhData} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={false} cancelWFH={cancelWFH} withdrawalWFH={withdrawalWFH}/>
                 <AccordionRow rowName={"Work From Office Dates"} loading={loading} data={nameOfOtherStaffs} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={true} cancelWFH={cancelWFH} withdrawalWFH={withdrawalWFH}/>
-                <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingData} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={false} isManageOwnApplication={isManageOwnApplication} isPending={true} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} isForCancel={isForCancel} cancelWFH={cancelWFH} withdrawalWFH={withdrawalWFH} />
+                {yourTeamSchedule? "":
+                <AccordionRow rowName={"Pending Requests"} loading={loading} data={pendingData} headCount = {headCount} activeSchedule={activeSchedule} isWFODate={false} isManageOwnApplication={isManageOwnApplication} isPending={true} successfulCancellation={successfulCancellation} setSuccessfulCancellation={setSuccessfulCancellation} isForCancel={isForCancel} cancelWFH={cancelWFH} withdrawalWFH={withdrawalWFH} />}
 
                 {/* <AccordionRow rowName={"Leave Dates"} loading={loading} data={leaveData}/> */}
             </>}
