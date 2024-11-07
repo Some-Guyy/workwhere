@@ -25,7 +25,8 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
   // console.log(details)
 
   const modalId = `modal-${index}`; // Unique modal ID for each row
-  const modalIdImage = `modalImage-${index}`
+  const modalIdImage = `modalImage-${index}`;
+  const modalIdWithdraw = `modalWithdraw-${index}`;
 
   let tableRow;
   if (activeSchedule==="Your Schedule" && isPending===true && isForCancel==true){
@@ -64,7 +65,7 @@ const ScheduleTableRow = ({details, modalKey, index, activeSchedule, isWFODate, 
             <td>{convert_to_date(details.date._seconds)}</td>
             <td>{details.time}</td>
             <td>{details.reportingFirstName} {details.reportingLastName}</td>
-            <td><ModalWithdraw modalId={modalId} details={details} date={convert_to_date(details.date._seconds)} type={details.time} withdrawalWFH={withdrawalWFH}/></td>
+            <td><ModalWithdraw modalId={modalIdWithdraw} details={details} date={convert_to_date(details.date._seconds)} type={details.time} withdrawalWFH={withdrawalWFH}/></td>
       </tr>
     );
   }else if (activeSchedule == "Your Schedule"){
