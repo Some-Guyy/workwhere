@@ -20,9 +20,11 @@ const ManageOthersApplicationPage = () => {
 
     const [loginEmployeeId, setLoginEmployeeId] = useState(null); // to be changed based on logins initial fetch for users employee id
 
-    const today = new Date().toLocaleDateString().split("/"); // todays date
+    // const today = new Date().toLocaleDateString().split("/"); // todays date
+    const today = new Date();
+    // const [selectedDate, setSelectedDate] = useState(`${today[1]}/${today[0]}/${today[2]}`);
+    const [selectedDate, setSelectedDate] = useState(`${today.getDate().toString()}/${(today.getMonth()+1).toString()}/${today.getFullYear().toString()}`);
     
-    const [selectedDate, setSelectedDate] = useState(`${today[1]}/${today[0]}/${today[2]}`); // state for the selected date
     const [dateTriggered, setDateTriggered] = useState(false); // date trigger
 
     const [userRole, setUserRole] = useState(null); // users role
