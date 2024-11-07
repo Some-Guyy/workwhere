@@ -1795,7 +1795,7 @@ describe('PUT /withdraw', () => {
     expect(db.collection().doc).toHaveBeenCalledWith('mock-doc-id');
   })
 
-  test('Jack Sim withdraws his own working arrangement', async () => {
+  test('Managing director withdraw their own working arrangement', async () => {
     // Mock Firestore get method to return a snapshot with a matching document
     const mockGet = db.collection().get;
     const mockDocRef = {
