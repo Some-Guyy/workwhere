@@ -1600,6 +1600,62 @@ describe('PUT /working-arrangements/withdraw', () => {
 })
 
 describe('PUT /cancel', () => {
+  test('cancel existing pendingWithdraw working arrangement', async () => {
+    // Mock Firestore get method to return a snapshot with a matching document
+    const mockGet = db.collection().get;
+    const mockDocRef = {
+      update: jest.fn().mockResolvedValue(), // Mock the update method to resolve successfully
+      delete: jest.fn().mockResolvedValue() // Mock the delete method to resolve successfully
+    };
+
+    mockGet.mockResolvedValueOnce({
+      empty: false, // Indicating that matching documents were found
+      docs: [
+        { id: 'mock-doc-id', data: () => ({
+          staffId: '160008',
+          date: {
+            _seconds: 1728316800,
+            _nanoseconds: 393000000
+          },
+          status: 'pendingWithdraw',
+        }) }
+      ]
+    });
+
+    mockGet.mockResolvedValueOnce({
+      empty: false, // Indicating that matching documents were found
+      docs: [
+        { id: 'notification', data: () => ({ /* notification  data */ }) }
+      ]
+    });
+
+    // Mock Firestore doc reference
+    db.collection().doc = jest.fn().mockReturnValue(mockDocRef);
+
+    // Simulate a PUT request with valid data
+    const response = await request(app)
+      .put('/cancel')
+      .send({
+        reportingId: "130002",
+        reportingFirstName: "Jack",
+        reportingLastName: "Sim",
+        staffId: "160008",
+        date: {
+          _seconds: 1728316800,
+          _nanoseconds: 393000000
+        },
+        status: "pending",
+        reason: null
+      });
+
+    // Assertions
+    expect(response.status).toBe(200);
+    expect(response.body.message).toEqual('Working arrangement successfully cancelled.');
+
+    // Verify that the correct document was updated with the correct status
+    expect(db.collection().doc).toHaveBeenCalledWith('mock-doc-id');
+  })
+
   test('cancel existing pending working arrangement', async () => {
     // Mock Firestore get method to return a snapshot with a matching document
     const mockGet = db.collection().get;
@@ -1611,7 +1667,14 @@ describe('PUT /cancel', () => {
     mockGet.mockResolvedValueOnce({
       empty: false, // Indicating that matching documents were found
       docs: [
-        { id: 'mock-doc-id', data: () => ({ /* mock data */ }) }
+        { id: 'mock-doc-id', data: () => ({
+          staffId: '160008',
+          date: {
+            _seconds: 1728316800,
+            _nanoseconds: 393000000
+          },
+          status: 'pending',
+        }) }
       ]
     });
 
