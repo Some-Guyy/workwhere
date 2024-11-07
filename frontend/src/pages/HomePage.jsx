@@ -17,9 +17,9 @@ const HomePage = ({}) => {
     const[overallData, setOverallData] = useState(null); // cache between button filters for overall schedule
 
     // const today = new Date().toLocaleDateString().split("/"); // todays date
-    const today = new Date();
-    // const [selectedDate, setSelectedDate] = useState(`${today[1]}/${today[0]}/${today[2]}`);
-    const [selectedDate, setSelectedDate] = useState(`${today.getDate().toString()}/${(today.getMonth()+1).toString()}/${today.getFullYear().toString()}`);
+    const date = new Date();
+    const today = [(date.getMonth()+1).toString(), date.getDate().toString(), date.getFullYear().toString()];
+    const [selectedDate, setSelectedDate] = useState(`${today[1]}/${today[0]}/${today[2]}`);
 
     const [loginEmployeeId, setLoginEmployeeId] = useState(null); // to be changed based on logins initial fetch for users employee id
     const [teamOrOverall, setTeamOrOverall] = useState(null);
