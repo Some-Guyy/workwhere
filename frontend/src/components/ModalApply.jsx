@@ -76,7 +76,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
     // Update dates state whenever selectedDates changes
     useEffect(() => {
         setDates(selectedDates.map((d) => ({
-            date: `${d.toLocaleDateString().split("/")[2]}-${d.toLocaleDateString().split("/")[0]}-${d.toLocaleDateString().split("/")[1]}` ,
+            date: `${d.getFullYear().toString()}-${(d.getMonth()+1).toString()}-${d.getDate().toString()}` ,
             time: "am",
             // reason: "",
             attachment: null
@@ -124,7 +124,7 @@ const ModalApply = ({selectedDates, wfhDays, addWFH, successfulApplication, setS
                     {selectedDates.map((d, index) => (
                         <div className="border-2 border-primary rounded-lg p-5 mb-3" key={index}>
                             <span className="font-bold text-2xl">Arrangement {index+1}: </span>
-                            <span className="font-bold text-2xl">{`${d.toLocaleDateString().split("/")[1]}/${d.toLocaleDateString().split("/")[0]}/${d.toLocaleDateString().split("/")[2]}` }</span>
+                            <span className="font-bold text-2xl">{`${d.getDate().toString()}/${(d.getMonth()+1).toString()}/${d.getFullYear().toString()}` }</span>
                             <br/>
 
                             {/* Check if dates[index] exists before accessing its properties */}

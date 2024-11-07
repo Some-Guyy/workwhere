@@ -6,17 +6,20 @@ const DateFilter = ({setSelectedDate}) => {
   const today = new Date();
   const [month, setMonth] = useState();
 
-  const currentDate = parseInt(today.toLocaleDateString().split("/")[1]);
-  const currentMonth = parseInt(today.toLocaleDateString().split("/")[0])-1;
-  const currentYear = parseInt(today.toLocaleDateString().split("/")[2]);
+  const currentDate = today.getDate();
+  const currentMonth = today.getMonth();
+  const currentYear = today.getFullYear();
 
   const handleSelect = (date) => {
     setSelected(date); // Update the selected date state
     if (date) {
-      const selectedDay = date.toLocaleDateString().split("/");
-      const selectedDate = parseInt(selectedDay[1]);
-      const selectedMonth = parseInt(selectedDay[0]);
-      const selectedYear = parseInt(selectedDay[2]);
+      // const selectedDay = date.toLocaleDateString().split("/");
+      // const selectedDate = parseInt(selectedDay[1]);
+      // const selectedMonth = parseInt(selectedDay[0]);
+      // const selectedYear = parseInt(selectedDay[2]);
+      const selectedDate = date.getDate();
+      const selectedMonth = date.getMonth()+1;
+      const selectedYear = date.getFullYear();
 
       const formattedDateForView = `${selectedDate}/${selectedMonth}/${selectedYear}`;
 
