@@ -100,7 +100,7 @@ const ModalWithdrawSubordinate = ({details, date, type, withdrawSubordinate}) =>
                   <div className="flex items-center">
                       <div className="flex items-center">
                           <PiWarningDiamondFill size={25}/>
-                          <span className="mx-2">Error approving/reject arrangement</span>
+                          <span className="mx-2">Error withdrawing subordinate's arrangement</span>
                       </div>
                       <div className="absolute top-4 right-7">
                           {/* Right side: Close icon */}

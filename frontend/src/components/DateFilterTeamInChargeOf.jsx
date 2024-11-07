@@ -12,6 +12,7 @@ const DateFilterTeamInChargeOf = ({setSelectedDate, selectedDate}) => {
   const currentYear = today.getFullYear();
 
   const handleSelect = (date) => {
+    console.log(date)
     setSelected(date); // Update the selected date state
     if (date) {
       // const selectedDay = date.toLocaleDateString().split("/");
@@ -28,7 +29,6 @@ const DateFilterTeamInChargeOf = ({setSelectedDate, selectedDate}) => {
       setSelectedDate(formattedDateForView);
 
     } else {
-      setSelectedDate(null);
     }
   };
 
