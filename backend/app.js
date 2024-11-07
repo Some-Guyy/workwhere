@@ -30,7 +30,7 @@ app.use(express.json())
 //batch fetching
 const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, calledFrom) => {
     const workingArrangements = []
-    const batchSize = 15 // Firestore limit for 'in' operator
+    const batchSize = 10 // Firestore limit for 'in' operator
 
     if (calledFrom === "team") {
 
@@ -57,7 +57,7 @@ const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, called
               .where('staffId', 'in', batch)
               .where("date", "<=", startDate)
               .where("date", ">=", endDate)
-              .where("status", "in", ["approved", "pending"])
+              .where("status", "in", ["approved", "pending", "pendingWithdraw"])
               .get()
       
             snapshot.forEach((doc) => {
