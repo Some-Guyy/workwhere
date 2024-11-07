@@ -16,9 +16,10 @@ const HomePage = ({}) => {
     const[teamData, setTeamData] = useState(null); // cache between button filters for team schedule
     const[overallData, setOverallData] = useState(null); // cache between button filters for overall schedule
 
-    const today = new Date().toLocaleDateString().split("/"); // todays date
+    // const today = new Date().toLocaleDateString().split("/"); // todays date
+    const date = new Date();
+    const today = [(date.getMonth()+1).toString(), date.getDate().toString(), date.getFullYear().toString()];
     const [selectedDate, setSelectedDate] = useState(`${today[1]}/${today[0]}/${today[2]}`);
-
 
     const [loginEmployeeId, setLoginEmployeeId] = useState(null); // to be changed based on logins initial fetch for users employee id
     const [teamOrOverall, setTeamOrOverall] = useState(null);
@@ -32,6 +33,9 @@ const HomePage = ({}) => {
     const [successfulCancellation, setSuccessfulCancellation]  = useState(location.state?.successfulCancellation || {});
     const [successfulWithdrawal, setSuccessfulWithdrawal] = useState(location.state?.successfulWithdrawal || {});
     const [successfulWithdrawalSubordinate, setSuccessfulWithdrawalSubordinate] = useState(location.state?.successfulWithdrawalSubordinate || {});
+    const [successfulApprovalRejection, setSuccessfulApprovalRejection] = useState(location.state?.successfulApprovalRejection || {});
+    const [successfulApprovalRejectionWithdrawal, setSuccessfulApprovalRejectionWithdrawal] = useState(location.state?.successfulApprovalRejectionWithdrawal || {}); // this is to show whether approval/rejection successful or not for withdrawal
+
 
 
     // Fetch the role from localStorage when the component mounts
@@ -118,29 +122,11 @@ const HomePage = ({}) => {
       localStorage.setItem('personalSchedule', JSON.stringify(personalData));
     },[personalData])
 
-    // temp data for testing
-    const deta = [{
-      date: {
-        _seconds: 1727326858
-      },
-      status: "approved",
-      time: "AM",
-      reportingFirstName: "Ryan",
-      reportingLastName: "Ng"
-    }, {
-      date: {
-        _seconds: 1727326858
-      },
-      status: "pending",
-      time: "AM",
-      reportingFirstName: "Ryan",
-      reportingLastName: "Ng"
-    }] 
 
     // function to fetch personal schedule
     const fetchPersonalData = async (employeeId=loginEmployeeId) => {
       
-      const apiUrl = `http://localhost:3000/working-arrangements/${employeeId}`;      
+      const apiUrl = `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/working-arrangements/${employeeId}`;      
 
       if(!personalData) {
 
@@ -180,7 +166,7 @@ const HomePage = ({}) => {
         // console.log(chosenDate);
       }
 
-      const apiUrl = `http://localhost:3000/working-arrangements/team/${employeeId}/${chosenDate}`;
+      const apiUrl = `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/working-arrangements/team/${employeeId}/${chosenDate}`;
 
       console.log(`Fetching for ${employeeId} ${chosenDate}`);
       // console.log(teamData);
@@ -222,7 +208,7 @@ const HomePage = ({}) => {
         chosenDate = `${selectedYear}-${selectedMonth}-${selectedDt}`;
       }
 
-      const apiUrl =  `http://localhost:3000/working-arrangements/department/${department}/${chosenDate}`;
+      const apiUrl =  `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/working-arrangements/department/${department}/${chosenDate}`;
 
       console.log(`Fetching for ${department} ${chosenDate}`);
       
@@ -281,9 +267,61 @@ const HomePage = ({}) => {
                         <GrStatusGood size={25}/>
                         <span className="mx-2">Successfully created arrangement</span>
                     </div>
-                    <div className="absolute top-4 right-7">
+                    <div className="absolute top-4 right-7
+                    ">
                         {/* Right side: Close icon */}
                         <IoMdClose size={30} onClick={() => setSuccessfulApplication(null)}/>
+                    </div>
+                </div>
+            </div>
+        )}
+
+        {/* alert for successful withdrawl */}
+        {successfulWithdrawal == true && (
+            <div role="alert" className="alert alert-success fixed top-0 left-0 w-full z-50">
+                <div className="flex items-center">
+                    <div className="flex items-center">
+                        <GrStatusGood size={25}/>
+                        <span className="mx-2">Successfully withdraw arrangement</span>
+                    </div>
+                    <div className="absolute top-4 right-7
+                    ">
+                        {/* Right side: Close icon */}
+                        <IoMdClose size={30} onClick={() => setSuccessfulWithdrawal(null)}/>
+                    </div>
+                </div>
+            </div>
+        )}
+
+        {/* alert for successful wfh approval and rejection */}
+        {successfulApprovalRejection == true && (
+            <div role="alert" className="alert alert-success fixed top-0 left-0 w-full z-50">
+                <div className="flex items-center">
+                    <div className="flex items-center">
+                        <GrStatusGood size={25}/>
+                        <span className="mx-2">Successfully Approved/Reject arrangement</span>
+                    </div>
+                    <div className="absolute top-4 right-7
+                    ">
+                        {/* Right side: Close icon */}
+                        <IoMdClose size={30} onClick={() => setSuccessfulApprovalRejection(null)}/>
+                    </div>
+                </div>
+            </div>
+        )}
+
+        {/* alert for successful wfh WITHDRAWAL approval and rejection */}
+        {successfulApprovalRejectionWithdrawal == true && (
+            <div role="alert" className="alert alert-success fixed top-0 left-0 w-full z-50">
+                <div className="flex items-center">
+                    <div className="flex items-center">
+                        <GrStatusGood size={25}/>
+                        <span className="mx-2">Successfully Approved/Reject withdrawal request</span>
+                    </div>
+                    <div className="absolute top-4 right-7
+                    ">
+                        {/* Right side: Close icon */}
+                        <IoMdClose size={30} onClick={() => setSuccessfulApprovalRejectionWithdrawal(null)}/>
                     </div>
                 </div>
             </div>

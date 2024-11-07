@@ -33,7 +33,7 @@ const ModalWithdrawSubordinate = ({details, date, type, withdrawSubordinate}) =>
 
         // Validate that a reason is provided if the request is rejected
         if (reason.trim() === "") {
-            setErrorMessage("Please provide a reason for rejecting the request.");
+            setErrorMessage("Please provide a reason.");
             return;
         }
 

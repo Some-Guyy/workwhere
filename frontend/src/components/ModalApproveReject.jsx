@@ -26,7 +26,10 @@ const ModalApproveReject = ({modalId, date, type, staffName, StaffID, approveRej
       if (successfulApprovalRejection === true) {
           // Wait a moment and then navigate to a different page
           setTimeout(() => {
-              window.location.reload();
+              // window.location.reload();
+              navigate('/home', {
+                state: { successfulApprovalRejection: true }, // Send successfulApplication state
+            });
           }, 2000); // 2-second delay
 
       }
@@ -104,22 +107,6 @@ const ModalApproveReject = ({modalId, date, type, staffName, StaffID, approveRej
                 <p className="py-4">Press ESC key or click outside to close</p>
             </div>
             <form method="dialog" className="modal-backdrop">
-                
-                {/* alert for unsuccessful approve/reject */}
-                {successfulApprovalRejection == false && (
-                    <div role="alert" className="alert alert-error fixed top-0 left-0 w-full z-50">
-                        <div className="flex items-center">
-                            <div className="flex items-center">
-                                <PiWarningDiamondFill size={25}/>
-                                <span className="mx-2">Error approved/reject arrangement</span>
-                            </div>
-                            <div className="absolute top-4 right-7">
-                                {/* Right side: Close icon */}
-                                <IoMdClose size={30} onClick={() => setSuccessfulApprovalRejection(null)}/>
-                            </div>
-                        </div>
-                    </div>
-                )}
                 <button>close</button>
             </form>
             </dialog>

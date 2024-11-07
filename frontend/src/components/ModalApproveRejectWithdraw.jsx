@@ -23,7 +23,9 @@ const ModalApproveRejectWithdraw = ({modalId, date, type, staffName, StaffID, su
       if (successfulApprovalRejectionWithdrawal === true) {
           // Wait a moment and then navigate to a different page
           setTimeout(() => {
-              window.location.reload();
+            navigate('/home', {
+                state: { successfulApprovalRejection: true }, // Send successfulApplication state
+            });
           }, 2000); // 2-second delay
 
       }

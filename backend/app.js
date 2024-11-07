@@ -8,8 +8,8 @@ admin.initializeApp({
 })
 const db = admin.firestore()
 
-let collectionEmployee = "mockEmployees"
-let collectionWa = "mockWorkingArrangements"
+let collectionEmployee = "employees"
+let collectionWa = "workingArrangements"
 let collectionNotification = "notifications"
 if (process.env.NODE_ENV === 'test') {
     collectionEmployee = "testEmployees"
@@ -30,7 +30,7 @@ app.use(express.json())
 //batch fetching
 const fetchWorkingArrangementsInBatches = async (ids, startDate, endDate, calledFrom) => {
     const workingArrangements = []
-    const batchSize = 30 // Firestore limit for 'in' operator
+    const batchSize = 15 // Firestore limit for 'in' operator
 
     if (calledFrom === "team") {
 
@@ -256,7 +256,7 @@ app.put("/cancel", async (req, res) => {
         .where('staffId', '==', staffId)
         .where("date", "<=", endOfDay)
         .where("date", ">=", targetDate)
-        .where("status", "==", "pending")
+        .where("status", "in", ["pending", "pendingWithdraw"])
         .get()
 
         if (snapshot.empty) {
@@ -265,15 +265,22 @@ app.put("/cancel", async (req, res) => {
     
         const doc = snapshot.docs[0]
         const docRef = db.collection(collectionWa).doc(doc.id)
-    
-        await docRef.update({ status: "cancelled" })
+        
+        //checks if status is pendingWithdraw to check it to approved
+        if (doc.data().status == "pendingWithdraw") {
+            await docRef.update({ status: "approved" })
+        } else {
+            // means this is pending and we will change the status to cancelled
+            await docRef.update({ status: "cancelled" })
+        }
+        
 
         //once we cancelled the working arrangement, need to delete the notification for pending
         const notificationSnapshot = await db.collection(collectionNotification)
         .where('actorId', "==", staffId)
         .where('arrangementDate', "<=", endOfDay)
         .where('arrangementDate', ">=", targetDate)
-        .where('arrangementStatus', "==", "pending")
+        .where('arrangementStatus', "in", ["pending", "pendingWithdraw"])
         .get()
 
         if (!notificationSnapshot.empty) {
@@ -420,6 +427,7 @@ app.get("/working-arrangements/department/:department/:date", async (req, res) =
         res.json({workingArrangements, sameDepart})
 
     } catch (err) {
+        console.log(err)
         res.status(500).json({message: "Something went wrong when fetching your working arrangements", error: `Internal server error`})
     }
 })

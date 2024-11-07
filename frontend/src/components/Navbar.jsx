@@ -23,7 +23,7 @@ const Navbar = () => {
       // console.log(data)
       setEmployeeName(data.staffFirstName);
       setEmployeeRole(data.role)
-      setEmployeePosition(data.Position)
+      setEmployeePosition(data.position)
       setEmployeeId(data.staffId)
   },[])
 
@@ -57,7 +57,7 @@ const Navbar = () => {
   };
 
   const fetchNotificationData = async () =>{
-    const apiUrl = `http://localhost:3000/get-notifications/${EmployeeId}`;
+    const apiUrl = `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/get-notifications/${EmployeeId}`;
     try{
       const res = await fetch(apiUrl);
       const data = await res.json();
@@ -85,7 +85,7 @@ const Navbar = () => {
   const updateNotifictionStatus = async (notificationId) => {
     let unseenNotification = unseenNotifications.filter(notifiction => notifiction != notificationId)
     setUnSeenNotifications(unseenNotification)
-    const apiUrl = `http://localhost:3000/seen-notification`
+    const apiUrl = `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}/seen-notification`
     try{
       const res = await fetch(apiUrl, {
         method: 'PUT',

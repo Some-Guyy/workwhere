@@ -11,9 +11,9 @@ const CalendarApplication = ({data, addWFH, successfulApplication, setSuccessful
     const [month, setMonth] = useState();
 
     // todays date
-    const currentDate = parseInt(today.toLocaleDateString().split("/")[1]);
-    const currentMonth = parseInt(today.toLocaleDateString().split("/")[0])-1;
-    const currentYear = parseInt(today.toLocaleDateString().split("/")[2]);
+    const currentDate = today.getDate();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
 
     // console.log(currentDate,currentMonth,currentYear)
     // console.log(data);
