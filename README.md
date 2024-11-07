@@ -4,6 +4,7 @@ A Work-from-Home tracking system for the company All-in-One. It comprises of a w
 ## C4 Model
 <img src="https://static.structurizr.com/workspace/95869/diagrams/Diagram1.png" width=300 />
 <img src="https://static.structurizr.com/workspace/95869/diagrams/Diagram2.png" width=300 />
+<img src="Database_Schema.png" width=300 />
 
 ## Setup
 ### Prerequisites:
