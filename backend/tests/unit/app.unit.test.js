@@ -85,7 +85,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
     })
 
     await fetchWorkingArrangementsInBatches(sameDepartmentID, endOfDay, targetDate, "department")
-    expect(db.collection().where).toHaveBeenCalledWith("status", "in", ["approved", "pending"])
+    expect(db.collection().where).toHaveBeenCalledWith("status", "in", ["approved", "pending", "pendingWithdraw"])
   })
 
   test('fetch arrangements in batches for team', async () => {
@@ -197,7 +197,7 @@ describe('fetchWorkingArrangementsInBatches function is called', () => {
     })
 
     await fetchWorkingArrangementsInBatches(inChargeOfID, endOfDay, targetDate, "manager")
-    expect(db.collection().where).toHaveBeenCalledWith("status", "in", ["approved", "pending"])
+    expect(db.collection().where).toHaveBeenCalledWith("status", "in", ["approved", "pending", "pendingWithdraw"])
   })
 
   test('fetch arrangements in batches for manager\'s supervised employees pending', async () => {
