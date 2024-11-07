@@ -2,9 +2,10 @@
 A Work-from-Home tracking system for the company All-in-One. It comprises of a web application hosted on [AWS](https://aws.amazon.com/) and database hosted on [Firebase](https://firebase.google.com/).
 
 ## C4 Model
-<img src="https://static.structurizr.com/workspace/95869/diagrams/Diagram1.png" width=300 />
-<img src="https://static.structurizr.com/workspace/95869/diagrams/Diagram2.png" width=300 />
-<img src="Database_Schema.png" width=300 />
+<img src="readme_images/context.png" width=300 />
+<img src="readme_images/container.png" width=300 />
+<img src="readme_images/Database_Schema.png" width=300 />
+<img src="readme_images/system_arch.png"  />
 
 ## Setup
 ### Prerequisites:
