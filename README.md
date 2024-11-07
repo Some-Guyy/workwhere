@@ -1,7 +1,7 @@
 # WorkWhere
 A Work-from-Home tracking system for the company All-in-One. It comprises of a web application hosted on [AWS](https://aws.amazon.com/) and database hosted on [Firebase](https://firebase.google.com/).
 
-## C4 Model
+## Models
 <img src="readme_images/context.png" width=300 />
 <img src="readme_images/container.png" width=300 />
 <img src="readme_images/Database_Schema.png" width=300 />
