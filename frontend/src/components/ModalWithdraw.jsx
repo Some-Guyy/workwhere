@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import { PiWarningDiamondFill } from "react-icons/pi";
 
-const ModalWithdraw = ({details, date, type, withdrawalWFH}) => {
+const ModalWithdraw = ({modalId, details, date, type, withdrawalWFH}) => {
     // console.log(setSuccessfulWithdrawal)
 
     const [successfulWithdrawal, setSuccessfulWithdrawal] = useState(null);
@@ -59,8 +59,8 @@ const ModalWithdraw = ({details, date, type, withdrawalWFH}) => {
 
   return (
     <>
-        <button className="btn btn-primary btn-xs rounded-full" onClick={()=>document.getElementById('withdraw_modal').showModal()}>Actions</button>
-        <dialog id="withdraw_modal" className="modal">
+        <button className="btn btn-primary btn-xs rounded-full" onClick={()=>document.getElementById(modalId).showModal()}>Actions</button>
+        <dialog id={modalId} className="modal">
         <div className="modal-box">
             <h3 className="font-bold text-lg">Do you want to withdraw your WFH arrangement?</h3>
 
